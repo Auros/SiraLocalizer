@@ -1,0 +1,12 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
+  "id": "SiraLocalizer",
+  "name": "SiraLocalizer",
+  "author": "SIRA",
+  "version": "1.0.0",
+  "description": "Community localization support in Beat Saber.",
+  "gameVersion": "1.12.2",
+  "dependsOn": {
+    "BSIPA": "^4.0.0"
+  }
+}
