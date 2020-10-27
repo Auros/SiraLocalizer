@@ -1,0 +1,629 @@
+STRING ID	DESCRIPTION	ENGLISH	FRENCH / FRANÇAIS	SPANISH / ESPAÑOL	GERMAN / DEUTSCH	ITALIAN / ITALIANO	PORTUGUESE / PORTUGUÊS (BR)	PORTUGUESE / PORTUGUÊS (PT)	RUSSIAN / РУССКИЙ	GREEK / ΕΛΛΗΝΙΚΑ	TURKISH / TÜRKÇE	DANISH / DANSK	NORWEGIAN (NB) / NORSK BOKMÅL	SWEDISH / SVENSKA	DUTCH / NEDERLANDS	POLISH / POLSKI	FINNISH / SUOMI	JAPANESE / 日本語	SIMPLIFIED CHINESE / 简体中文	TRADITIONAL CHINESE / 繁体中文	KOREAN / 한국어	CZECH / ČEŠTINA	HUNGARIAN / MAGYAR	ROMANIAN / ROMÂNĂ	THAI / ภาษาไทย	BULGARIAN / БЪЛГАРСКИ	עברית / HEBREW	 العربية / ARABIC	BOSNIAN
+LANGUAGE_CODE	IETF language tag(s) without dash	enUS enGB	frFR	esES esAR esMX	deDE deCH deAT	itIT itCH	ptBR	ptPT	ruRU	elGR	trTR	daDK	noNB	svSE	nlNL	plPL	fiFI	jaJP	zhCN zhSG	zhTW zhHK zhMO	koKR	csCZ	huHU	roRO	thTH	bgBG	heIL	ar001	bsBS
+LANGUAGE_EN	[LanguageName] in english	English	French	Spanish	German	Italian 	Portuguese (Brazil)	Portuguese	Russian	Greek	Turkish	Danish	Norwegian	Swedish	Dutch	Polish	Finnish	Japanese	Simplified Chinese	Traditional Chinese	Korean	Czech	Hungarian	Romanian	Thai	Bulgarian	Hebrew	Arabic	Bosnian
+LANGUAGE_DIRECTION	ltr or rtl (text direction used by game code)	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	ltr	rtl	rtl	ltr
+																													
+Polyglot	100																												
+MENU_LANGUAGE_THIS	Name of the language	English	Français												Nederlands				简体中文										
+HEALTH_AND_SAFETY_WARNING_TITLE		Health And Safety Warning	Avertissement de santé et sécurité												Gezondheids- en veiligheidswaarschuwing				健康与安全警告										
+HEALTH_AND_SAFETY_WARNING_CONTENT		A small percentage of people may experience seizures when exposed to certain lights, patterns or images even with no history of epilepsy or seizures.  Please read health and safety warnings in your VR headset instruction manual before playing Beat Saber. Because you may be encouraged to perform intense action with your controllers also make sure to review your surroundings and clear any obstacles in your play area before starting the game. Always remember to stay in the center of the cleared play area and do not walk around.  Playing Beat Saber requires high physical activity so follow the same habits as doing a regular workout. Don't forget to stretch before playing and rest regularly in between levels. Some people may experience muscle soreness. If you experience this then immediately stop playing the game and rest. 	Certaines personnes peuvent souffrir de crises d'épilepsie lorsqu'elles sont exposées à certaines lumières, certains motifs ou certaines images même sans antécédents d'épilepsie.  Veuillez lire les avertissements de santé et de sécurité dans le manuel d'instructions de votre casque de réalité virtuelle avant de jouer à Beat Saber. Puisque vous êtes encouragé à effectuer des actions intenses avec vos manettes, vérifiez également votre environnement et éliminez tout obstacle dans votre zone de jeu avant de commencer. N'oubliez pas de rester au centre de l'aire de jeu dégagée et de ne pas vous promener.  Jouer à Beat Saber implique de l'activité physique intense, alors suivez les mêmes habitudes que lorsque vous faites de l'exercice normal. N'oubliez pas de vous étirer avant de jouer et de vous reposer régulèrement. Certaines personnes peuvent développer des douleurs musculaires; si cela vous arrive, arrêtez immédiatement de jouer et reposez-vous.												Een klein percentage van de mensen kan epileptische aanvallen krijgen wanneer ze worden blootgesteld aan bepaalde lichten, patronen of beelden, zelfs zonder voorgeschiedenis van epilepsie of aanvallen.  Lees de gezondheids- en veiligheidswaarschuwingen in de instructiehandleiding van je VR-headset voordat je Beat Saber gaat spelen.				有小部分的人暴露在某种光线、图案或者图像时可能会引发癫痫发作即使没有癫痫病史。    在游玩Beat Saber之前，请阅读VR设备手册中的健康与安全警告。游戏过程会让您使用手柄做出激烈的运动，所以请仔细检查周围环境并在开始游戏前清除游玩区域内所有的障碍物。请保持身处空旷的游玩区域中性并避免到处走动。    游玩Beat Saber需要高强度的身体活动，所以请保持定期锻炼时的习惯。请不要忘记在游玩前进行热身并经常在关卡间隔休息。部分玩家可能经历肌肉酸痛。如果你遇到这种情况，请立即停止游戏并充分地休息。										
+CREDITS_TITLE		Credits	Générique												Credits				鸣谢										
+CREDITS_OG		OG Team	Équipe originale												Origineel team				OG团队										
+CREDITS_GAME_DESIGN		Game Design	Conception du jeu												Spelontwerp				游戏设计										
+CREDITS_SOUND		Music Content & Sound	Contenu musical et son												Muziekinhoud & geluiden				音乐及音效										
+CREDITS_MARKETING		Marketing	Marketing												Marketing				市场营销										
+CREDITS_PROGRAMMING		Programming	Programmation												Ontwikkelaars				程序设计										
+CREDITS_LEVEL_CREATORS		Level Creators	Créateurs de niveaux																关卡设计										
+CREDITS_3D_GRAPHICS		3D Graphics	Graphismes 3D																3D图像										
+CREDITS_EXTRA_MUSIC_ARTISTS		Extra Music Artists	Artistes musicaux supplémentaires																其他音乐艺术家										
+CREDITS_2D_GRAPHICS		2D Graphics	Graphismes 2D																2D图像										
+CREDITS_THANK_YOU_NOTE		Thanks to everyone who supported us and helped us make this game a reality!	Merci à tous ceux qui nous ont appuyés et aidés à créer ce jeu!																感谢所有帮助我们完成这款游戏的人！										
+CREDITS_SPECIAL_THANKS		Special thanks to	Remerciement spécial à																特别鸣谢										
+CREDITS_VFX		VFX	Effets visuels																视觉效果										
+BUTTON_PLAY		Play	Jouer												Speel				开始										
+BUTTON_CONTINUE		Continue	Continuer												Voortdoen				继续										
+BUTTON_SKIP		Skip	Sauter												Overslaan				跳过										
+BUTTON_CANCEL		Cancel	Annuler												Annuleren				取消										
+BUTTON_RETRY		Retry	Réessayer												Opnieuw				重试										
+BUTTON_OK		Ok	OK												Ok				确认										
+BUTTON_APPLY		Apply	Appliquer												Toepassen				应用										
+BUTTON_PLAY_TUTORIAL		Play Tutorial	Didacticiel												Speel tutorial				进入教程										
+BUTTON_CAMPAIGN		Campaign	Campagne																闯关模式										
+BUTTON_CAMPAIGN_HINT		Play missions, clear objectives and progress through campaign!	Complétez des missions, atteignez des objectifs et progressez à travers la campagne!																进行任务，达成目标并完成闯关！										
+BUTTON_SOLO		Solo	Solo												Alleen spelen				单人模式										
+BUTTON_SOLO_HINT		Play any level you like and compete on the online leaderboards!	Jouez à n'importe quel niveau et luttez pour atteindre le top du classement en ligne!																游玩任何你喜欢的关卡，并与排行榜上的其他人比拼分数！										
+BUTTON_PARTY		Party	En groupe																聚会模式										
+BUTTON_PARTY_HINT		Play with your friends locally!	Jouez avec vos amis localement!																与你的朋友一起进行本地游戏！										
+BUTTON_HOW_TO_PLAY		How To Play	Comment jouer																如何进行游戏										
+BUTTON_CREDITS		Credits	Générique																鸣谢										
+MENU_FLOOR_ADJUST		Floor Adjust	Adjustement du plancher																地面调整										
+BUTTON_SETTINGS		Settings	Options																设置										
+BUTTON_PLAYER_SETTINGS		Player Options	Options du joueur																玩家设置										
+BUTTON_QUIT		Quit	Quitter																退出										
+BUTTON_BASICS		Basics	Bases																基础规则										
+BUTTON_SCORE_SYSTEM		Score System	Système de pointage																分数系统										
+BUTTON_LOCAL_PLAYER		Local Player	Joueur local																本地玩家										
+BUTTON_GUEST_PLAYER		Guest Player	Joueur invité																游客										
+BUTTON_HIGHSCORES_ALL_TIME		All Time	Tout temps																所有										
+BUTTON_HIGHSCORES_TODAY		Today	Aujourd'hui																今日										
+BUTTON_HIGHSCORES_CLEAR_ALL		Clear All	Effacer tout																清除										
+BUTTON_HIGHSCORES_GLOBAL		Global	Global																全球										
+BUTTON_HIGHSCORES_AROUND_YOU		Around You	Près de vous																相近的玩家										
+BUTTON_HIGHSCORES_FRIENDS		Friends	Amis																好友										
+BUTTON_MODIFIERS		Modifiers	Modificateurs																修改项										
+BUTTON_BUY_LEVEL		Buy Level	Acheter le niveau																购买歌曲										
+BUTTON_BUY_MUSIC_PACK		Buy Music Pack	Acheter le pack de musique																购买歌曲包										
+BUTTON_RESET_ROOM		Reset Room	Réinitialiser																重置房间										
+BUTTON_MENU		Menu	Menu																菜单										
+BUTTON_RESTART		Restart	Recommencer																重新开始										
+STATS_ALL		All	Tout																全部										
+STATS_CAMPAIGN		Campaign	Campagne																闯关模式										
+STATS_SOLO		Solo	Solo																单人模式										
+STATS_PARTY		Party	En groupe																聚会模式										
+STATS_LEVELS_PLAYED		Levels Played	Niveaux joués																游玩关卡数										
+STATS_LEVELS_CLEARED		Levels Cleared	Niveaux terminés																通过关卡数										
+STATS_LEVELS_FAILED		Levels Failed	Niveaux échoués																失败关卡数										
+STATS_TOTAL_PLAYED_TIME		Total Played Time	Temps total joué																总游戏时长										
+STATS_TOTAL_SCORE		Total Score	Score total																总游戏分数										
+STATS_HAND_DISTANCE_TRAVELLED		Hand Distance Travelled	Distance parcourue par les mains																手部移动距离										
+STATS_GOOD_CUTS		Good Cuts	Bonnes coupes																正确挥砍数										
+STATS_BAD_CUTS		Bad Cuts	Mauvaises coupes																错误挥砍数										
+STATS_MISSED_NOTES		Missed Notes	Notes manquées																遗漏音符数量										
+STATS_FULL_COMBO		Full Combo	Combo complet																全连关卡数										
+STATS_AVERAGE_CUT_SCORE		Average Cut Score	Score de coupe moyen																平均挥砍分数										
+STATS_MAX_COMBO		Max Combo	Meilleur combo																最大连击数										
+STATS_HIGHSCORE		Highscore	Meilleur score																最高分数										
+STATS_MAX_RANK		Max Rank	Meilleur rang																最高评级										
+STATS_RANK		rank	rang																评级										
+STATS_SCORE		score	score																分数										
+STATS_DIFFICULTY		Difficulty	Difficulté																难度										
+INFO_BOMBS_COUNT		Bombs Count	Nombre de bombes																炸弹数量										
+INFO_OBSTACLES_COUNT		Obstacles Count	Nombre d'obstacles																障碍物数量										
+INFO_NOTES_COUNT		Notes Count	Nombre de notes																音符数量										
+INFO_BPM		Beats per Minute	Battements par minute																每分钟节拍数										
+INFO_TIME		Time	Durée																歌曲时长										
+TITLE_HOW_TO_PLAY		How To Play	Comment jouer																如何进行游戏										
+TITLE_PLAYER_SETTINGS		Player Settings	Paramètres du joueur																玩家设置										
+TITLE_PLAYER_STATISTICS		Player Statistics	Statistiques du joueur																玩家统计										
+TITLE_PRACTICE_MODE		Practice Mode	Mode pratique																练习模式										
+TITLE_LEVEL		Level	Niveau																关卡										
+TITLE_FLOOR_ADJUST		Floor Adjust	Ajustement du plancher																地面调整										
+TITLE_HIGHSCORES		Highscores	Classement																排行榜										
+TITLE_LOCAL_HIGHSCORES		Local Highscores	Classement local																本地排行榜										
+TITLE_GAME_PLAY_SETUP		Gameplay Setup	Configuration du jeu																游戏性设置										
+TITLE_ENTER_YOUR_NAME		Enter Your Name	Entrez votre nom																输入你的名字										
+TITLE_SOLO		Solo	Solo																单人模式										
+TITLE_PARTY		Party	En groupe																聚会模式										
+TITLE_TUTORIAL		Tutorial	Didacticiel																教程关卡										
+TITLE_CAMPAIGN		Campaign	Campagne																闯关模式										
+TITLE_RESULTS		Results	Résultats																游戏结果										
+TITLE_SETTINGS		Settings	Options																设置										
+TITLE_LEVEL_CLEARED		Level Cleared	Niveau complété																关卡完成										
+PRACTICE_SONG_START		Song Start	Début																起始时间										
+PRACTICE_SPEED		Speed	Vitesse																歌曲速度										
+PLAYER_SETTINGS_LEFT_HANDED		Left-Handed	Gaucher																左手模式										
+PLAYER_SETTINGS_SWAP_COLORS		Swap Colors	Échanger les couleurs																交换颜色										
+PLAYER_SETTINGS_STATIC_LIGHTS		Static Lights	Lumières statiques																静态灯光										
+PLAYER_SETTINGS_PLAYER_HEIGHT		Player Height	Hauteur du joueur																玩家身高										
+PLAYER_SETTINGS_PLAYER_HEIGHT_HINT		Make sure the room setup is done precisely before setting the player height.	Vérifiez que la configuration de la pièce est faite avant de définir la hauteur du joueur.																在设置玩家高度之前，请确保已正确完成房间设置。										
+PLAYER_SETTINGS_NO_TEXTS_AND_HUD		No Texts & HUDs	Pas de texte ou d'ATH																隐藏文字与HUD显示										
+PLAYER_SETTINGS_ADVANCED_HUD		Advanced HUD	ATH avancé																显示高级HUD										
+PLAYER_SETTINGS_DISABLE_SFX		Disable SFX	Désactiver les effets sonores																禁用音效										
+PLAYER_SETTINGS_REDUCE_DEBRIS		Reduce Debris	Réduire le montant de débris																关闭方块碎片										
+PLAYER_SETTINGS_NJSBO		Note Jump Start Beat Offset	Décalage du début du saut de la note																方块出生偏差值										
+PLAYER_SETTINGS_NJSBO_TIP		Note Jump Start Beat Offset	Décalage du début du saut de la note																方块出生偏差值										
+PLAYER_SETTINGS_JUMP_START_CLOSE		Close	Très près																很近										
+PLAYER_SETTINGS_JUMP_START_CLOSER		Closer	Près																近										
+PLAYER_SETTINGS_JUMP_START_DEFAULT		Default	Par défaut																默认										
+PLAYER_SETTINGS_JUMP_START_FURTHER		Further	Loin																远										
+PLAYER_SETTINGS_JUMP_START_FAR		Far	Très loin																很远										
+PLAYER_SETTINGS_HIDE_NOTE_SPAWN_EFFECT		Hide Note Spawning Effect	Cacher l'effet d'apparition des notes																隐藏方块生成特效										
+PLAYER_SETTINGS_ADAPTIVE_SFX		Adaptive SFX	Volume des effets sonores adaptif																自适应音效										
+PLAYER_SETTINGS_HEADER_GENERAL		General Player Settings	Paramètres du joueur généraux																一般玩家设置										
+PLAYER_SETTINGS_HEADER_HUD		HUD Settings	Paramètres de l'ATH																HUD界面设置										
+PLAYER_SETTINGS_HEADER_FX_SETTINGS		FX Settings	Paramètres des effets																画面特效设置										
+CONTENT_SCORE_INFO		- To get <color=#ffffff88>100</color> points in one cut, perform a swing with a large starting angle, 100 degrees from where the cube is hit, and follow through after hitting the cube for 60 degrees more.  - A bonus <color=#ffffff88>15</color> points will be awarded based on how close to the center of the cube the cut is made.	- Pour obtenir une coupe de <color=#ffffff99>100</color> points, effectuez un arc avec votre sabre de 100 degrés avant de frapper le cube et continuez encore 60 degrés après l'avoir coupé.  - Un bonus de <color=#ffffff88>15</color> points vous sera donné dépendemment de la proximité de la coupe au centre du cube.																-要想在一次挥砍中获得<color=#ffffff88>100</color>分，请以较大的初始角度挥剑，在击中方块前挥动100度并在击中方块后额外挥动60度。        -<color=#ffffff88>15</color>分的额外分数取决于是否完整地将方块一分为二										
+CONTENT_CONBO_INFO		Combo represents the number of consecutive good cuts which were not interrupted by any mistake.	Le combo représente le nombre de coupes consécutives sans erreur.																连击数量代表在被任何失误打断前的连续正确挥砍数量。										
+CONTENT_WARNING_PLAY_AREA		Always remember to stay in the center of the cleared play area and do not walk around!	Rappelez-vous de toujours rester au centre de la zone de jeu et de ne pas vous promener!																请时刻保持身处空旷的游玩区域中心并避免到处走动。										
+HOW_TO_PLAY_NOTE_CUT		Cut in the arrow direction and match the color	Coupez dans la direction indiquée par la flèche et avec le sabre de couleur correspondant.																切向箭头方向并匹配方块颜色										
+HOW_TO_PLAY_OBSTACLES		Avoid obstacles with your head	Évitez les obstacles avec votre tête																移动头部来躲避障碍物										
+HOW_TO_PLAY_BOMB_CUT		Don't cut the bombs	Ne coupez pas les bombes																不要切到炸弹										
+TUTORIAL_PUT_SABERS_IN_RING		Put your sabers into these rings.	Placez vos sabres dans ces anneaux																将您的光剑移动到圆环内										
+TUTORIAL_CUT_ARROW_DIRECTION_COLOR		Cut in the arrow direction and match the color.	Coupez dans la direction indiquée par la flèche et avec le sabre de couleur correspondant.																切向箭头方向并匹配方块颜色										
+TUTORIAL_CUT_ANY_DIRECTION		Cut in any direction.	Coupez dans n'importe quelle direction.																从任意方向挥砍方块										
+TUTORIAL_DO_NOT_CUT_OR_TOUCH		Do not cut or touch with sabers!	Ne touchez pas avec vos sabres!																不要砍中或触碰炸弹！										
+TUTORIAL_LEAN_RIGHT		Lean right! <sprite=1 tint=1>	Penchez-vous vers la droite! <sprite=1 tint=1>																身体向右倾斜！<sprite=1 tint=1>										
+TUTORIAL_LEAN_LEFT		<sprite=3 tint=1> Lean left!	<sprite=3 tint=1> Penchez-vous vers la gauche!																<sprite=3 tint=1> 身体向左倾斜！										
+TUTORIAL_CROUCH		Crouch!	Accroupissez-vous!																蹲下！										
+TUTORIAL_CONGRATULATIONS		Congratulations! You are ready now.	Bravo! Vous êtes maintenant prêt.																恭喜！  你已经准备好了。										
+TUTORIAL_STAND_INSIDE_AREA		Stand inside the marked area.  Hold the <color=#00C0FF>blue</color> saber in your right hand and the <color=#FF0000>red</color> in your left hand.  Place both sabers into these rings to start.	Mettez-vous debout à l'emplacement indiqué.    Tenez le sabre <color=#00C0FF>bleu</color> dans votre main droite  et le sabre <color=#FF0000>rouge</color> dans votre main gauche.    Placez les deux sabres dans ces anneaux pour commencer.																请站在标记区域内。        右手持<color=#00C0FF>蓝色</color>光剑    左手持<color=#FF0000>红色</color>光剑        请将两把光剑放到圆环内开始游戏。										
+FLOOR_ADJUST_HELP_CONTENT		Here you can adjust the position of the floor. Try to make it match your real floor.	Ici vous pouvez modifier la position du plancher. Essayez de le faire correspondre à votre vrai plancher.																这里可以调整游戏内的地面位置，请试着对齐真实环境的地面。										
+FLOOR_ADJUST_HEIGHT_FROM_FLOOR		Your height from the floor	Votre hauteur à partir du plancher																距离地面高度										
+MODIFIER_BATTERY_ENERGY		Battery Energy	Batterie d'énergie																电池能量										
+MODIFIER_BATTERY_ENERGY_HINT		You can make just a fixed amount of mistakes.	Vous ne pouvez faire qu'un nombre limité d'erreurs.																你只可以失误一定次数										
+MODIFIER_NO_FAIL		No Fail	Échec impossible																不会失败										
+MODIFIER_NO_FAIL_HINT		Bad cuts, misses or hitting an obstacle with your head will not deplete your energy bar.	Les mauvaises coupes, les notes manquées et frapper des obstacles n'affecteront pas votre barre d'énergie.																失误不会减少生命值										
+MODIFIER_NO_OBSTACLES		No Obstacles	Sans obstacles																没有墙壁										
+MODIFIER_NO_OBSTACLES_HINT		There will be no obstacles in the level.	Il n'y aura pas d'obstacles dans le niveau.																关卡中不会出现墙壁										
+MODIFIER_DISAPPEARING_ARROWS		Disappearing Arrows	Flèches qui disparaîssent																箭头消失										
+MODIFIER_DISAPPEARING_ARROWS_HINT		Arrows on the cubes will disappear before they reach you.	Les flèches sur les cubes disparaîtront avant de vous atteindre.																方块上的箭头将在到达你面前时消失										
+MODIFIER_FASTER_SONG		Faster Song	Chanson plus rapide																歌曲加速										
+MODIFIER_FASTER_SONG_HINT		Song will play faster.	La chanson jouera plus rapidement.																歌曲将加速至1.2倍										
+MODIFIER_GHOST_NOTES		Ghost Notes	Notes fantômes																幽灵方块										
+MODIFIER_GHOST_NOTES_HINT		Cubes are invisible & arrows will disappear before they reach you.	Les cubes sont invisibles et les flèches disparaissent avant de vous atteindre.																方块和箭头将在到达你面前时一起消失										
+MODIFIER_INSTA_FAIL		Insta Fail	Échec instantané																瞬间失败										
+MODIFIER_INSTA_FAIL_HINT		Every mistake will cause instant level fail.	Toute erreur entraînera un échec du niveau.																任何一个失误都会结束关卡										
+MODIFIER_NO_ARROWS		No Arrows	Pas de flèches																没有箭头										
+MODIFIER_NO_ARROWS_HINT		You can cut all the cubes in any direction.	Vous pouvez couper les cubes dans n'importe quelle direction.																你可以从任何角度挥砍方块										
+MODIFIER_NO_BOMBS		No Bombs	Pas de bombes																没有炸弹										
+MODIFIER_NO_BOMBS_HINT		There will be no bombs in the level.	Il n'y aura pas de bombes dans le niveau.																关卡中不会出现炸弹										
+MODIFIER_PRO_MODE		Pro Mode	Mode professionnel																专家模式										
+MODIFIER_PRO_MODE_HINT		There's no tolerance in hitting cubes.	Il n'y a aucune tolérance pour la coupe des cubes.																在击打方块时将没有容错值										
+MODIFIER_SLOWER_SONG		Slower Song	Chanson plus lente																歌曲减速										
+MODIFIER_SLOWER_SONG_HINT		Song will play slower.	La chanson jouera plus lentement.																歌曲将减速至0.8倍										
+MODIFIER_STRICT_ANGLES		Strict Angles	Angles stricts																精确角度										
+MODIFIER_STRICT_ANGLES_HINT		Only really precise cuts will be evaulated as good.	Seules les coupes très précises compteront.																只有精确地击中方块才算做正确挥砍										
+MODIFIER_SUPER_FAST_NOTES		Super Fast Notes	Notes super rapides																超速方块										
+MODIFIER_SUPER_FAST_NOTES_HINT		Cubes will move super fast.	Les cubes bougeront très rapidement.																方块会高速飞来										
+MODIFIERS_TOTAL_MULTIPLIER		Total Multiplier	Multiplicateur total																当前加成倍数										
+MODIFIERS_MAX_RANK_WITH_MODIFIERS		Max Rank with current modifiers	Rang maximal																当前可达到的最高评级										
+STEAM_BOUGHT_CONTENT_INFO		If you bought this content, but don't see it here, please open Steam and check if it was properly downloaded.	Si vous avez acheté ce contenu mais ne le voyez pas ici, veuillez ouvrir Steam et vérifier que le contenu a été téléchargé.																如果您购买了此内容，但在这里没有显示，那么请打开Steam并检查它是否已被下载。										
+STATUS_DOWNLOADING		Downloading	Téléchargement																下载中										
+STATUS_ERROR_GETTING_DATA		Error getting data.	Échec de l'acquisition des données																数据获取失败。										
+MENU_GRAPHICS		Graphics	Graphismes																图像设定										
+MENU_ADVANCED_GRAPHICS		Advanced Graphics	Graphismes avancés																高级图像设定										
+MENU_ROOM_ADJUST		Room Adjust	Ajustement de la pièce																房间调整										
+MENU_SMOOTH_CAMERA		Smooth Camera	Caméra lisse																平滑相机										
+MENU_OTHERS		Others	Autres																其它										
+SETTINGS_MIRROR_QUALITY		Mirror Quality	Qualité du mirroir																镜面质量										
+SETTINGS_SMOKE		Smoke	Fumée																烟雾										
+SETTINGS_BLOOM_FOG_QUALITY		Bloom Fog Quality	Qualité de la brume d'éclat																雾中光晕质量										
+SETTINGS_BLOOM_POST_PROCESS		Bloom Post Process	Effet d'éclat																光晕后期处理										
+SETTINGS_ROOM_X_OFFSET		X Offset	Décalage X																X轴偏移										
+SETTINGS_ROOM_Y_OFFSET		Y Offset	Décalage Y																Y轴偏移										
+SETTINGS_ROOM_Z_OFFSET		Z Offset	Décalage Z																Z轴偏移										
+SETTINGS_ROOM_ROTATION		Rotation	Rotation																旋转										
+SETTINGS_NON_VR_RESOLUTION		Non VR Resolution	Résolution non-RV																桌面窗口分辨率										
+SETTINGS_FULLSCREEN		Fullscreen	Plein écran																全屏										
+SETTINGS_RENDERING_SCALE		Rendering Scale	Échelle du rendu																渲染倍数										
+SETTINGS_ANTIALIASING_MSAA		Antialiasing (MSAA)	Anticrénelage (MSAA)																抗锯齿(MSAA)										
+SETTINGS_VOLUME		Volume	Volume																音量										
+SETTINGS_PAUSE_PRESS_DURATION		Pause Press Duration	Durée de l'appui du bouton pause																暂停键触发时长										
+SETTINGS_SMOOTH_CAMERA		Smooth Camera	Caméra lisse																平滑相机										
+SETTINGS_ONLINE_SERVICES		Enable Online Services	Services en ligne																开启网络服务										
+SETTINGS_SMOOTH_CAMERA_INFO		Enabling this feature will replace Beat Sabers desktop window with a smoothed, customised field of view, suitable for recording & streaming	Activer cette fonctionnalité remplacera la vue bureau de Beat Saber par une caméra lissée et avec un champ de vision personnalisé adapté à l'enregistrement et à la diffusion en direct.																开启该功能将会使Beat Saber桌面窗口显示更加平滑，可以自定义视野大小，适合录制和直播										
+SETTINGS_SMOOTH_CAMERA_WARNING		Smooth camera is expensive and can cause bad performance on some hardware configurations.	La caméra lisse peut réduire la performance sur certains ordinateurs.																平滑相机将会消耗更多性能并可能在一些硬件配置上导致更差性能表现。										
+SETTINGS_FIELD_OF_VIEW		Field Of View	Champ de vision																视野(FOV)										
+SETTINGS_SMOOTHNESS		Smoothness	Lissage																平滑度										
+SETTINGS_ON		On	Allumé																开启										
+SETTINGS_OFF		Off	Éteint																关闭										
+SETTINGS_LOW		Low	Bas																低										
+SETTINGS_HIGH		High	Haut																高										
+SETTINGS_INSTANT		Instant	Instantané																立即										
+SETTINGS_LONG		Long	Long																长按										
+DIFFICULTY_EASY		Easy	Facile																简单										
+DIFFICULTY_EASY_SHORT		E	F																易										
+DIFFICULTY_NORMAL		Normal	Normal																普通										
+DIFFICULTY_NORMAL_SHORT		N	N																中										
+DIFFICULTY_HARD		Hard	Difficile																困难										
+DIFFICULTY_HARD_SHORT		H	D																难										
+DIFFICULTY_EXPERT		Expert	Expert																专家										
+DIFFICULTY_EXPERT_SHORT		X	X																专										
+DIFFICULTY_EXPERT_PLUS		Expert+	Expert+																专家+										
+DIFFICULTY_EXPERT_PLUS_SHORT		X+	X+																专+										
+DIFFICULTY_UNKNOWN		Unknown	Inconnu																未知										
+DIFFICULTY_UNKNOWN_SHORT		/	/																/										
+STAGE_LOCK_HINT		To continue up you need to finish some levels before this barrier.	Vous devez terminer plus de niveaux sous cette barrière pour continuer.																您需要完成其他关卡来继续进行游戏。										
+CAMPAIGN_MISSION		Mission	Mission																任务										
+CAMPAIGN_SONG		Song <color=#ffffff88>{0}</color>	Chanson  <color=#ffffff88>{0}</color>																歌曲    <color=#ffffff88>{0}</color>										
+CAMPAIGN_DIFFICULTY		Difficulty <color=#ffffff88>{0}</color>	Difficulté  <color=#ffffff88>{0}</color>																难度  <color=#ffffff88>{0}</color>										
+CAMPAIGN_TYPE		Type <color=#ffffff88>{0}</color>	Type  <color=#ffffff88>{0}</color>																类型  <color=#ffffff88>{0}</color>										
+CAMPAIGN_MISSION_COMPLETE		Mission Complete	Mission complétée																任务完成										
+CAMPAIGN_MISSION_FAILED		Mission Failed	Mission échouée																任务失败										
+CAMPAIGN_MODIFIERS		Modifiers	Modificateurs																修改项										
+CAMPAIGN_OBJECTIVES		Objectives	Objectifs																目标										
+CAMPAIGN_CHARACTERISTIC		characteristic	charactéristique																类型										
+CAMPAIGN_FINISH_LEVEL		Finish Level	NiveauTerminé																完成<br>关卡										
+LEVEL_NO_ARROWS		No Arrows	Pas de flèches																无箭头										
+LEVEL_NO_ARROWS_HINT		No Arrows	Pas de flèches																方块上没有箭头										
+LEVEL_ONE_SABER		One Saber	Un sabre																单手剑										
+LEVEL_ONE_SABER_HINT		One Saber	Un sabre																只使用一把光剑										
+LEVEL_STANDARD		Standard	Standard																普通模式										
+LEVEL_STANDARD_HINT		Standard	Standard																普通模式										
+PROMPT_INFORMATION		Information	Information																提示										
+PROMPT_HAVENT_PLAYED_YET		It looks like you haven't played Beat Saber yet. Would you like to play tutorial first?	Il semblerait que vous n'avez pas encore joué à Beat Saber. Voulez-vous faire le didacticiel?																看起来您还没有游玩过节奏光剑。是否开始新手教程？										
+PROMPT_YES		Yes	Oui																是										
+PROMPT_NO		No	Non																否										
+RESULTS_LEVEL_FAILED		Level Failed	Niveau échoué																关卡失败										
+OBJECTIVE_BAD_CUTS		Bad Cuts	Mauvaises coupes																错误挥砍										
+OBJECTIVE_COMBO		Combo	Combo																连击数										
+OBJECTIVE_FULL_COMBO		Full Combo	Combo complet																全连										
+OBJECTIVE_HANDS_MOVEMENT		Hands Movement	Mouvement des mains																手部挥动距离										
+OBJECTIVE_MISS		Miss	Manqués																遗漏										
+OBJECTIVE_SCORE		Score	Score																分数										
+MISSION_NEW_OBJECTIVE_TITLE		New Objective	Nouvel objectif																新目标										
+MISSION_HELP_MIN_SCORE_TITLE		In this mission your score must be higher than the specified minimum.	Pour cette mission, votre score doit être plus élevé que le minimum donné.																该任务要求您的分数超过最低规定分数										
+MISSION_HELP_MAX_BAD_CUTS_TITLE		In this mission you can make only limited amount of mistakes (<color=#ffffff88>BAD CUTS</color> and <color=#ffffff88>MISSED</color> notes)	Pour cette mission, vous ne pouvez faire qu'un nombre limité d'erreurs (<color=#ffffff88>MAUVAISES COUPES</color> et notes <color=#ffffff88>MANQUÉES</color>)																该任务要求您只能出现一定数量的失误(<color=#ffffff88>错误挥砍</color>和<color=#ffffff88>遗漏</color> 音符)										
+MISSION_HELP_MIN_COMBO_TITLE		In this mission you must reach specified <color=#ffffff88>combo</color> number.	Pour cette mission, vous devez atteindre le <color=#ffffff88>combo</color> donné.																该任务要求你达到一定的<color=#ffffff88>连击数</color>。										
+MISSION_HELP_MIN_HANDS_MOVEMENT_TITLE		In this mission your goal is to move your <color=#FFFFFF88>hands</color> enough to travel the <color=#FFFFFF88>specified MINIMUM distance.</color>	Pour cette mission, vous devez bouger vos <color=#FFFFFF88>mains</color> pour qu'elles se déplacent d'au moins la distance donnée.																该任务中你的目标是挥动你的<color=#FFFFFF88>双手</color>以达到<color=#FFFFFF88>最低移动距离</color>。										
+MISSION_HELP_MAX_HANDS_MOVEMENT_DESCRIPTION		Try to limit your movement as much as possible.	Essayez de limiter votre mouvement autant que possible.																尝试更小幅度地挥动你的双手										
+MISSION_HELP_MAX_HANDS_MOVEMENT		This objective is special. There is a <color=#FFFFFF88>MAXIMUM distance</color> you can move with your <color=#FFFFFF88>hands.</color>	Cet objectif est spécial. Il y a une <color=#FFFFFF88>distance MAXIMALE</color> de déplacement des <color=#FFFFFF88>mains.</color>																该目标比较特殊。<color=#FFFFFF88>最大移动距离</color>是你<color=#FFFFFF88>双手</color>可以移动的距离。										
+MISSION_HELP_MIN_HANDS_MOVEMENT_DESCRIPTION		To complete this objective you usually just need to move with your hands a lot. Don't use just your wrists but whole arms.	Pour compléter cet objectif vous devez tout simplement beaucoup bouger vos mains. Utiliser vos bras au complet et non juste vos poignets.																想完成这个目标你只需要尽量小幅度地移动你的手。不只是移动你的手腕，试试连同手臂一起。										
+MISSION_HELP_MAX_COMBO_TITLE		In this mission you have to keep your <color=#FFFFFF88>combo</color> below specified number.	Pour cette mission, vous devez garder votre <color=#FFFFFF88>combo</color> sous le nombre donné.																该任务要求你保持的你的<color=#FFFFFF88>连击数</color>低于一定数量。										
+MISSION_HELP_MAX_COMBO_TITLE_DESCRIPTION		One way how to complete this kind of objective is to make deliberate mistakes.	Une façon simple de compléter ce genre d'objectif consiste à faire des erreurs délibérément.																完成这种目标的唯一方法是犯些错误。										
+BUTTON_LEVEL_EDITOR		Level Editor	Éditeur de niveaux																关卡编辑器										
+SETTINGS_SCREEN_DISTORTION_EFFECTS		Screen Distortion Effects	Effets de distortion de l'écran																屏幕失真效果										
+CUSTOM_LEVELS_LEADERBOARDS_NOT_SUPPORTED		Leaderboards for custom levels are not supported.	Le classement pour les chansons personnalisées n'est pas pris en charge.																原版排行榜不支持自定义歌曲										
+TITLE_CUSTOM_LEVELS		Custom Levels	Niveaux personnalisés																自定义歌曲										
+SETTINGS_AUDIO		Audio	Audio																音频										
+SETTINGS_AUDIO_LATENCY_INFO		This setting can help you compensate an audio delay of your sound system. Adjust the latency value to sync audio with video. Always use your headset to do this calibration.	Ce paramètre peut vous aider à compenser pour un délai dans votre système audio. Ajustez la latence pour synchroniser l'audio et la vidéo. Utilisez toujours votre casque pour faire cette calibration.																此设置可以帮助您补偿声音系统的音频延迟。 调整延迟值以将音频与视频同步。 请在VR头显中进行此校准。										
+PLAYER_SETTINGS_AUTO_RESTART		Auto Restart on Fail	Redémarrer automatiquement après un échec																失败自动重新开始										
+SETTINGS_MAX_SHOCKWAVE_PARTICLES		Max Shockwave Particles	Nombre maximum de particules d'onde de choc																最大冲击粒子数										
+TITLE_NEW_HIGHSCORE		New Highscore	Nouveau meilleur score																新纪录										
+STEAM_STORE_DOESNT_OPEN_HINT		If the store window doesn't open after pressing the buy button, please try to purchase this item directly on Steam. We are sorry for the inconvenience.	Si la page du magasin ne s'ouvre pas après avoir appuyé sur le bouton, veuillez essayer d'acheter cet article directement sur Steam. Nous sommes désolés de l'inconvénient.																如果按下购买按钮后商店窗口没有打开，请尝试直接在Steam上购买此产品。 我们为对您造成的不便表示歉意。										
+BUTTON_ENVIRONMENTS		Environments	Environnements																环境设置										
+BUTTON_COLORS		Colors	Couleurs																颜色设置										
+BUTTON_LOGIN		Login	Connexion																登录										
+BUTTON_LOGOUT		Logout	Déconnexion																登出										
+STATUS_CONNECTED		Connected	Connecté																已连接										
+STATUS_DISCONNECTED		Disconnected	Déconnecté																连接断开										
+REQUIRES_INTERNET_INFO		Requires an active internet connection.	Requiert une connexion Internet active.																需要有效的互联网连接。										
+PLAYER_HEIGHT_MEASURE_BUTTON_HOVER_HINT		Measure and set your current height. Stand straight and make sure your floor position was configured properly in the game settings.	Mesurer et définir votre hauteur. Tenez vous droit et vérifiez que la position du plancher a été définie correctement dans les paramètres du jeu.																测量并设置您当前身高。请站直并确保你已经在游戏设置里正确设置了地板位置。										
+NORMAL_ENVIRONMENT_TYPE		Normal Environment	Environnement normal																一般环境										
+CIRCLE_ENVIRONMENT_TYPE		Circle Environment	Environnement circulaire																环形环境										
+OVERRIDE_ENVIRONMENTS_TOGGLE		Override Default Environments	Utiliser un environnement spécifique																覆盖默认环境										
+OVERRIDE_COLORS_TOGGLE		Override Default Colors	Utiliser des couleurs spécifiques																覆盖默认颜色										
+CUSTOM_COLORS_EDITING_HINT		Only custom color schemes can be edited.	Seuls les schémas de couleur personnalisés peuvent être modifiés.																只有自定义配色方案可以被编辑										
+PREVIOUS_COLOR_HINT		Previous Color	Couleur précédente																上一个颜色										
+SETTINGS_OVERRIDE_AUDIO_LATENCY		Override Audio Latency	Définir la latence audio																强制音频延迟										
+LEADERBOARDS_LOADING_FAILED		Oops something went wrong. You may want to check your internet connection.	Oups! Quelque chose n'a pas marché. Vérifiez votre connexion Internet.																啊呀出错了。请检查你的网络连接										
+LEADERBOARDS_NOT_AVAILABLE		Leaderboards not available.\nProbably you are not signed in or your use of online features is restricted.	Classement indisponible. Vous n'êtes probablement pas connecté ou votre accès aux fonctionnalités en ligne est restreint.																无法使用排行榜功能。 \n可能由于您尚未登录或您的网络受到限制										
+LEVEL_SELECTION_BUTTON		Level Selection	Sélection de niveau																关卡选择										
+HOW_TO_PLAY_BUTTON		How To Play	Comment jouer																如何游玩										
+LOGOUT_BUTTON		Logout	Déconnexion																登出										
+PRIVACY_POLICY_BUTTON		Privacy Policy	Politique de confidentialité																隐私政策										
+PLAYER_SETTINGS_AUTOMATIC_PLAYER_HEIGHT		Automatic Player Height	Hauteur du joueur automatique																自动调整玩家高度										
+LEVEL_360DEGREE		360 Degree	360 degrés																360°模式										
+LEVEL_360DEGREE_HINT		360 Degree	360 degrés																360°模式										
+LEVEL_90DEGREE		90 Degree	90 degrés																90°模式										
+LEVEL_90DEGREE_HINT		90 Degree	90 degrés																90°模式										
+BUTTON_OPEN_MUSIC_PACK		Open Music Pack	Ouvrir le pack de musique																打开曲包										
+BUY_VIEW_INFO_TEXT		Buying complete music pack is cheaper than buying all the songs individually.	Acheter un pack de musique complet est moins cher que d'acheter les chansons individuellement.																购买完整曲包将会比单独购买每首歌曲更便宜										
+ERROR_LOADING_DATA_NO_INTERNET_MESSAGE		Error loading data. You may want to check your internet connection.	Échec du chargement des données. Vérifiez votre connexion Internet.																加载数据时出错，请检查网络连接										
+ERROR_LOADING_DATA		Error loading data.	Échec du chargement des données.																加载数据时出错										
+DOWNLOADING		Downloading	Téléchargement																下载中...										
+PREPARING_TO_DOWNLOAD		Preparing to download	Préparation du téléchargement																正在准备下载										
+MUSIC_PACKS_TABBAR_TITLE		Music Packs	Packs de musique																音乐包										
+PLAYLISTS_TABBAR_TITLE		Playlists	Listes de lecture																播放列表										
+90_PLAYLIST_NAME		Songs with 90 Degree Levels	Chansons avec des niveaux à 90 degrés																含有90°模式的歌曲										
+360_PLAYLIST_NAME		Songs with 360 Degree Levels	Chansons avec des niveaux à 360 degrés																含有360°模式的歌曲										
+ALL_SONGS_PLAYLIST_NAME		All Songs	Toutes les chansons																所有歌曲										
+USER_PLAYLIST_NAME		Favorites	Favoris																最爱										
+INFO_AVERAGE_NOTES_PER_SECOND		Average Notes per Second	Nombre de notes par seconde moyen																平均每秒方块数										
+INFO_SONG_DURATION		Song Duration	Durée de la chanson																歌曲时长										
+PLAYER_SETTINGS_SFX_VOLUME		SFX Volume	Volume des effets sonores																音效音量										
+OST_&_EXTRA_TABBAR_TITLE		OST & Extras	BO et extras																原声集和其他										
+PROMPT_HAVENT_PLAYED_360_YET		Playing 360 degree levels requires you to rotate around freely. We advise you to either hang the cable from the ceiling or use a wireless solution.	Jouer à 360 degrés nécessite des rotations libres. Nous vous recommandons d'attacher le câble de votre casque au plafond ou d'utiliser une solution sans fil.																游玩360度关卡需要你能自由转身。我们推荐您将VR连接线悬挂到天花板或使用无线VR方案。										
+PROMPT_OK		OK	OK																了解										
+AGREE_TO_PRIVACY_POLICY_LABEL		By clicking Continue you are agreeing to our privacy policy.	En appuyant sur Continuer, vous acceptez notre politique de confidentialité.																点击继续按钮表示同意我们的隐私政策										
+LEADERBOARDS_NOT_INITIALIZED_ERROR		Not initialized.	Non initialisées.																未初始化										
+LEADERBOARDS_SOMETHING_WENT_WRONG_ERROR		Oops something went wrong.	Oups! Quelque chose n'a pas marché.																啊呀出错了										
+LEADERBOARDS_PLATFORM_SERVICES_ERROR		Leaderboards not available. Probably you are not signed in or your use of online features is restricted.	Classement indisponible. Vous n'êtes probablement pas connecté ou votre accès aux fonctionnalités en ligne est restreint.																无法使用排行榜功能.    可能由于您尚未登录或您的网络受到限制										
+LEADERBOARDS_NO_MODIFIERS_TITLE		Top without modifiers	Top sans modificateurs																排行(未使用修改项)										
+LEADERBOARDS_MIXED_LEADERBOARDS_TITLE		Top mixed	Top mélangé																排行(所有)										
+EMPTY_FAVORITES_LIST_INFO		No songs have been favorited, press the heart icon next to a song's name to add it to favorites.	Aucune chanson n'a été marquée comme favori. Appuyez sur le cœur à côté du nom d'une chanson pour l'ajouter ici.																收藏夹还是空的，点击心型按钮将您喜爱的歌曲加入收藏夹										
+EULA_TITLE		End User License Agreement	Contrat de license d'utilisateur final																终止用户许可协议										
+PRIVACY_POLICY_TITLE		Privacy Policy	Politique de confidentialité																隐私政策										
+ONLINE_SERVICES_TITLE		Online Services	Services en ligne																在线服务										
+DISABLE_ONLINE_SERVICES_WARNING_INFO		You are about to disable online services. Functionality like leaderboards will stop working. All your personal data stored on our servers including your scores in leaderboards will be removed. Do you really want to disable online services?	Vous vous apprêtez à désactiver les services en ligne. Certaines fonctionalités telles le classement arrêteront de fonctionner. Toutes vos informations personnelles stockées sur nos serveurs seront supprimées. Êtes-vous sûr de vouloir désactiver les services en ligne?																您将要禁用在线服务。如排行榜之类的功能将停止工作。您存储在我们服务器上的所有个人数据（包括您在排行榜中的得分）将被删除。您真的要禁用在线服务吗？										
+TITLE_WARNING		Warning	Avertissement																警告										
+BUTTON_DISABLE_ONLINE_SERVICES		Disable online services	Désactiver les services en ligne																禁用在线服务										
+BUTTON_ENABLE		Enable	Activer																开启										
+BUTTON_DONT_ENABLE		Don't enable	Ne pas activer																不要开启										
+SETTINGS_ONLINE_SERVICES_INFO		Online services are required for leaderboards functionality.	Les services en ligne sont requis pour l'affichage du classement.																排行榜功能需要在线服务。										
+SETTINGS_ONLINE_SERVICES_TOGGLE		Online services enabled	Services en ligne activés																在线服务已开启										
+ONLINE_SERVICES_OPTIN_INFO		Before you start using our leaderboards you need to enable our online services. This is required to show the best players and to submit your scores. Do you want to enable online services?	Avant de commencer à utiliser le classement vous devez activer les services en ligne. Ceux-ci sont requis pour afficher les meilleurs joueurs et soumettre vos scores. Voulez-vous activer les services en ligne?																在开始使用我们的排行榜之前，您需要启用我们的在线服务。 这是显示最佳玩家和提交分数所必需的。 您要启用在线服务吗？										
+EMPTY_CUSTOM_SONG_LIST_INFO		You don't have any custom songs.	Vous n'avez pas de chansons personnalisées.																您还没有任何的自定义歌曲										
+MENU_CONTROLLERS_TRANSFORM		Controllers	Manettes																手柄										
+BUTTON_RESET		Reset	Réinitialiser																重置										
+TITLE_POSITION_X		Position X	Position X																X轴位置										
+TITLE_POSITION_Y		Position Y	Position Y																Y轴位置										
+TITLE_POSITION_Z		Position Z	Position Z																Z轴位置										
+TITLE_ROTATION_X		Rotation X	Rotation X																X轴旋转										
+TITLE_ROTATION_Y		Rotation Y	Rotation Y																Y轴旋转										
+TITLE_ROTATION_Z		Rotation Z	Rotation Z																Z轴旋转										
+MENU_OCULUS_MRC		MRC	Capture en réalité mixte																混合现实捕捉(MRC)										
+SETTINGS_OCULUS_MRC		MRC (Beta)	Capture en réalité mixte (bêta)																混合现实捕捉(MRC)(测试版)										
+SETTINGS_OCULUS_MRC_INFO		Mixed Reality Capture uses an external camera, such as a webcam, to capture real-world images, against a green-screen, and combine them with a scene generated by a mixed reality supported VR app to create a single blended scene.   For more information search for Getting Started With Mixed Reality Capture in Oculus Documentation.	La capture en réalité mixte utilise une caméra externe (telle qu'une webcam) pour capturer des images du monde réel devant un écran vert et combine ces images avec la scène générée par une application en réalité virtuelle qui prend en charge la réalité mixte pour créer une scène unique mélangée.  Pour plus d'information, cherchez « Getting Started With Mixed Reality Capture » (en anglais seulement) dans la documentation Oculus.																混合现实捕获使用外部摄像头（例如webcam）在绿屏上捕获真实世界的图像，并将它们与混合现实支持的VR应用程序生成的场景结合起来以创建单个混合场景。         有关更多信息，请在Oculus文档中搜索《Getting Started With Mixed Reality Capture》。										
+SETTINGS_OCULUS_MRC_WARNING		Mixed Reality Capture is in development and can cause bad performance. We are continuing to improve the experience, and the set up flow may change.	La capture en réalité mixte est en développement et peut affecter négativement la performance du jeu. Nous continuons à améliorer l'expérience et la configuration pourrait donc changer.																混合现实捕获正在开发中，可能会导致性能下降。 我们将继续改善体验，并且设置流程可能会更改变。										
+PLAYER_SETTINGS_SABER_TRAIL_INTENSITY		Trail Intensity	Intensité de la trainée																光剑尾迹强度										
+PLAYING_CAMPAIGN_PRESENCE		Playing Campaign	Joue à la campagne																正在玩闯关模式										
+PLAYING_TUTORIAL_PRESENCE		Playing Tutorial	Joue au didacticiel																正在进行新手教程										
+BROWSING_MENUS_PRESENCE		Browsing Menus	Navigue les menus																正在浏览菜单										
+LEADERBOARDS_CURRENT_MODIFIERS_ONLY_TITLE		Top (only with current modifiers)	Classement (seulement avec les modificateurs sélectionnés)																排行(使用当前修改项)										
+LABEL_SERVER_NAME		Server Name	Nom du serveur																服务器名称										
+LABEL_PLAYER_COUNT		Players	Joueurs																玩家										
+BUTTON_SERVER_FILTER		Filter	Filtrer																筛选										
+BUTTON_CREATE_SERVER		Create	Créer																创建										
+BUTTON_INTERNET_SERVER_ORIGIN		Internet	Internet																网络										
+BUTTON_LOCAL_SERVER_ORIGIN		Local	Local																本地										
+LABEL_SERVER		Server	Serveur																服务器										
+LABEL_PASSWORD_PROTECTED		Password Protected	Protégé par un mot de passe																密码保护										
+LABEL_PASSWORD		Password	Mot de passe																密码										
+LABEL_MAX_NUMBER_OF_PLAYERS		Max Number of Players	Nombre maximal de joueurs																最大玩家数										
+LABEL_ALLOWED_DIFFICULTY		Allowed Difficulty	Difficulté permise																允许难度										
+LABEL_ALLOWED_MUSIC_PACKS		Allowed Music Packs	Packs de musique permis																允许曲包										
+LABEL_DISCOVERABLE_ON_INTERNET		Discoverable on Internet	Découvrable sur Internet																房间可公开查找										
+BUTTON_MULTIPLAYER		Online	En ligne																联机模式										
+AVATAR_CLOTHES		Clothes	Vêtements																衣服										
+ALL_LEVEL_PACKS		All	Tous																全部										
+BUILT_IN_LEVEL_PACKS		Built-in	Intégrés																内置										
+BEATMAP_DIFFICULTY_ALL		All	Toutes																全部										
+BUTTON_EDIT_AVATAR		Avatar	Avatar																角色造型										
+LOBBY_START_GAME		Start	Démarrer																开始										
+LOBBY_SPECTATOR		Spectator	Spectateur																观看者										
+LOBBY_READY		Ready	Prêt																准备										
+LOBBY_SELECT_LEVEL		Select Level	Sélectionner un niveau																选择歌曲										
+LOBBY_SET_MODIFIERS		Set Modifiers	Définir les modificateurs																选择修改项										
+LABEL_FILTER_BY_DIFFICULTY		Filter By Difficulty	Filtrer par difficulté																按难度筛选										
+LABEL_DIFFICULTY		Difficulty	Difficulté																难度										
+LABEL_FILTER_BY_MUSIC_PACKS		Filter By Music Packs	Filtrer par pack de musique																按曲包筛选										
+LABEL_MUSIC_PACKS		Music Packs	Packs de musique																曲包										
+LABEL_FILTER_SHOW_FULL		Show Full	Afficher tout																显示全部										
+LABEL_FILTER_SHOW_PROTECTED		Show Protected	Afficher protégés																显示未解锁										
+LABEL_CONNECTION_ERROR		Connection Error	Erreur de connexion																连接出错										
+CONNECTION_FAILED_UNKNOWN		Could not connect to the server.<br>Check your internet connection and try again	Impossible de se connecter au serveur.<br>Vérifiez votre connexion Internet et réessayez.																无法连接至服务器<br>请检查您的网络连接后再次尝试										
+CONNECTION_FAILED_SERVER_UNREACHABLE		Could not connect to the server.<br>Check your internet connection and try again	Impossible de se connecter au serveur.<br>Vérifiez votre connexion Internet et réessayez.																无法连接至服务器<br>请检查您的网络连接后再次尝试										
+CONNECTION_FAILED_SERVER_DOES_NOT_EXIST		Could not connect to the server.<br>Server does not exist	Impossible de se connecter au serveur.<br>Le serveur n'existe pas																无法连接至服务器<br>服务器不存在										
+CONNECTION_FAILED_SERVER_AT_CAPACITY		Could not connect to the server.<br>Server is full	Impossible de se connecter au serveur.<br>Le serveur est rempli																无法连接至服务器<br>服务器已满										
+CONNECTION_FAILED_VERSION_MISMATCH		Could not connect to the server.<br>Update your game and try again	Impossible de se connecter au serveur.<br>Mettez votre jeu à jour et réessayez.																无法连接至服务器<br>请更新游戏后再次尝试										
+CONNECTION_FAILED_INVALID_PASSWORD		Invalid password	Mot de passe non valide																密码无效										
+CONNECTION_FAILED_MASTER_SERVER_UNREACHABLE		Could not connect to the server.<br>Check your internet connection and try again	Impossible de se connecter au serveur.<br>Vérifiez votre connexion Internet et réessayez.																无法连接至服务器<br>请检查您的网络连接后再次尝试										
+CONNECTION_FAILED_MASTER_SERVER_NOT_AUTHENTICATED		Could not connect to the server.<br>Check your internet connection and try again	Impossible de se connecter au serveur.<br>Vérifiez votre connexion Internet et réessayez.																无法连接至服务器<br>请检查您的网络连接后再次尝试										
+CONNECTION_FAILED_NETWORK_NOT_CONNECTED		Could not connect to the network.<br>Check your internet connection and try again	Impossible de se connecter au serveur.<br>Vérifiez votre connexion Internet et réessayez.																无法连接至服务器<br>请检查您的网络连接后再次尝试										
+LABEL_INVALID_PASSWORD		Invalid Password	Mot de passe non valide																密码无效										
+TEXT_INVALID_PASSWORD		You password was incorrect	Votre mot de passe est incorrect																你输入的密码有误										
+PLAYER_NAME		Player Name	Nom du joueur																玩家名字										
+SUGGESTED_BEATMAP		Suggested Beatmap	Chanson suggérée																提议歌曲										
+SUGGESTED_MODIFIERS		Suggested Modifiers	Modificateurs																提议修改项										
+MUSIC_PACK		Music Pack	Pack de musique																曲包										
+DIFFICULTY		Difficulty	Difficulté																难度										
+BUTTON_JOIN_SERVER		Join	Rejoindre																加入										
+LEVEL_END_ACTION_QUIT		Quit	Quitter																离开										
+LEVEL_END_ACTION_RESTART		Restart	Recommencer																重新开始										
+LEVEL_END_ACTION_MULTIPLAYER_INACTIVE		Multiplayer Inactive	Multijoueur désactivé																多人游戏无效										
+LEVEL_END_ACTION_LOST_CONNECTION		Connection Lost	Connexion perdue																连接丢失										
+LEVEL_END_ACTION_STARTUP_FAILED		Startup Failed	Échech du démarrage																启动失败										
+LEVEL_END_ACTION_HOST_ENDED_LEVEL		Host Ended Level	L'hôte a arrêté le niveau																主机结束关卡										
+TITLE_QUIT_LOBBY_CONFIRMATION		Quit Lobby	Quitter le salon																退出大厅										
+TEXT_QUIT_LOBBY_CONFIRMATION		Are you sure you want to quit lobby?	Êtes-vous sûr de vouloir quitter le salon?																你确定想要退出大厅吗?										
+NO_BEATMAP_SELECTED		No Beatmap Selected	Aucune chanson sélectionnée																尚未选择歌曲										
+NO_MODIFIERS		No Modifiers	Aucun modificateur																无修改项										
+LABEL_OST_AND_EXTRA		OST & Extras	BO et extras																原声集和其他										
+LABEL_CUSTOM_LEVELS		Custom Levels	Niveaux personnalisés																自定义歌曲										
+LABEL_FAVORITES		Favorites	Favoris																收藏夹										
+LABEL_ALL_SONGS		All Songs	Toutes les chansons																全部歌曲										
+TITLE_FILTER_PARAMETERS		Filter Parameters	Paramètres de filtre																筛选参数										
+LABEL_NO_FILTERS		No Filters	Aucun filtre																无筛选										
+LABEL_FILTER_BY_CHARACTERISTIC		Filter By Characteristics	Filtrer par charactéristique																按类型筛选										
+LABEL_CHARACTERISTIC		Characteristics	Charactéristiques																类型										
+LABEL_CLEAR		Clear	Effacer																清除										
+MP_WAITING_FOR_OTHER_PLAYERS		Waiting for Other Players	En attente d'autres joueurs																正在等待其他玩家										
+PLAYERS_GET_READY		Players Get Ready	Joueurs, apprêtez-vous																玩家们准备就绪										
+IN_GAME_PLAYER_LABEL		Player	Joueur																玩家										
+NEXT_BEATMAP		Next Beatmap	Prochaine chanson																下一首歌曲										
+NO_BEATMAP		No Beatmap	Aucune chanson																无歌曲										
+KICK_PLAYER		Kick	Éjecter																踢出										
+USE_BUTTON		Use	Utiliser																使用										
+TITLE_AVATAR		Avatar	Avatar																角色造型										
+AVATAR_FACIAL_HAIR		Facial Hair	Poil facial																胡须										
+AVATAR_HANDS		Hands	Mains																手部										
+AVATAR_SKIN		Skin	Peau																肤色										
+AVATAR_HAIR		Hair	Cheveux																头发										
+AVATAR_EYES		Eyes	Yeux																眼睛										
+AVATAR_MOUTH		Mouth	Bouche																嘴										
+AVATAR_GLASSES		Glasses	Lunettes																眼镜										
+FILTER_BY_OWNED_SONGS		Owned Songs	Filtrer par chansons possédées																已拥有歌曲										
+FILTER_BY_NOT_PLAYED_YET		Not Played Yet	Filtrer par chansons non jouées																尚未游玩										
+FILTER_BY_MIN_BPM		Filter by Min BPM	Filtrer par BPM minimum																限制最低BPM										
+MIN_BPM		Min BPM	BPM minimum																最低BPM										
+FILTER_BY_MAX_BPM		Filter by Max BPM	Filtrer par BPM maximum																限制最高BPM										
+MAX_BPM		Max BPM	BPM maximum																最高BPM										
+LABEL_FILTER_BY_TEXT		Filter by Text	Filtrer par texte																按文字筛选										
+LABEL_TEXT		Text	Texte																文字										
+NO_ALLOWED_BEATMAP_INFO		This level doesn't contain any allowed characteristic or difficulty	Ce niveau ne contient aucune charactéristique ou difficulté permise																此关卡不包含任何允许的特征或难度										
+BUTTON_RANDOMIZE		Randomize	Aléatoire																随机										
+AVATAR_CLOTHES_BASKET		Basket	Débardeur																篮球服										
+AVATAR_CLOTHES_DRESS		Dress	Jupe																连衣裙										
+AVATAR_CLOTHES_HOODIE		Hoodie	Sweat																连帽衫										
+AVATAR_CLOTHES_JACKET		Jacket	Blouson																夹克										
+AVATAR_CLOTHES_JUMPSUIT		Jumpsuit	Salopette																连身裤										
+AVATAR_CLOTHES_ROCK		Rock	Rock																摇滚风										
+AVATAR_CLOTHES_TRACKSUIT		Tracksuit	Survêtement																运动装										
+AVATAR_CLOTHES_VEST		Vest	Veste																背心										
+AVATAR_EYES_EYES1		1	1												1				1										
+AVATAR_EYES_EYES2		2	2												2				2										
+AVATAR_EYES_EYES3		3	3												3				3										
+AVATAR_EYES_EYES4		4	4												4				4										
+AVATAR_EYES_EYES5		5	5												5				5										
+AVATAR_EYES_EYES6		6	6												6				6										
+AVATAR_EYES_EYES7		7	7												7				7										
+AVATAR_EYES_EYES8		8	8												8				8										
+AVATAR_EYES_EYES9		9	9												9				9										
+AVATAR_EYES_EYES10		10	10												10				10										
+AVATAR_EYES_EYES11		11	11												11				11										
+AVATAR_EYES_EYES12		12	12												12				12										
+AVATAR_FACIALHAIR_NONE		None	Aucun																无										
+AVATAR_FACIALHAIR_BEARD01		Beard 1	Barbe 1																唇下胡子1										
+AVATAR_FACIALHAIR_BEARD02		Beard 2	Barbe 2																唇下胡子2										
+AVATAR_FACIALHAIR_BEARD03		Beard 3	Barbe 3																唇下胡子3										
+AVATAR_FACIALHAIR_MOUSTACHE01		Moustache 1	Moustache 1																唇上胡子1										
+AVATAR_FACIALHAIR_MOUSTACHE02		Moustache 2	Moustache 2																唇上胡子2										
+AVATAR_GLASSES_NONE		None	Aucune																无										
+AVATAR_GLASSES_GLASSES01		Glasses 1	Lunettes 1																眼镜1										
+AVATAR_GLASSES_GLASSES02		Glasses 2	Lunettes 2																眼镜2										
+AVATAR_HEAD_NONE		None	Aucun																无										
+AVATAR_HEADTOP_BEDHEAD		Bed Head	Tête de lit																睡不醒										
+AVATAR_HEADTOP_BOB		Bob	Bob																短发										
+AVATAR_HEADTOP_DOUBLETROUBLE		Double Trouble	Double chignon																双重烦恼										
+AVATAR_HEADTOP_EMO		Emo	Emo																杀马特										
+AVATAR_HEADTOP_HALFSHAVED		Half Shaved	Mi-rasé																半剃										
+AVATAR_HEADTOP_HEARTBREAK		Heartbreak	Cœur brisé																心碎										
+AVATAR_HEADTOP_HIPPIE		Hippie	Hippie																嬉皮士										
+AVATAR_HEADTOP_LONGBANGS		Long Bangs	Longue frange																长刘海										
+AVATAR_HEADTOP_LOOSE		Loose	Relâché																蓬松										
+AVATAR_HEADTOP_MAGICIAN		Magician	Magicien																魔术师										
+AVATAR_HEADTOP_NANNY		Nanny	Grand-mère																保姆										
+AVATAR_HEADTOP_NORMIE		Normie	Normie																诺米										
+AVATAR_HEADTOP_ONFIRE		OnFire	En feu																火										
+AVATAR_HEADTOP_POLOCAP		Polo Cap	Casquette																马球帽										
+AVATAR_HEADTOP_PONYTAIL		Ponytail	Queue de cheval																马尾辫										
+AVATAR_HEADTOP_PUNK		Punk	Punk																朋克										
+AVATAR_HEADTOP_SCIFI		Scifi	Science-fiction																科幻										
+AVATAR_HEADTOP_SULTAN		Sultan	Sultan																苏丹										
+AVATAR_HEADTOP_SWEATBAND		Sweat Band	Bandeau																吸汗带										
+AVATAR_HEADTOP_UNTIDY		Untidy	Ébouriffé																凌乱										
+AVATAR_HEADTOP_WETHAIR		Wet Hair	Mouillé																潮湿										
+AVATAR_HEADTOP_WINDSWEPT		Windswept	Venteux																风吹乱										
+AVATAR_HEADTOP_WINTERHAT		Winter Hat	Tuque																保暖帽										
+AVATAR_HEADTOP_WIZARD		Wizard	Sorcier																巫师帽										
+AVATAR_MOUTH_MOUTH1		1	1												1				1										
+AVATAR_MOUTH_MOUTH2		2	2												2				2										
+AVATAR_MOUTH_MOUTH3		3	3												3				3										
+AVATAR_MOUTH_MOUTH4		4	4												4				4										
+AVATAR_MOUTH_MOUTH5		5	5												5				5										
+AVATAR_MOUTH_MOUTH6		6	6												6				6										
+AVATAR_MOUTH_MOUTH7		7	7												7				7										
+AVATAR_MOUTH_MOUTH8		8	8												8				8										
+AVATAR_MOUTH_MOUTH9		9	9												9				9										
+AVATAR_MOUTH_MOUTH10		10	10												10				10										
+AVATAR_MOUTH_MOUTH11		11	11												11				11										
+AVATAR_MOUTH_MOUTH12		12	12												12				12										
+AVATAR_HANDS_FINGERLESS		Fingerless Gloves	Gants sans doigts																露指手套										
+AVATAR_HANDS_BAREHANDS		Bare Hands	Mains nues																徒手										
+TITLE_EDIT_AVATAR		Edit Avatar	Modifier l'avatar																编辑角色										
+TITLE_CREATE_AVATAR		Create Your Avatar	Créez votre avatar																创建角色										
+BUTTON_DISCONNECT		Disconnect	Déconnexion																断开连接										
+BUTTON_GIVE_UP		Give Up	Abandonner																放弃										
+BUTTON_RESUME		Resume	Continuer																继续										
+LABEL_SERVER_CODE		Server Code	Code de serveur																房间号										
+TITLE_CLIENT_DISCONNECTED		Client Disconnected	Client déconnecté																客户端连接断开										
+BUTTON_RECOMMEND		Recommend	Recommander																推荐										
+MULTIPLAYER_DISCLAIMER		If you play in multiplayer mode, other players will be able to see your username, avatar, and other information necessary to enable you to play multiplayer games.	Si vous jouez en multijoueur, les autres joueurs pourront voir votre nom d'utilisateur, votre avatar et d'autres informations nécessaires vous permettant de jouer des parties à plusieurs joueurs.																在联机模式中，你需要让其他玩家看到你的昵称、角色造型和其他一些必要的信息以继续游玩该模式。										
+MP_MISSING_SONG_ENTITLEMENT		Missing Song Entitlement	Droit de chanson manquant																缺少歌曲授权										
+TITLE_RECOMMEND_LEVEL		Recommend Level	Niveau recommandé																推荐关卡										
+LABEL_JOINING_LOBBY		Joining Lobby	Connexion au salon																进入大厅										
+BUTTON_SELECT		Select	Sélectionner																选择										
+TITLE_SELECT_LEVEL		Select Level	Sélectionner le niveau																选择关卡										
+CONFIRM_KICK		Confirm Kick	Confirmer l'éjection																确认踢出										
+COUNTDOWN_GO		GO!	PARTEZ!																冲！										
+TITLE_CLIENT_SETUP		Client Setup	Configuration du client																客户端设置										
+TITLE_GAME_STARTING		Game Starting	Début de la partie																游戏开始										
+TITLE_SUGGEST_MODIFIERS		Suggest Modifiers	Suggérer des modificateurs																建议修改项										
+TITLE_GAME_BROWSER		Game Browser	Navigateur de parties																浏览列表										
+LABEL_CREATE_SERVER		Create Server	Créer un serveur																创建房间										
+TITLE_JOIN_SERVER		Join Server	Rejoindre un serveur																加入房间										
+TITLE_GAME_SERVER_FILTER		Game Servers Filter	Filtre de serveurs																服务器筛选器										
+TITLE_HOST_SETUP		Host Setup	Configuration de l'hôte																房主设定										
+TITLE_SELECT_MODIFIERS		Select Modifiers	Sélectionner des modificateurs																选择修改项										
+LABEL_MULTIPLAYER_MODE_SELECTION		Multiplayer Mode Selection	Sélection du mode multijoueur																多人游戏模式选择										
+LABEL_JOIN_QUICK_PLAY		Join Quick Play	Partie rapide																快速匹配										
+LABEL_JOIN_VIA_CODE		Join via Code	Avec un code																输入房间号加入										
+LABEL_JOINING_QUICK_PLAY		Joining Quick Play	Connexion à une partie rapide																正在快速匹配										
+LABEL_JOINING_GAME		Joining Game	Connexion à la partie																正在加入游戏										
+LABEL_CREATING_SERVER		Creating Server	Création du serveur																正在创建房间										
+LABEL_MULTIPLAYER_DISCLAIMER		Multiplayer Disclaimer	Avertissement																多人模式免责声明										
+TITLE_QUICK_PLAY_LOBBY		Quick Play Lobby	Salon de partie rapide																快速游戏大厅										
+MODIFIER_ALL		All	Tous																全部										
+MODIFIER_NONE		None	Aucun																无										
+BUTTON_OBSERVE_NEXT		Next	Prochain																下一个										
+BUTTON_OBSERVE_PREV		Previous	Précédent																上一个										
+BUTTON_DO_NOT_AGREE_AND_QUIT		Do Not Agree and Quit	Ne pas accepter et quitter																不同意并退出										
+BUTTON_AGREE		Agree	Accepter																同意										
+SETTINGS_ENABLE_OPEN_PARTY		Enable Open Party																	启用公开聚会										
+TITLE_LOCAL_NETWORK_PLAYERS		Local Network Players	Joueurs sur le réseau local																局域网玩家										
+OPEN_DATA_PRIVACY_PAGE_BUTTON		Open Data Privacy	Ouvrir la page sur la vie privée																查看数据隐私声明										
+PRACTICE		Practice	Pratiquer																练习										
+SETTINGS_ENABLE_NETWORK_DISCOVERABILITY		Enable Network Discoverability	Activer la visibilité sur le réseau																开启网络发现										
+NO_LEVEL_SELECTED		No Level Selected	Aucun niveau sélectionné																当前未选择任何关卡										
+NEXT_LEVEL		Next Level	Prochain niveau																下一个关卡										
+SUGGESTED_LEVEL		Suggested Level	Niveau suggéré																建议关卡										
+LABEL_READY		Ready	Prêt																准备										
+LABEL_MODIFIERS		Modifiers	Modificateurs																修改项										
+LABEL_FILTER_BY_MODIFIERS		Filter by Modifiers	Filtrer par modificateur																按修改项筛选										
+LABEL_JOIN		Join	Rejoindre																加入										
+BUTTON_JOIN		Join	Rejoindre																加入										
+LABEL_JOIN_WITH_CODE		Join with Code	Rejoindre avec un code																按号码加入										
+LABEL_QUICK_PLAY		Quick Play	Partie rapide																快速匹配										
+LABEL_SERVER_BROWSER		Server Browser	Navigateur de serveurs																服务器浏览器										
+LABEL_SECRET_CODE		Secret Code	Code secret																密码										
+SETTINGS_AUDIO_LATENCY		Audio Latency	Latence audio																音频延迟										
+CHOOSE_COLOR		Choose Color	Choisir une couleur																选择颜色										
+LOBBY_AUTO_SETUP		Audio Setup	Configuration audio																音频设定										
+LOBBY_SELECT_BASED_ON_SUGGESTION		Select Based on Suggestion	Sélectionner en utilisant la suggestion																根据推荐选择										
+LOBBY_FORCE_AUTO_START		Force Auto Start	Forcer le démarrage automatique																强制自动开始										
+LOBBY_RANDOM_SONG_IF_NONE_SUGGESTED		Random Song If None Suggested	Chanson aléatoire si aucune n'est suggérée																没有推荐歌曲时随机选曲										
+LOBBY_AUTO_START_ALL_READY		Auto Start When All Ready	Démarrer automatiquement lorsque tous sont prêts																全员准备后自动开始										
+PLAYERS		Players	Joueurs																玩家										
+LABEL_CHOOSE_COLORS		Choose Colors	Choisir des couleurs																选择颜色										
+LABEL_NEXT_LEVEL		Next Level	Prochain niveau																下一关										
+LABEL_RELEASE_NOTES		Release Notes	Notes de version																更新信息										
+LABEL_UNEXPECTED_ERROR_OCCURED		An unexpected error occurred	Une erreur inattendue s'est produite																发生了预料外的错误										
+LABEL_SPECTATING_SPOT		Spectating Spot	Emplacement de spectateur																旁观视角										
+LABEL_GRANDSTAND		Grandstand	Tribune																观众席										
+TITLE_QUICK_PLAY_COUNTDOWN		Quick Play Countdown	Décompte de partie rapide																快速匹配倒计时										
+LABEL_CHECKING_SERVER_STATUS		Checking Server Status	Vérification du statut des serveurs																正在检查服务器状态										
+LABEL_MULTIPLAYER_UNAVAILABLE_ERROR		Connection Error	Erreur de connexion																连接错误										
+CREDITS_ADDITIONAL_VFX		Additional VFX	Effets visuels additionnels																额外特效										
+CREDITS_DEVELOPMENT_PROJECT_MANAGER		Development Project Manager	Chef de projet de développement																开发项目管理器										
+CREDITS_OCULUS_STUDIOS		Facebook Reality Labs	Facebook Reality Labs																脸书现实实验室										
+CREDITS_OPERATIONS_LEAD		Operations Lead	Responsable des opérations																运营主管										
+CREDITS_PRODUCER		Producer	Producteur																制作者										
+CREDITS_HEAD_OF_CONTENT_STRATEGY		Head of Content Strategy	Responsable de la stratégie de contenu																内容策略主管										
+LABEL_CANT_START_GAME_ALL_PLAYERS_SPECTATING		All players are spectating	Tous les joueurs sont spectateurs																所有玩家都在观看										
+LABEL_CANT_START_GAME_NO_SONG_SELECTED		No song selected	Aucune chanson sélectionnée																当前没有已选择的歌曲										
+LABEL_CANT_START_GAME_ALL_PLAYERS_NOT_IN_LOBBY		Not all players are back in lobby	Il manque des joueurs dans le salon																有玩家还在游戏中										
+LABEL_CANT_START_GAME_DO_NOT_OWN_SONG		Do not own the song	Ne possède pas cette chanson																未拥有此歌曲										
+LABEL_DO_NOT_OWN_SONG		You do not own this song	Vous ne possédez pas cette chanson																你没拥有该曲目										
+BUTTON_PREVIOUS		Previous	Précédent																预览										
+BUTTON_CREATE_AVATAR		Create Avatar	Créer mon avatar																创建人物										
+LABEL_SEARCH		Search	Rechercher																搜索										
+LABEL_WAITING_FOR_SONG_DOWNLOAD		Downloading song	Téléchargement de la chanson																正在下载歌曲										
+BUTTON_END_GAME		End Game	Arrêter																结束游戏										
+PLAYER_OPTIONS_SP_ONLY		Singleplayer Options Only	Options solo seulement																只有单人选项										
+PLAYER_SETTINGS_NJBSO		Note Jump Offset	Décalage du saut des notes																方块出生距离偏移值										
+SETTINGS_LANGUAGE		Language	Langue																语言										
+LANGUAGE_EN		English																	英语										
+LANGUAGE_SC		Simplified Chinese																	简体中文										
+BUTTON_PLAYER_OPTIONS		Player Options	Options du joueur																玩家选项										
+BUTTON_YES		Yes	Oui																是										
+BUTTON_NO		No	Non																否										
+PLACEHOLDER_ENTER_NAME		Enter Name	Entrez un nom																输入名称										
+PLACEHOLDER_SERVER_PASSWORD		Server Password	Mot de passe du serveur																房间密码										
+DISCONNECTED_UNKNOWN		Disconnected<br>Check your internet connection and try again	Déconnecté<br>Vérifiez votre connexion Internet et réessayez																失去连接<br>检查您的网络连接，然后再试。										
+DISCONNECTED_USER_INITIATED		Disconnected<br>User initiated	Déconnecté<br>Par l'utilisateur																失去连接<br>用户已初始化。										
+DISCONNECTED_TIMEOUT		Disconnected<br>Server timeouted	Déconnecté<br>Temps de réponse du serveur excédé																失去连接<br>服务器超时退出。										
+DISCONNECTED_KICKED		Disconnected<br>You have been kicked	Déconnecté<br>Vous avez été éjecté																失去连接<br>您已被踢出。										
+DISCONNECTED_SERVER_AT_CAPACITY		Disconnected<br>Server is at capacity	Déconnecté<br>Le serveur est plein																失去连接<br>服务器已达负荷。										
+DISCONNECTED_SERVER_SHUT_DOWN		Disconnected<br>Server was shut down	Déconnecté<br>Le serveur a été fermé																失去连接<br>服务器已关闭。										
+DISCONNECTED_MASTER_SERVER_UNREACHABLE		Disconnected<br>Check your internet connection and try again.	Déconnecté<br>Vérifiez votre connexion Internet et réessayez																断线<br>检查您的互联网连接并重新尝试。										
+MULTIPLAYER_UNAVAILABLE_NETWORK_UNREACHABLE		Multiplayer Unavailable<br>Check your internet connection and try again	Multijoueur inaccessible<br>Vérifiez votre connexion Internet et réessayez																多人游戏不可用<br>检查你的网络连接，然后再试										
+MULTIPLAYER_UNAVAILABLE_SERVER_OFFLINE		Multiplayer Unavailable<br>Server is offline	Multijoueur inaccessible<br>Les serveurs sont hors-ligne																多人游戏不可用<br>服务器离线										
+MULTIPLAYER_UNAVAILABLE_UPDATE_REQUIRED		Multiplayer Unavailable<br>Beat Saber update is required	Multijoueur inaccessible<br>Mise à jour de Beat Saber requise																多人游戏不可用<br>需要更新Beat Saber。										
+MULTIPLAYER_UNAVAILABLE_MAINTENANCE_MODE		Multiplayer Unavailable<br>Maintenance ends at {0}	Multijoueur inaccessible<br>L'entretien finit à {0}																多人游戏不可用<br>维护结束于{0}。										
+MULTIPLAYER_UNAVAILABLE_UNKNOWN		Multiplayer Unavailable<br>Check your internet connection and try again	Multijoueur inaccessible<br>Vérifiez votre connexion Internet et réessayez																多人游戏不可用<br>检查你的网络连接后再尝试										
+NO_NAME_PLAYER		No Name	Sans nom																匿名										
+BUTTON_UNREADY		Unready	Pas prêt																取消准备										
+SUGGEST_BEATMAP_AND_MODIFIERS		Suggest Beatmap And Modifiers	Suggérer une chanson et des modificateurs																推荐歌曲和修改项										
+SUGGEST_BEATMAP		Suggest Beatmap	Suggérer une chanson																推荐歌曲										
+LABEL_DEFAULT		Default	Par défaut																默认										
+BUTTON_OPTIONS		Options	Paramètres																选项										
+LABEL_OPTIONS		Options	Paramètres																选项										
+COUNTDOWN_READY		READY!	À VOS MARQUES!																准备！										
+COUNTDOWN_SET		SET!	PRÊTS!																就绪！										
+LABEL_PLAYERS_MISSING_ENTITLEMENT		These players don't own this song	Ces joueurs n'ont pas cette chanson																这些玩家没有这首歌										
+LABEL_KICK_PLAYER_PROMPT		You are about to kick player {0}.<br>Are you sure?	Vous vous apprêtez à éjecter le joueur {0}.<br>Êtes-vous sûr?																你将踢出玩家{0}。<br>是否确认？										
+LABEL_MULTIPLAYER_MAINTENANCE_UPCOMING		Upcoming maintenance from {0} until {1}	Entretien prévu de {0} à {1}																服务器维护将从{0}持续至{1}										
+HINT_HELP_BUTTON		Help	Aide																帮助										
+HINT_EDITOR_BUTTON		Beatmap Editor	Éditeur de chansons																谱面编辑器										
+HINT_OPTIONS_BUTTON		Settings	Options																设置										

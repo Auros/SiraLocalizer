@@ -7,6 +7,7 @@
   "description": "Community localization support in Beat Saber.",
   "gameVersion": "1.12.2",
   "dependsOn": {
-    "BSIPA": "^4.0.0"
+    "BSIPA": "^4.0.0",
+    "SiraUtil": "^2.1.0"
   }
 }

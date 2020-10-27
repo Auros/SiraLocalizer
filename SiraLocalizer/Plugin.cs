@@ -1,4 +1,6 @@
 ﻿using IPA;
+using SiraUtil.Zenject;
+using SiraLocalizer.Installers;
 using IPALogger = IPA.Logging.Logger;
 
 namespace SiraLocalizer
@@ -9,21 +11,13 @@ namespace SiraLocalizer
         internal static IPALogger Log { get; private set; }
 
         [Init]
-        public Plugin(IPALogger logger)
+        public Plugin(IPALogger logger, Zenjector zenjector)
         {
             Log = logger;
+            zenjector.OnApp<SiraLocalizerCoreInstaller>();
         }
 
-        [OnEnable]
-        public void OnEnable()
-        {
-            
-        }
-
-        [OnDisable]
-        public void OnDisable()
-        {
-
-        }
+        [OnEnable, OnDisable]
+        public void OnState() { }
     }
 }
