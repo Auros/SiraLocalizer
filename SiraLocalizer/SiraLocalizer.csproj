@@ -128,7 +128,7 @@
   <ItemGroup>
     <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
     <None Include="Directory.Build.targets" Condition="Exists('Directory.Build.targets')" />
-    <EmbeddedResource Include="Resources\sira-locale.tsv" />
+    <None Include="Resources\sira-locale.csv" />
     <None Include="SiraLocalizer.csproj.user" Condition="Exists('SiraLocalizer.csproj.user')" />
   </ItemGroup>
   <ItemGroup>

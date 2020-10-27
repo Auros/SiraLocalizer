@@ -15,7 +15,7 @@ namespace SiraLocalizer
         public Localizer()
         {
             // Add ours FIRST
-            AddLocalizationSheetFromAssembly("SiraLocalizer.Resources.sira-locale.tsv", GoogleDriveDownloadFormat.TSV);
+            AddLocalizationSheetFromAssembly("SiraLocalizer.Resources.sira-locale.csv", GoogleDriveDownloadFormat.CSV);
         }
 
         public LocalizationAsset AddLocalizationSheet(string localizationAsset, GoogleDriveDownloadFormat type, string id, bool shadow = false)
