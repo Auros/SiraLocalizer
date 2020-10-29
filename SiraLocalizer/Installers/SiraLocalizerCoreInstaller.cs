@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using SiraLocalizer.UI;
+using Zenject;
 using SiraUtil.Interfaces;
 
 namespace SiraLocalizer.Installers
@@ -9,6 +10,9 @@ namespace SiraLocalizer.Installers
         {
             Container.Bind<ILocalizer>().WithId("SIRA.Localizer").To<Localizer>().AsSingle();
             Container.Bind<IInitializable>().To<CustomLocaleLoader>().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<LanguageManager>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<FontLoader>().AsSingle().NonLazy();
         }
     }
 }

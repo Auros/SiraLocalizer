@@ -15,6 +15,7 @@ namespace SiraLocalizer
         {
             Log = logger;
             zenjector.OnApp<SiraLocalizerCoreInstaller>();
+            zenjector.OnMenu<SiraLocalizerUIInstaller>();
         }
 
         [OnEnable, OnDisable]

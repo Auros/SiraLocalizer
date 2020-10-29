@@ -84,6 +84,10 @@
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
@@ -118,12 +122,18 @@
   <ItemGroup>
     <Compile Include="CustomLocaleLoader.cs" />
     <Compile Include="Installers\SiraLocalizerCoreInstaller.cs" />
+    <Compile Include="Installers\SiraLocalizerUIInstaller.cs" />
+    <Compile Include="UI\FontLoader.cs" />
+    <Compile Include="UI\LanguageManager.cs" />
+    <Compile Include="UI\LanguageSetting.cs" />
+    <Compile Include="UI\LanguageSettingCreator.cs" />
     <Compile Include="Localizer.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
+    <EmbeddedResource Include="Resources\fonts.assets" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
