@@ -60,6 +60,10 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Harmony">
+      <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Main">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Main.dll</HintPath>
       <Private>False</Private>
@@ -121,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomLocaleLoader.cs" />
+    <Compile Include="HarmonyPatches\TextSegmentedControl.cs" />
     <Compile Include="Installers\SiraLocalizerCoreInstaller.cs" />
     <Compile Include="Installers\SiraLocalizerUIInstaller.cs" />
     <Compile Include="UI\FontLoader.cs" />
