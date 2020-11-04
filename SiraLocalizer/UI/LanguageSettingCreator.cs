@@ -1,6 +1,6 @@
-﻿using Polyglot;
+﻿using Zenject;
+using Polyglot;
 using UnityEngine;
-using Zenject;
 
 namespace SiraLocalizer.UI
 {
@@ -10,7 +10,7 @@ namespace SiraLocalizer.UI
         private readonly SettingsNavigationController _settingsNavigationController;
         private readonly GameplaySetupViewController _gameplaySetupViewController;
 
-        private LanguageSettingCreator(DiContainer container, SettingsNavigationController settingsNavigationController, GameplaySetupViewController gameplaySetupViewController)
+        internal LanguageSettingCreator(DiContainer container, SettingsNavigationController settingsNavigationController, GameplaySetupViewController gameplaySetupViewController)
         {
             _container = container;
             _settingsNavigationController = settingsNavigationController;

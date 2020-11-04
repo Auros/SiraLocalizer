@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
+using System;
+using Zenject;
+using UnityEngine;
 using System.Linq;
 using System.Reflection;
-using TMPro;
-using UnityEngine;
-using Zenject;
+using System.Collections;
+using System.Collections.Generic;
 using Object = UnityEngine.Object;
 
 namespace SiraLocalizer.UI
@@ -22,7 +22,7 @@ namespace SiraLocalizer.UI
         
         private readonly List<TMP_FontAsset> _fallbackFontAssets = new List<TMP_FontAsset>();
 
-        private FontLoader(GameScenesManager gameScenesManager)
+        internal FontLoader(GameScenesManager gameScenesManager)
         {
             _gameScenesManager = gameScenesManager;
         }

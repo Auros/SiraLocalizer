@@ -1,6 +1,6 @@
-﻿using HarmonyLib;
-using HMUI;
+﻿using HMUI;
 using TMPro;
+using HarmonyLib;
 using UnityEngine;
 
 namespace SiraLocalizer.HarmonyPatches

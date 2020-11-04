@@ -1,5 +1,5 @@
-﻿using SiraLocalizer.UI;
-using Zenject;
+﻿using Zenject;
+using SiraLocalizer.UI;
 
 namespace SiraLocalizer.Installers
 {
@@ -7,7 +7,7 @@ namespace SiraLocalizer.Installers
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<LanguageSettingCreator>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<LanguageSettingCreator>().AsSingle();
         }
     }
 }
