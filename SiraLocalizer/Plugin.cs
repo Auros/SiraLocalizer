@@ -1,8 +1,10 @@
-﻿using HarmonyLib;
-using IPA;
+﻿using IPA;
+using HarmonyLib;
 using SiraUtil.Zenject;
-using SiraLocalizer.Installers;
 using System.Reflection;
+using IPA.Config.Stores;
+using SiraLocalizer.Installers;
+using Conf = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
 
 namespace SiraLocalizer
@@ -10,20 +12,20 @@ namespace SiraLocalizer
     [Plugin(RuntimeOptions.DynamicInit)]
     public class Plugin
     {
-        private const string kHarmonyId = "dev.auros.siralocalizer";
+        private const string kHarmonyId = "pro.sira.siralocalizer";
 
         internal static IPALogger Log { get; private set; }
 
         private readonly Harmony _harmony;
 
         [Init]
-        public Plugin(IPALogger logger, Zenjector zenjector)
+        public Plugin(Conf conf, IPALogger logger, Zenjector zenjector)
         {
             Log = logger;
 
             _harmony = new Harmony(kHarmonyId);
 
-            zenjector.OnApp<SiraLocalizerCoreInstaller>();
+            zenjector.OnApp<SiraLocalizerCoreInstaller>().WithParameters(conf.Generated<Config>());
             zenjector.OnMenu<SiraLocalizerUIInstaller>();
         }
 

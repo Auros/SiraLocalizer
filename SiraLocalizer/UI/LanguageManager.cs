@@ -1,29 +1,34 @@
-﻿using IPA.Utilities;
-using Polyglot;
-using System;
-using System.IO;
+﻿using System;
 using Zenject;
+using Polyglot;
 
 namespace SiraLocalizer.UI
 {
     internal class LanguageManager : IInitializable, IDisposable, ILocalize
     {
-        private static readonly string kSettingsFilePath = Path.Combine(UnityGame.UserDataPath, "language");
-
         public Language selectedLanguage;
+        private readonly Config _config;
+
+        internal LanguageManager(Config config)
+        {
+            _config = config;
+        }
 
         public void Initialize()
         {
             Localization.Instance.AddOnLocalizeEvent(this);
 
-            LoadLanguageFromFile();
+            if (Enum.TryParse(_config.Language, out Language language) && Localization.Instance.SupportedLanguages.Contains(language))
+            {
+                Localization.Instance.SelectLanguage(language);
+            }
         }
 
         public void Dispose()
         {
-            Localization.Instance.RemoveOnLocalizeEvent(this);
+            _config.Language = selectedLanguage.ToString();
 
-            SaveLanguageToFile();
+            Localization.Instance.RemoveOnLocalizeEvent(this);
         }
 
         public void OnLocalize()
@@ -33,46 +38,6 @@ namespace SiraLocalizer.UI
             {
                 Plugin.Log.Trace("Enforcing language " + selectedLanguage);
                 Localization.Instance.SelectLanguage(selectedLanguage);
-            }
-        }
-
-        private void LoadLanguageFromFile()
-        {
-            if (!File.Exists(kSettingsFilePath)) return;
-
-            try
-            {
-                using (var reader = new StreamReader(kSettingsFilePath))
-                {
-                    if (!Enum.TryParse(reader.ReadToEnd(), out Language language)) return;
-                    if (!Localization.Instance.SupportedLanguages.Contains(selectedLanguage)) return;
-
-                    selectedLanguage = language;
-
-                    Plugin.Log.Debug("Set language to " + selectedLanguage);
-                    Localization.Instance.SelectLanguage(selectedLanguage);
-                }
-            }
-            catch (IOException ex)
-            {
-                Plugin.Log.Error("Failed to load language from settings");
-                Plugin.Log.Error(ex);
-            }
-        }
-
-        private void SaveLanguageToFile()
-        {
-            try
-            {
-                using (var writer = new StreamWriter(kSettingsFilePath))
-                {
-                    writer.Write(selectedLanguage.ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                Plugin.Log.Error("Failed to save language to settings");
-                Plugin.Log.Error(ex);
             }
         }
     }
