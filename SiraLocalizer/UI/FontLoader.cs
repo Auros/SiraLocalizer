@@ -46,7 +46,7 @@ namespace SiraLocalizer.UI
 
         private IEnumerator LoadFontAssets()
         {
-            Plugin.Log.Info($"Loading fonts");
+            Plugin.Log.Debug($"Loading fonts");
 
             AssetBundleCreateRequest assetBundleCreateRequest = AssetBundle.LoadFromStreamAsync(Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.fonts.assets"));
             yield return assetBundleCreateRequest;
@@ -77,7 +77,7 @@ namespace SiraLocalizer.UI
                 return;
             }
 
-            Plugin.Log.Info($"Font '{name}' loaded successfully");
+            Plugin.Log.Debug($"Font '{name}' loaded successfully");
 
             _fallbackFontAssets.Add(fontAsset);
         }
@@ -102,7 +102,7 @@ namespace SiraLocalizer.UI
 
         private void ApplyFallbacks(TMP_FontAsset fontAsset, IList<TMP_FontAsset> fallbacks)
         {
-            Plugin.Log.Info($"Adding fallbacks to '{fontAsset.name}' ({(uint)fontAsset.GetHashCode()})");
+            Plugin.Log.Debug($"Adding fallbacks to '{fontAsset.name}' ({(uint)fontAsset.GetHashCode()})");
 
             fontAsset.fallbackFontAssetTable.RemoveAll(f => kFontNamesToRemove.Contains(f.name));
 

@@ -49,7 +49,7 @@ namespace SiraLocalizer.UI
 
                     selectedLanguage = language;
 
-                    Plugin.Log.Info("Set language to " + selectedLanguage);
+                    Plugin.Log.Debug("Set language to " + selectedLanguage);
                     Localization.Instance.SelectLanguage(selectedLanguage);
                 }
             }

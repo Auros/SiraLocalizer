@@ -51,7 +51,7 @@ namespace SiraLocalizer.UI
 
             _container.InstantiateComponent<LanguageSetting>(gameObject);
 
-            Plugin.Log.Info("Created language setting");
+            Plugin.Log.Debug("Created language setting");
         }
     }
 }
