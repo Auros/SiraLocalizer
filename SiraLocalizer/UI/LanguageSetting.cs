@@ -1,8 +1,8 @@
 ﻿using HMUI;
-using Polyglot;
-using System.Collections.Generic;
-using UnityEngine;
 using Zenject;
+using Polyglot;
+using UnityEngine;
+using System.Collections.Generic;
 
 namespace SiraLocalizer.UI
 {
