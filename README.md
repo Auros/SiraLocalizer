@@ -1,6 +1,7 @@
 # SiraLocalizer
  Community localization support in Beat Saber. Created by nicoco007 and Auros.
 
+ Requires [SiraUtil](https://github.com/Auros/SiraUtil/releases/latest) 2.0.0 or greater.
 # Supported Languages for the BASE GAME
  The community has unofficially translated the base game into the following languages:
 * French
