@@ -6,6 +6,9 @@
 * French
 * Chinese
 
+You can change the settings here.
+![Localization Location](https://cdn.sira.pro/images/language_option_location.png)
+
 ## French Contributors
 * [Nicolas (nicoco007)](https://github.com/nicoco007)
 
