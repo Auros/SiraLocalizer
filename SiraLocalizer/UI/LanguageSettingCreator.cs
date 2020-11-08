@@ -1,4 +1,6 @@
-﻿using Zenject;
+﻿using HMUI;
+using TMPro;
+using Zenject;
 using Polyglot;
 using UnityEngine;
 
@@ -52,6 +54,31 @@ namespace SiraLocalizer.UI
             _container.InstantiateComponent<LanguageSetting>(gameObject);
 
             Plugin.Log.Debug("Created language setting");
+
+            var textGameObject = new GameObject("SiraLocalizerContributorsText");
+            var curvedText = textGameObject.AddComponent<CurvedTextMeshPro>();
+            textGameObject.transform.SetParent(otherSettingsContent);
+            (textGameObject.transform as RectTransform).sizeDelta = new Vector2(90f, 100f);
+            textGameObject.transform.localPosition = new Vector2(0f, -75f);
+            textGameObject.transform.localScale = Vector3.one;
+            curvedText.alignment = TextAlignmentOptions.TopLeft;
+            curvedText.lineSpacing = -35f;
+            curvedText.fontSize = 3.4f;
+            curvedText.gameObject.SetActive(true);
+
+            foreach (var lang in Localization.Instance.SupportedLanguages)
+            {
+                if (lang == Language.English)
+                {
+                    continue;
+                }
+                var contributors = Localization.Get("LANGUAGE_CONTRIBUTORS", lang);
+                var name = Localization.Get("MENU_LANGUAGE_THIS", lang);
+                if (contributors != "LANGUAGE_CONTRIBUTORS")
+                {
+                    curvedText.text += $"<b>{name}</b>: <color=#bababa>{contributors}</color>\n";
+                }
+            }
         }
     }
 }
