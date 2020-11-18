@@ -8,15 +8,14 @@ MENU_LANGUAGE_THIS,Name of the language,English,Français,,,,,,,,,,,,,,,,简体�
 LANGUAGE_CONTRIBUTORS,,,nicoco007,,,,,,,,,,,,,,,,"乾杯君, WGzeyu, 暗黑幻想Dark师, 包子侯爵, 四条, 椰子",,,,,,,,,,
 HEALTH_AND_SAFETY_WARNING_TITLE,,Health And Safety Warning,Avertissement de santé et sécurité,,,,,,,,,,,,,,,,健康与安全警告,,,,,,,,,,
 HEALTH_AND_SAFETY_WARNING_CONTENT,,"A small percentage of people may experience seizures when exposed to certain lights, patterns or images even with no history of epilepsy or seizures.
+ 
+ Please read health and safety warnings in your VR headset instruction manual before playing Beat Saber. Because you may be encouraged to perform intense action with your controllers also make sure to review your surroundings and clear any obstacles in your play area before starting the game. Always remember to stay in the center of the cleared play area and do not walk around.
+ 
+ Playing Beat Saber requires high physical activity so follow the same habits as doing a regular workout. Don't forget to stretch before playing and rest regularly in between levels. Some people may experience muscle soreness. If you experience this then immediately stop playing the game and rest.","Certaines personnes peuvent souffrir de crises d'épilepsie lorsqu'elles sont exposées à certaines lumières, certains motifs ou certaines images même sans antécédents d'épilepsie.
 
-Please read health and safety warnings in your VR headset instruction manual before playing Beat Saber. Because you may be encouraged to perform intense action with your controllers also make sure to review your surroundings and clear any obstacles in your play area before starting the game. Always remember to stay in the center of the cleared play area and do not walk around.
+ Veuillez lire les avertissements de santé et de sécurité dans le manuel d'instructions de votre casque de réalité virtuelle avant de jouer à Beat Saber. Puisque vous êtes encouragé à effectuer des actions intenses avec vos manettes, vérifiez également votre environnement et éliminez tout obstacle dans votre zone de jeu avant de commencer. N'oubliez pas de rester au centre de l'aire de jeu dégagée et de ne pas vous promener.
 
-Playing Beat Saber requires high physical activity so follow the same habits as doing a regular workout. Don't forget to stretch before playing and rest regularly in between levels. Some people may experience muscle soreness. If you experience this then immediately stop playing the game and rest.
-","Certaines personnes peuvent souffrir de crises d'épilepsie lorsqu'elles sont exposées à certaines lumières, certains motifs ou certaines images même sans antécédents d'épilepsie.
-
-Veuillez lire les avertissements de santé et de sécurité dans le manuel d'instructions de votre casque de réalité virtuelle avant de jouer à Beat Saber. Puisque vous êtes encouragé à effectuer des actions intenses avec vos manettes, vérifiez également votre environnement et éliminez tout obstacle dans votre zone de jeu avant de commencer. N'oubliez pas de rester au centre de l'aire de jeu dégagée et de ne pas vous promener.
-
-Jouer à Beat Saber implique de l'activité physique intense, alors suivez les mêmes habitudes que lorsque vous faites de l'exercice normal. N'oubliez pas de vous étirer avant de jouer et de vous reposer régulèrement. Certaines personnes peuvent développer des douleurs musculaires; si cela vous arrive, arrêtez immédiatement de jouer et reposez-vous.",,,,,,,,,,,,,,,,"有小部分的人暴露在某种光线、图案或者图像时可能会引发癫痫发作即使没有癫痫病史。
+ Jouer à Beat Saber implique de l'activité physique intense, alors suivez les mêmes habitudes que lorsque vous faites de l'exercice normal. N'oubliez pas de vous étirer avant de jouer et de vous reposer régulièrement. Certaines personnes peuvent développer des douleurs musculaires; si cela vous arrive, arrêtez immédiatement de jouer et reposez-vous.",,,,,,,,,,,,,,,,"有小部分的人暴露在某种光线、图案或者图像时可能会引发癫痫发作即使没有癫痫病史。
  
  在游玩Beat Saber之前，请阅读VR设备手册中的健康与安全警告。游戏过程会让您使用手柄做出激烈的运动，所以请仔细检查周围环境并在开始游戏前清除游玩区域内所有的障碍物。请保持身处空旷的游玩区域中性并避免到处走动。
  
@@ -31,7 +30,7 @@ CREDITS_LEVEL_CREATORS,,Level Creators,Créateurs de niveaux,,,,,,,,,,,,,,,,关�
 CREDITS_3D_GRAPHICS,,3D Graphics,Graphismes 3D,,,,,,,,,,,,,,,,3D图像,,,,,,,,,,
 CREDITS_EXTRA_MUSIC_ARTISTS,,Extra Music Artists,Artistes musicaux supplémentaires,,,,,,,,,,,,,,,,其他音乐艺术家,,,,,,,,,,
 CREDITS_2D_GRAPHICS,,2D Graphics,Graphismes 2D,,,,,,,,,,,,,,,,2D图像,,,,,,,,,,
-CREDITS_THANK_YOU_NOTE,,Thanks to everyone who supported us and helped us make this game a reality!,Merci à tous ceux qui nous ont appuyés et aidés à créer ce jeu!,,,,,,,,,,,,,,,,感谢所有帮助我们完成这款游戏的人！,,,,,,,,,,
+CREDITS_THANK_YOU_NOTE,,Thanks to everyone who supported us and helped us make this game a reality!,Merci à tous ceux qui nous ont appuyés et aidés à faire de ce jeu une réalité!,,,,,,,,,,,,,,,,感谢所有帮助我们完成这款游戏的人！,,,,,,,,,,
 CREDITS_SPECIAL_THANKS,,Special thanks to,Remerciement spécial à,,,,,,,,,,,,,,,,特别鸣谢,,,,,,,,,,
 CREDITS_VFX,,VFX,Effets visuels,,,,,,,,,,,,,,,,视觉效果,,,,,,,,,,
 BUTTON_PLAY,,Play,Jouer,,,,,,,,,,,,,,,,开始,,,,,,,,,,
@@ -80,12 +79,12 @@ STATS_LEVELS_FAILED,,Levels Failed,Niveaux échoués,,,,,,,,,,,,,,,,失败关卡
 STATS_TOTAL_PLAYED_TIME,,Total Played Time,Temps total joué,,,,,,,,,,,,,,,,总游戏时长,,,,,,,,,,
 STATS_TOTAL_SCORE,,Total Score,Score total,,,,,,,,,,,,,,,,总游戏分数,,,,,,,,,,
 STATS_HAND_DISTANCE_TRAVELLED,,Hand Distance Travelled,Distance parcourue par les mains,,,,,,,,,,,,,,,,手部移动距离,,,,,,,,,,
-STATS_GOOD_CUTS,,Good Cuts,Bonnes coupes,,,,,,,,,,,,,,,,正确挥砍数,,,,,,,,,,
-STATS_BAD_CUTS,,Bad Cuts,Mauvaises coupes,,,,,,,,,,,,,,,,错误挥砍数,,,,,,,,,,
-STATS_MISSED_NOTES,,Missed Notes,Notes manquées,,,,,,,,,,,,,,,,遗漏音符数量,,,,,,,,,,
-STATS_FULL_COMBO,,Full Combo,Combo complet,,,,,,,,,,,,,,,,全连关卡数,,,,,,,,,,
+STATS_GOOD_CUTS,,Good Cuts,Bonnes coupes,,,,,,,,,,,,,,,,正确挥砍,,,,,,,,,,
+STATS_BAD_CUTS,,Bad Cuts,Mauvaises coupes,,,,,,,,,,,,,,,,错误挥砍,,,,,,,,,,
+STATS_MISSED_NOTES,,Missed Notes,Notes manquées,,,,,,,,,,,,,,,,遗漏音符,,,,,,,,,,
+STATS_FULL_COMBO,,Full Combo,Combo complet,,,,,,,,,,,,,,,,全连,,,,,,,,,,
 STATS_AVERAGE_CUT_SCORE,,Average Cut Score,Score de coupe moyen,,,,,,,,,,,,,,,,平均挥砍分数,,,,,,,,,,
-STATS_MAX_COMBO,,Max Combo,Meilleur combo,,,,,,,,,,,,,,,,最大连击数,,,,,,,,,,
+STATS_MAX_COMBO,,Max Combo,Meilleur combo,,,,,,,,,,,,,,,,最大连击,,,,,,,,,,
 STATS_HIGHSCORE,,Highscore,Meilleur score,,,,,,,,,,,,,,,,最高分数,,,,,,,,,,
 STATS_MAX_RANK,,Max Rank,Meilleur rang,,,,,,,,,,,,,,,,最高评级,,,,,,,,,,
 STATS_RANK,,rank,rang,,,,,,,,,,,,,,,,评级,,,,,,,,,,
@@ -137,8 +136,8 @@ PLAYER_SETTINGS_HEADER_GENERAL,,General Player Settings,Paramètres du joueur g�
 PLAYER_SETTINGS_HEADER_HUD,,HUD Settings,Paramètres de l'ATH,,,,,,,,,,,,,,,,HUD界面设置,,,,,,,,,,
 PLAYER_SETTINGS_HEADER_FX_SETTINGS,,FX Settings,Paramètres des effets,,,,,,,,,,,,,,,,画面特效设置,,,,,,,,,,
 CONTENT_SCORE_INFO,,"- To get <color=#ffffff88>100</color> points in one cut, perform a swing with a large starting angle, 100 degrees from where the cube is hit, and follow through after hitting the cube for 60 degrees more.
-
-- A bonus <color=#ffffff88>15</color> points will be awarded based on how close to the center of the cube the cut is made.","- Pour obtenir une coupe de <color=#ffffff99>100</color> points, effectuez un arc avec votre sabre de 100 degrés avant de frapper le cube et continuez encore 60 degrés après l'avoir coupé.
+ 
+ - A bonus <color=#ffffff88>15</color> points will be awarded based on how close to the center of the cube the cut is made.","- Pour obtenir une coupe de <color=#ffffff99>100</color> points, effectuez un arc avec votre sabre de 100 degrés avant de frapper le cube et continuez encore 60 degrés après l'avoir coupé.
 
 - Un bonus de <color=#ffffff88>15</color> points vous sera donné dépendemment de la proximité de la coupe au centre du cube.",,,,,,,,,,,,,,,,"-要想在一次挥砍中获得<color=#ffffff88>100</color>分，请以较大的初始角度挥剑，在击中方块前挥动100度并在击中方块后额外挥动60度。
  
@@ -158,14 +157,15 @@ TUTORIAL_LEAN_RIGHT,,Lean right! <sprite=1 tint=1>,Penchez-vous vers la droite! 
 TUTORIAL_LEAN_LEFT,,<sprite=3 tint=1> Lean left!,<sprite=3 tint=1> Penchez-vous vers la gauche!,,,,,,,,,,,,,,,,<sprite=3 tint=1> 身体向左倾斜！,,,,,,,,,,
 TUTORIAL_CROUCH,,Crouch!,Accroupissez-vous!,,,,,,,,,,,,,,,,蹲下！,,,,,,,,,,
 TUTORIAL_CONGRATULATIONS,,"Congratulations!
-You are ready now.",Bravo! Vous êtes maintenant prêt.,,,,,,,,,,,,,,,,"恭喜！
+ You are ready now.","Bravo!
+ Vous êtes maintenant prêt.",,,,,,,,,,,,,,,,"恭喜！
  你已经准备好了。",,,,,,,,,,
 TUTORIAL_STAND_INSIDE_AREA,,"Stand inside the marked area.
-
-Hold the <color=#00C0FF>blue</color> saber in your right hand
-and the <color=#FF0000>red</color> in your left hand.
-
-Place both sabers into these rings to start.","Mettez-vous debout à l'emplacement indiqué.
+ 
+ Hold the <color=#00C0FF>blue</color> saber in your right hand
+ and the <color=#FF0000>red</color> in your left hand.
+ 
+ Place both sabers into these rings to start.","Mettez-vous debout à l'emplacement indiqué.
  
  Tenez le sabre <color=#00C0FF>bleu</color> dans votre main droite
  et le sabre <color=#FF0000>rouge</color> dans votre main gauche.
@@ -245,6 +245,7 @@ SETTINGS_LOW,,Low,Bas,,,,,,,,,,,,,,,,低,,,,,,,,,,
 SETTINGS_HIGH,,High,Haut,,,,,,,,,,,,,,,,高,,,,,,,,,,
 SETTINGS_INSTANT,,Instant,Instantanée,,,,,,,,,,,,,,,,立即,,,,,,,,,,
 SETTINGS_LONG,,Long,Longue,,,,,,,,,,,,,,,,长按,,,,,,,,,,
+SETTINGS_JOYSTICK_SCROLLING,,Enable Joystick Scrolling,Activer le défilement par joystick,,,,,,,,,,,,,,,,启用摇杆滚动,,,,,,,,,,
 DIFFICULTY_EASY,,Easy,Facile,,,,,,,,,,,,,,,,简单,,,,,,,,,,
 DIFFICULTY_EASY_SHORT,,E,F,,,,,,,,,,,,,,,,易,,,,,,,,,,
 DIFFICULTY_NORMAL,,Normal,Normal,,,,,,,,,,,,,,,,普通,,,,,,,,,,
@@ -260,16 +261,16 @@ DIFFICULTY_UNKNOWN_SHORT,,/,/,,,,,,,,,,,,,,,,/,,,,,,,,,,
 STAGE_LOCK_HINT,,To continue up you need to finish some levels before this barrier.,Vous devez terminer plus de niveaux sous cette barrière pour continuer.,,,,,,,,,,,,,,,,您需要完成其他关卡来继续进行游戏。,,,,,,,,,,
 CAMPAIGN_MISSION,,Mission,Mission,,,,,,,,,,,,,,,,任务,,,,,,,,,,
 CAMPAIGN_SONG,,"Song
-<color=#ffffff88>{0}</color>","Chanson
+ <color=#ffffff88>{0}</color>","Chanson
  <color=#ffffff88>{0}</color>",,,,,,,,,,,,,,,,"歌曲
  
  <color=#ffffff88>{0}</color>",,,,,,,,,,
 CAMPAIGN_DIFFICULTY,,"Difficulty
-<color=#ffffff88>{0}</color>","Difficulté
+ <color=#ffffff88>{0}</color>","Difficulté
  <color=#ffffff88>{0}</color>",,,,,,,,,,,,,,,,"难度
  <color=#ffffff88>{0}</color>",,,,,,,,,,
 CAMPAIGN_TYPE,,"Type
-<color=#ffffff88>{0}</color>","Type
+ <color=#ffffff88>{0}</color>","Type
  <color=#ffffff88>{0}</color>",,,,,,,,,,,,,,,,"类型
  <color=#ffffff88>{0}</color>",,,,,,,,,,
 CAMPAIGN_MISSION_COMPLETE,,Mission Complete,Mission complétée,,,,,,,,,,,,,,,,任务完成,,,,,,,,,,
@@ -278,7 +279,8 @@ CAMPAIGN_MODIFIERS,,Modifiers,Modificateurs,,,,,,,,,,,,,,,,修改项,,,,,,,,,,
 CAMPAIGN_OBJECTIVES,,Objectives,Objectifs,,,,,,,,,,,,,,,,目标,,,,,,,,,,
 CAMPAIGN_CHARACTERISTIC,,characteristic,charactéristique,,,,,,,,,,,,,,,,类型,,,,,,,,,,
 CAMPAIGN_FINISH_LEVEL,,"Finish
-Level",NiveauTerminé,,,,,,,,,,,,,,,,完成<br>关卡,,,,,,,,,,
+Level","Terminer
+le niveau",,,,,,,,,,,,,,,,完成<br>关卡,,,,,,,,,,
 LEVEL_NO_ARROWS,,No Arrows,Pas de flèches,,,,,,,,,,,,,,,,无箭头,,,,,,,,,,
 LEVEL_NO_ARROWS_HINT,,No Arrows,Pas de flèches,,,,,,,,,,,,,,,,方块上没有箭头,,,,,,,,,,
 LEVEL_ONE_SABER,,One Saber,Un sabre,,,,,,,,,,,,,,,,单手剑,,,,,,,,,,
@@ -364,7 +366,7 @@ AGREE_TO_PRIVACY_POLICY_LABEL,,By clicking Continue you are agreeing to our priv
 LEADERBOARDS_NOT_INITIALIZED_ERROR,,Not initialized.,Non initialisées.,,,,,,,,,,,,,,,,未初始化,,,,,,,,,,
 LEADERBOARDS_SOMETHING_WENT_WRONG_ERROR,,Oops something went wrong.,Oups! Quelque chose n'a pas marché.,,,,,,,,,,,,,,,,啊呀出错了,,,,,,,,,,
 LEADERBOARDS_PLATFORM_SERVICES_ERROR,,"Leaderboards not available.
-Probably you are not signed in or your use of online features is restricted.",Classement indisponible. Vous n'êtes probablement pas connecté ou votre accès aux fonctionnalités en ligne est restreint.,,,,,,,,,,,,,,,,"无法使用排行榜功能.
+ Probably you are not signed in or your use of online features is restricted.",Classement indisponible. Vous n'êtes probablement pas connecté ou votre accès aux fonctionnalités en ligne est restreint.,,,,,,,,,,,,,,,,"无法使用排行榜功能.
  
  可能由于您尚未登录或您的网络受到限制",,,,,,,,,,
 LEADERBOARDS_NO_MODIFIERS_TITLE,,Top without modifiers,Top sans modificateurs,,,,,,,,,,,,,,,,排行(未使用修改项),,,,,,,,,,
@@ -393,8 +395,8 @@ TITLE_ROTATION_Z,,Rotation Z,Rotation Z,,,,,,,,,,,,,,,,Z轴旋转,,,,,,,,,,
 MENU_OCULUS_MRC,,MRC,Capture en réalité mixte,,,,,,,,,,,,,,,,混合现实捕捉(MRC),,,,,,,,,,
 SETTINGS_OCULUS_MRC,,MRC (Beta),Capture en réalité mixte (bêta),,,,,,,,,,,,,,,,混合现实捕捉(MRC)(测试版),,,,,,,,,,
 SETTINGS_OCULUS_MRC_INFO,,"Mixed Reality Capture uses an external camera, such as a webcam, to capture real-world images, against a green-screen, and combine them with a scene generated by a mixed reality supported VR app to create a single blended scene. 
-
-For more information search for Getting Started With Mixed Reality Capture in Oculus Documentation.","La capture en réalité mixte utilise une caméra externe (telle qu'une webcam) pour capturer des images du monde réel devant un écran vert et combine ces images avec la scène générée par une application en réalité virtuelle qui prend en charge la réalité mixte pour créer une scène unique mélangée.
+ 
+ For more information search for Getting Started With Mixed Reality Capture in Oculus Documentation.","La capture en réalité mixte utilise une caméra externe (telle qu'une webcam) pour capturer des images du monde réel devant un écran vert et combine ces images avec la scène générée par une application en réalité virtuelle qui prend en charge la réalité mixte pour créer une scène unique mélangée.
 
 Pour plus d'information, cherchez « Getting Started With Mixed Reality Capture » (en anglais seulement) dans la documentation Oculus.",,,,,,,,,,,,,,,,"混合现实捕获使用外部摄像头（例如webcam）在绿屏上捕获真实世界的图像，并将它们与混合现实支持的VR应用程序生成的场景结合起来以创建单个混合场景。
  
@@ -460,7 +462,7 @@ LEVEL_END_ACTION_RESTART,,Restart,Recommencer,,,,,,,,,,,,,,,,重新开始,,,,,,,
 LEVEL_END_ACTION_MULTIPLAYER_INACTIVE,,Multiplayer Inactive,Multijoueur désactivé,,,,,,,,,,,,,,,,多人游戏无效,,,,,,,,,,
 LEVEL_END_ACTION_LOST_CONNECTION,,Connection Lost,Connexion perdue,,,,,,,,,,,,,,,,连接丢失,,,,,,,,,,
 LEVEL_END_ACTION_STARTUP_FAILED,,Startup Failed,Échech du démarrage,,,,,,,,,,,,,,,,启动失败,,,,,,,,,,
-LEVEL_END_ACTION_HOST_ENDED_LEVEL,,Host Ended Level,L'hôte a arrêté le niveau,,,,,,,,,,,,,,,,主机结束关卡,,,,,,,,,,
+LEVEL_END_ACTION_HOST_ENDED_LEVEL,,Host Ended Level,Niveau arrêté par l'hôte,,,,,,,,,,,,,,,,主机结束关卡,,,,,,,,,,
 TITLE_QUIT_LOBBY_CONFIRMATION,,Quit Lobby,Quitter le salon,,,,,,,,,,,,,,,,退出大厅,,,,,,,,,,
 TEXT_QUIT_LOBBY_CONFIRMATION,,Are you sure you want to quit lobby?,Êtes-vous sûr de vouloir quitter le salon?,,,,,,,,,,,,,,,,你确定想要退出大厅吗?,,,,,,,,,,
 NO_BEATMAP_SELECTED,,No Beatmap Selected,Aucune chanson sélectionnée,,,,,,,,,,,,,,,,尚未选择歌曲,,,,,,,,,,
@@ -693,3 +695,4 @@ LABEL_MULTIPLAYER_MAINTENANCE_UPCOMING,,Upcoming maintenance from {0} until {1},
 HINT_HELP_BUTTON,,Help,Aide,,,,,,,,,,,,,,,,帮助,,,,,,,,,,
 HINT_EDITOR_BUTTON,,Beatmap Editor,Éditeur de chansons,,,,,,,,,,,,,,,,谱面编辑器,,,,,,,,,,
 HINT_OPTIONS_BUTTON,,Settings,Options,,,,,,,,,,,,,,,,设置,,,,,,,,,,
+HINT_EXIT_BUTTON,,Exit,Quitter,,,,,,,,,,,,,,,,退出,,,,,,,,,,
