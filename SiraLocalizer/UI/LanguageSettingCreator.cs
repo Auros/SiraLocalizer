@@ -45,8 +45,8 @@ namespace SiraLocalizer.UI
             gameObject.name = "LanguageSetting";
 
             RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
-            rectTransform.offsetMin = new Vector2(0, -21.4f);
-            rectTransform.offsetMax = new Vector2(0, -14.4f);
+            rectTransform.offsetMin = new Vector2(0, -14.2f);
+            rectTransform.offsetMax = new Vector2(0, -7.2f);
 
             LocalizedTextMeshProUGUI label = gameObject.transform.Find("Label").GetComponent<LocalizedTextMeshProUGUI>();
             label.Key = "SETTINGS_LANGUAGE";
@@ -57,13 +57,16 @@ namespace SiraLocalizer.UI
 
             var textGameObject = new GameObject("SiraLocalizerContributorsText");
             var curvedText = textGameObject.AddComponent<CurvedTextMeshPro>();
-            textGameObject.transform.SetParent(otherSettingsContent);
-            (textGameObject.transform as RectTransform).sizeDelta = new Vector2(90f, 100f);
-            textGameObject.transform.localPosition = new Vector2(0f, -75f);
-            textGameObject.transform.localScale = Vector3.one;
+
+            var textRectTransform = (RectTransform)textGameObject.transform;
+            textRectTransform.SetParent(otherSettingsContent, false);
+            textRectTransform.offsetMin = new Vector2(-45f, -7.4f);
+            textRectTransform.offsetMax = new Vector2(45f, -7.4f);
+
             curvedText.alignment = TextAlignmentOptions.TopLeft;
             curvedText.lineSpacing = -35f;
-            curvedText.fontSize = 3.4f;
+            curvedText.fontSize = 3f;
+            curvedText.fontStyle = FontStyles.Italic;
             curvedText.gameObject.SetActive(true);
 
             foreach (var lang in Localization.Instance.SupportedLanguages)
@@ -74,9 +77,9 @@ namespace SiraLocalizer.UI
                 }
                 var contributors = Localization.Get("LANGUAGE_CONTRIBUTORS", lang);
                 var name = Localization.Get("MENU_LANGUAGE_THIS", lang);
-                if (contributors != "LANGUAGE_CONTRIBUTORS")
+                if (!string.IsNullOrEmpty(contributors))
                 {
-                    curvedText.text += $"<b>{name}</b>: <color=#bababa>{contributors}</color>\n";
+                    curvedText.text += $"<b>{name}</b>   <color=#bababa>{contributors}</color>\n";
                 }
             }
         }
