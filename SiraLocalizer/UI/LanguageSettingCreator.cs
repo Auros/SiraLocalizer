@@ -1,22 +1,29 @@
 ﻿using HMUI;
 using TMPro;
+using System;
 using Zenject;
 using Polyglot;
 using UnityEngine;
+using IPA.Utilities;
+using UnityEngine.UI;
 
 namespace SiraLocalizer.UI
 {
-    internal class LanguageSettingCreator : IInitializable
+    internal class LanguageSettingCreator : IInitializable, IDisposable
     {
+        private Button _creditsToggle;
+        private CurvedTextMeshPro _credits;
         private readonly DiContainer _container;
-        private readonly SettingsNavigationController _settingsNavigationController;
         private readonly GameplaySetupViewController _gameplaySetupViewController;
+        private readonly SettingsNavigationController _settingsNavigationController;
+        private readonly StandardLevelDetailViewController _standardLevelDetailViewController;
 
-        internal LanguageSettingCreator(DiContainer container, SettingsNavigationController settingsNavigationController, GameplaySetupViewController gameplaySetupViewController)
+        internal LanguageSettingCreator(DiContainer container, GameplaySetupViewController gameplaySetupViewController, SettingsNavigationController settingsNavigationController, StandardLevelDetailViewController standardLevelDetailViewController)
         {
             _container = container;
-            _settingsNavigationController = settingsNavigationController;
             _gameplaySetupViewController = gameplaySetupViewController;
+            _settingsNavigationController = settingsNavigationController;
+            _standardLevelDetailViewController = standardLevelDetailViewController;
         }
 
         public void Initialize()
@@ -56,18 +63,18 @@ namespace SiraLocalizer.UI
             Plugin.Log.Debug("Created language setting");
 
             var textGameObject = new GameObject("SiraLocalizerContributorsText");
-            var curvedText = textGameObject.AddComponent<CurvedTextMeshPro>();
+            _credits = textGameObject.AddComponent<CurvedTextMeshPro>();
 
             var textRectTransform = (RectTransform)textGameObject.transform;
             textRectTransform.SetParent(otherSettingsContent, false);
             textRectTransform.offsetMin = new Vector2(-45f, -7.4f);
             textRectTransform.offsetMax = new Vector2(45f, -7.4f);
 
-            curvedText.alignment = TextAlignmentOptions.TopLeft;
-            curvedText.lineSpacing = -35f;
-            curvedText.fontSize = 3f;
-            curvedText.fontStyle = FontStyles.Italic;
-            curvedText.gameObject.SetActive(true);
+            _credits.alignment = TextAlignmentOptions.TopLeft;
+            _credits.lineSpacing = -35f;
+            _credits.fontSize = 3f;
+            _credits.fontStyle = FontStyles.Italic;
+            _credits.gameObject.SetActive(false);
 
             foreach (var lang in Localization.Instance.SupportedLanguages)
             {
@@ -79,8 +86,36 @@ namespace SiraLocalizer.UI
                 var name = Localization.Get("MENU_LANGUAGE_THIS", lang);
                 if (!string.IsNullOrEmpty(contributors))
                 {
-                    curvedText.text += $"<b>{name}</b>   <color=#bababa>{contributors}</color>\n";
+                    _credits.text += $"<b>{name}</b>   <color=#bababa>{contributors}</color>\n";
                 }
+            }
+
+            _creditsToggle = _container.InstantiatePrefabForComponent<Button>(_standardLevelDetailViewController.GetField<StandardLevelDetailView, StandardLevelDetailViewController>("_standardLevelDetailView").practiceButton);
+            _creditsToggle.name = "LocalizationCreditsButton";
+            UnityEngine.Object.Destroy(_creditsToggle.transform.Find("Content").GetComponent<LayoutElement>());
+            _creditsToggle.gameObject.transform.SetParent(otherSettingsContent, false);
+            var rect = (_creditsToggle.transform as RectTransform);
+            rect.localPosition = new Vector3(-5f, -11f, 0f);
+            
+            ContentSizeFitter buttonSizeFitter = _creditsToggle.gameObject.AddComponent<ContentSizeFitter>();
+            buttonSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            buttonSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            LocalizedTextMeshProUGUI localizer = _creditsToggle.GetComponentInChildren<LocalizedTextMeshProUGUI>(true);
+            localizer.Key = "CREDITS_TITLE";
+
+            _creditsToggle.onClick.AddListener(ToggleCredits);
+        }
+
+        private void ToggleCredits()
+        {
+            _credits.gameObject.SetActive(!_credits.isActiveAndEnabled);
+        }
+
+        public void Dispose()
+        {
+            if (_creditsToggle != null)
+            {
+                _creditsToggle.onClick.RemoveListener(ToggleCredits);
             }
         }
     }
