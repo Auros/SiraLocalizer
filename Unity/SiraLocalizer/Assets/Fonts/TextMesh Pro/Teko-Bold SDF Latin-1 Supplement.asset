@@ -128,7 +128,7 @@ MonoBehaviour:
     m_Scale: 1
     m_LineHeight: 128.97
     m_AscentLine: 86.22
-    m_CapLine: 58
+    m_CapLine: 57
     m_MeanLine: 45
     m_Baseline: 0
     m_DescentLine: -42.75
@@ -1809,7 +1809,7 @@ MonoBehaviour:
   normalSpacingOffset: 0
   boldStyle: 0.75
   boldSpacing: 7
-  italicStyle: 22
+  italicStyle: 30
   tabSize: 10
 --- !u!28 &4582126001362041272
 Texture2D:

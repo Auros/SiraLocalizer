@@ -66,7 +66,7 @@ MonoBehaviour:
     m_FamilyName: Source Han Sans SC
     m_StyleName: Bold
     m_PointSize: 50
-    m_Scale: 1
+    m_Scale: 0.85
     m_LineHeight: 72.4
     m_AscentLine: 58
     m_CapLine: 37
@@ -170,7 +170,7 @@ MonoBehaviour:
   normalSpacingOffset: 0
   boldStyle: 0.75
   boldSpacing: 7
-  italicStyle: 35
+  italicStyle: 30
   tabSize: 10
 --- !u!21 &1055358269306632870
 Material:
