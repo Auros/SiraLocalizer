@@ -3,11 +3,16 @@ using Zenject;
 using Polyglot;
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace SiraLocalizer.UI
 {
     internal class LanguageSetting : MonoBehaviour
     {
+        public event Action<Language> selectedLanguageChanged;
+
+        public Language selectedLanguage => _selectedLanguage;
+
         private LanguageManager _languageManager;
 
         private SimpleTextDropdown _dropdown;
@@ -34,6 +39,7 @@ namespace SiraLocalizer.UI
             _languageDisplayNames = Localization.Instance.LocalizedLanguageNames.AsReadOnly();
 
             _selectedLanguage = _languageManager.selectedLanguage;
+            selectedLanguageChanged?.Invoke(_selectedLanguage);
         }
 
         public void OnEnable()
@@ -56,6 +62,7 @@ namespace SiraLocalizer.UI
             if (finishAction == SettingsNavigationController.FinishAction.Cancel)
             {
                 _selectedLanguage = _languageManager.selectedLanguage;
+                selectedLanguageChanged?.Invoke(_selectedLanguage);
             }
             else
             {
@@ -66,6 +73,7 @@ namespace SiraLocalizer.UI
         private void OnSelectedCell(DropdownWithTableView dropdown, int idx)
         {
             _selectedLanguage = _languages[idx];
+            selectedLanguageChanged?.Invoke(_selectedLanguage);
         }
     }
 }
