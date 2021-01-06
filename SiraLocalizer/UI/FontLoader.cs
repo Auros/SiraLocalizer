@@ -7,11 +7,14 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using Object = UnityEngine.Object;
+using IPA.Utilities;
 
 namespace SiraLocalizer.UI
 {
     internal class FontLoader : IInitializable, IDisposable
     {
+        private static readonly FieldAccessor<TMP_FontAsset, Texture2D>.Accessor kAtlasTextureAccessor = FieldAccessor<TMP_FontAsset, Texture2D>.GetAccessor("m_AtlasTexture");
+
         private static readonly string kLatin1SupplementFontName = "Teko-Medium SDF Latin-1 Supplement";
         private static readonly string kSimplifiedChineseFontName = "SourceHanSansSC-Medium SDF";
 
@@ -84,7 +87,7 @@ namespace SiraLocalizer.UI
 
         private void AddFallbackFonts()
         {
-            if (_fallbackFontAssets == null) return;
+            if (!_fallbackFontAssets.Any()) return;
 
             IEnumerable<TMP_FontAsset> originalFontAssets = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(f => kTargetFontNames.Contains(f.name));
 
@@ -108,15 +111,30 @@ namespace SiraLocalizer.UI
 
             foreach (TMP_FontAsset fallback in fallbacks.Reverse())
             {
-                TMP_FontAsset fallbackCopy = Object.Instantiate(fallback);
+                TMP_FontAsset fallbackCopy = CopyFontAsset(fallback, fontAsset.material);
 
-                fallbackCopy.name = fallback.name;
-                fallbackCopy.material.shader = fontAsset.material.shader;
-                fallbackCopy.material.shaderKeywords = fontAsset.material.shaderKeywords;
-
-                // insert as first possible fallback fonts
+                // insert as first possible fallback font
                 fontAsset.fallbackFontAssetTable.Insert(0, fallbackCopy);
             }
+        }
+
+        private TMP_FontAsset CopyFontAsset(TMP_FontAsset fontAsset, Material referenceMaterial)
+        {
+            TMP_FontAsset copy = Object.Instantiate(fontAsset);
+
+            Texture2D texture = fontAsset.atlasTexture;
+            Texture2D newTexture = new Texture2D(texture.width, texture.height, texture.format, texture.mipmapCount, true);
+            Graphics.CopyTexture(texture, newTexture);
+
+            Material material = new Material(referenceMaterial);
+            material.SetTexture("_MainTex", newTexture);
+
+            kAtlasTextureAccessor(ref copy) = newTexture;
+            copy.name = fontAsset.name;
+            copy.atlasTextures = new[] { newTexture };
+            copy.material = material;
+
+            return copy;
         }
     }
 }
