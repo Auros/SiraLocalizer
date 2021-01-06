@@ -16,13 +16,23 @@ namespace SiraLocalizer.UI
     {
         private static readonly FieldAccessor<TMP_FontAsset, Texture2D>.Accessor kAtlasTextureAccessor = FieldAccessor<TMP_FontAsset, Texture2D>.GetAccessor("m_AtlasTexture");
 
-        private static readonly string kLatin1SupplementFontName = "Teko-Medium SDF Latin-1 Supplement";
-        private static readonly string kSimplifiedChineseFontName = "SourceHanSansSC-Medium SDF";
-
-        private static readonly string[] kTargetFontNames = { "Teko-Medium SDF", "Teko-Medium SDF No Glow", "Teko-Medium SDF No Glow Billboard" };
-        private static readonly string[] kFontNamesToRemove = { kLatin1SupplementFontName, kSimplifiedChineseFontName, "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)" };
+        private readonly string[] kFontNamesToRemove = { "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)" };
+        private readonly FontReplacementStrategy[] kFontReplacementStrategies = new[]
+        {
+            new FontReplacementStrategy()
+            {
+                targetFontNames = new[] { "Teko-Medium SDF", "Teko-Medium SDF No Glow", "Teko-Medium SDF No Glow Billboard" },
+                fontNamesToAdd = new[] { "Teko-Medium SDF Latin-1 Supplement", "SourceHanSansSC-Medium SDF" }
+            },
+            new FontReplacementStrategy()
+            {
+                targetFontNames = new[] { "Teko-Bold SDF" },
+                fontNamesToAdd = new[] { "Teko-Bold SDF Latin-1 Supplement", "SourceHanSansSC-Bold SDF" }
+            },
+        };
 
         private readonly List<TMP_FontAsset> _fallbackFontAssets = new List<TMP_FontAsset>();
+        private readonly List<TMP_FontAsset> _processedFontAssets = new List<TMP_FontAsset>();
 
         public void Initialize()
         {
@@ -38,12 +48,12 @@ namespace SiraLocalizer.UI
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            AddFallbackFonts();
+            ApplyFallbackFonts();
         }
 
         private IEnumerator LoadFontAssets()
         {
-            Plugin.Log.Debug($"Loading fonts");
+            Plugin.Log.Info($"Loading fonts");
 
             AssetBundleCreateRequest assetBundleCreateRequest = AssetBundle.LoadFromStreamAsync(Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.fonts.assets"));
             yield return assetBundleCreateRequest;
@@ -56,15 +66,17 @@ namespace SiraLocalizer.UI
                 yield break;
             }
 
-            AddFont(assetBundle, kLatin1SupplementFontName);
-            AddFont(assetBundle, kSimplifiedChineseFontName);
+            foreach (string fontName in kFontReplacementStrategies.SelectMany(s => s.fontNamesToAdd))
+            {
+                LoadFontAsset(assetBundle, fontName);
+            }
 
             assetBundle.Unload(false);
 
-            AddFallbackFonts();
+            ApplyFallbackFonts();
         }
 
-        private void AddFont(AssetBundle assetBundle, string name)
+        private void LoadFontAsset(AssetBundle assetBundle, string name)
         {
             TMP_FontAsset fontAsset = assetBundle.LoadAsset<TMP_FontAsset>(name);
 
@@ -74,34 +86,41 @@ namespace SiraLocalizer.UI
                 return;
             }
 
-            Plugin.Log.Debug($"Font '{name}' loaded successfully");
+            Plugin.Log.Info($"Font '{name}' loaded successfully");
 
             _fallbackFontAssets.Add(fontAsset);
         }
 
-        private void AddFallbackFonts()
+        private void ApplyFallbackFonts()
         {
             if (!_fallbackFontAssets.Any()) return;
 
-            IEnumerable<TMP_FontAsset> originalFontAssets = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Where(f => kTargetFontNames.Contains(f.name));
+            TMP_FontAsset[] fontAssets = Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
 
-            foreach (TMP_FontAsset fontAsset in originalFontAssets)
+            foreach (FontReplacementStrategy strategy in kFontReplacementStrategies)
             {
-                ApplyFallbacks(fontAsset, _fallbackFontAssets);
-            }
+                IEnumerable<TMP_FontAsset> originalFontAssets = fontAssets.Where(f => !_processedFontAssets.Contains(f) && strategy.targetFontNames.Contains(f.name)); ;
 
-            // force update any text that has already rendered
-            foreach (TMP_Text text in Object.FindObjectsOfType<TMP_Text>())
-            {
-                text.SetAllDirty();
+                foreach (TMP_FontAsset fontAsset in originalFontAssets)
+                {
+                    AddFallbacksToFont(fontAsset, _fallbackFontAssets.Where(f => strategy.fontNamesToAdd.Contains(f.name)));
+                }
+
+                // force update any text that has already rendered
+                foreach (TMP_Text text in Object.FindObjectsOfType<TMP_Text>())
+                {
+                    text.SetAllDirty();
+                }
             }
         }
 
-        private void ApplyFallbacks(TMP_FontAsset fontAsset, IList<TMP_FontAsset> fallbacks)
+        private void AddFallbacksToFont(TMP_FontAsset fontAsset, IEnumerable<TMP_FontAsset> fallbacks)
         {
-            Plugin.Log.Debug($"Adding fallbacks to '{fontAsset.name}' ({(uint)fontAsset.GetHashCode()})");
+            Plugin.Log.Info($"Adding fallbacks to '{fontAsset.name}' ({(uint)fontAsset.GetHashCode()})");
 
-            fontAsset.fallbackFontAssetTable.RemoveAll(f => kFontNamesToRemove.Contains(f.name));
+            IEnumerable<string> fontNamesToRemove = Enumerable.Concat(kFontNamesToRemove, fallbacks.Select(f => f.name));
+
+            fontAsset.fallbackFontAssetTable.RemoveAll(f => fontNamesToRemove.Contains(f.name));
 
             foreach (TMP_FontAsset fallback in fallbacks.Reverse())
             {
@@ -110,6 +129,8 @@ namespace SiraLocalizer.UI
                 // insert as first possible fallback font
                 fontAsset.fallbackFontAssetTable.Insert(0, fallbackCopy);
             }
+
+            _processedFontAssets.Add(fontAsset);
         }
 
         private TMP_FontAsset CopyFontAsset(TMP_FontAsset fontAsset, Material referenceMaterial)
@@ -129,6 +150,12 @@ namespace SiraLocalizer.UI
             copy.material = material;
 
             return copy;
+        }
+
+        private struct FontReplacementStrategy
+        {
+            public string[] targetFontNames;
+            public string[] fontNamesToAdd;
         }
     }
 }
