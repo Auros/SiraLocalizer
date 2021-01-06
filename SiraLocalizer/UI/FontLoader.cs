@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Object = UnityEngine.Object;
 using IPA.Utilities;
+using UnityEngine.SceneManagement;
 
 namespace SiraLocalizer.UI
 {
@@ -21,28 +22,21 @@ namespace SiraLocalizer.UI
         private static readonly string[] kTargetFontNames = { "Teko-Medium SDF", "Teko-Medium SDF No Glow", "Teko-Medium SDF No Glow Billboard" };
         private static readonly string[] kFontNamesToRemove = { kLatin1SupplementFontName, kSimplifiedChineseFontName, "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)" };
 
-        private readonly GameScenesManager _gameScenesManager;
-        
         private readonly List<TMP_FontAsset> _fallbackFontAssets = new List<TMP_FontAsset>();
-
-        internal FontLoader(GameScenesManager gameScenesManager)
-        {
-            _gameScenesManager = gameScenesManager;
-        }
 
         public void Initialize()
         {
-            _gameScenesManager.transitionDidFinishEvent += OnTransitionDidFinish;
+            SceneManager.sceneLoaded += OnSceneLoaded;
 
             SharedCoroutineStarter.instance.StartCoroutine(LoadFontAssets());
         }
 
         public void Dispose()
         {
-            _gameScenesManager.transitionDidFinishEvent -= OnTransitionDidFinish;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
-        private void OnTransitionDidFinish(ScenesTransitionSetupDataSO setupData, DiContainer container)
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             AddFallbackFonts();
         }
