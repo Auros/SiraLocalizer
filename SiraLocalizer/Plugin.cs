@@ -27,6 +27,7 @@ namespace SiraLocalizer
 
             zenjector.OnApp<SiraLocalizerCoreInstaller>().WithParameters(conf.Generated<Config>());
             zenjector.OnMenu<SiraLocalizerUIInstaller>();
+            zenjector.Register<SiraLocalizerGameplayInstaller>().On<GameplayCoreInstaller>().Expose<MissedNoteEffectSpawner>();
         }
 
         [OnEnable]

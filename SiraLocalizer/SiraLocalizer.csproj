@@ -64,6 +64,10 @@
       <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="BeatmapCore">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatmapCore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Main">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Main.dll</HintPath>
       <Private>False</Private>
@@ -129,7 +133,9 @@
     <Compile Include="HarmonyPatches\LevelFailedController.cs" />
     <Compile Include="HarmonyPatches\TextSegmentedControl.cs" />
     <Compile Include="Installers\SiraLocalizerCoreInstaller.cs" />
+    <Compile Include="Installers\SiraLocalizerGameplayInstaller.cs" />
     <Compile Include="Installers\SiraLocalizerUIInstaller.cs" />
+    <Compile Include="UI\TextBasedMissedNoteEffectSpawner.cs" />
     <Compile Include="UI\FontLoader.cs" />
     <Compile Include="UI\LanguageManager.cs" />
     <Compile Include="UI\LanguageSetting.cs" />
