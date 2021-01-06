@@ -18,7 +18,7 @@ namespace SiraLocalizer.UI
         {
             Localization.Instance.AddOnLocalizeEvent(this);
 
-            if (Enum.TryParse(_config.Language, out Language language) && Localization.Instance.SupportedLanguages.Contains(language))
+            if (Enum.TryParse(_config.Language, out Language language))
             {
                 selectedLanguage = language;
                 Localization.Instance.SelectLanguage(language);

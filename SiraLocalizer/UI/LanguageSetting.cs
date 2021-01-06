@@ -48,7 +48,17 @@ namespace SiraLocalizer.UI
             _dropdown.didSelectCellWithIdxEvent += OnSelectedCell;
 
             _dropdown.SetTexts(_languageDisplayNames);
-            _dropdown.SelectCellWithIdx(_languages.IndexOf(_selectedLanguage));
+
+            int idx = _languages.IndexOf(_selectedLanguage);
+
+            if (idx >= 0)
+            {
+                _dropdown.SelectCellWithIdx(idx);
+            }
+            else
+            {
+                _selectedLanguage = Language.English;
+            }
         }
 
         public void OnDisable()
