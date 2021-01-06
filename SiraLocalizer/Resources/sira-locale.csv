@@ -697,3 +697,6 @@ HINT_HELP_BUTTON,,Help,Aide,,,,,,,,,,,,,,,,帮助,,,,,,,,,,
 HINT_EDITOR_BUTTON,,Beatmap Editor,Éditeur de chansons,,,,,,,,,,,,,,,,谱面编辑器,,,,,,,,,,
 HINT_OPTIONS_BUTTON,,Options,Options,,,,,,,,,,,,,,,,设置,,,,,,,,,,
 HINT_EXIT_BUTTON,,Exit,Quitter,,,,,,,,,,,,,,,,退出,,,,,,,,,,
+LEVEL_FAILED,," Level
+Failed"," Niveau
+échoué",,,,,,,,,,,,,,,,,,,,,,,,,,
