@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# ignore TextMeshPro files
+Unity/SiraLocalizer/Assets/TextMesh?Pro/* linguist-vendored
