@@ -130,6 +130,7 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="CustomLocaleLoader.cs" />
+    <Compile Include="HarmonyPatches\ComboUIController.cs" />
     <Compile Include="HarmonyPatches\LevelFailedController.cs" />
     <Compile Include="HarmonyPatches\TextSegmentedControl.cs" />
     <Compile Include="Installers\SiraLocalizerCoreInstaller.cs" />
