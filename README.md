@@ -6,6 +6,7 @@ Requires [SiraUtil](https://github.com/Auros/SiraUtil/releases/latest) 2.1.0 or 
 The community has unofficially translated the base game into the following languages:
 * French
 * Simplified Chinese
+* Korean
 
 You can change the language in-game by going to *Options* > *Settings* > *Others*.
 ![Localization Location](https://i.imgur.com/tazj6Tl.png)
@@ -21,6 +22,11 @@ You can change the language in-game by going to *Options* > *Settings* > *Others
 * 包子侯爵
 * 四条
 * 椰子
+
+### Korean
+* [Cryental](https://github.com/Cryental)
+* [Helloyunho](https://github.com/Helloyunho)
+* [SieR](https://github.com/SieR-VR)
 
 # Creating Custom Localization Sheets
 You can create a copy of [this spreadsheet](https://docs.google.com/spreadsheets/d/1NERV_PftlFQFKByvCxWV6hs9XaRLmNyMBOSLf4285AY/edit?usp=sharing) and fill out the keys for your language. Once completed, it can be exported as a **csv** and be placed into `UserData/SIRA/Localizations`. If the mod is installed, this folder will be created for you. Launch the game and the localizations will be loaded into the game.
