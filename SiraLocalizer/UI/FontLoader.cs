@@ -22,12 +22,12 @@ namespace SiraLocalizer.UI
             new FontReplacementStrategy()
             {
                 targetFontNames = new[] { "Teko-Medium SDF", "Teko-Medium SDF No Glow", "Teko-Medium SDF No Glow Billboard" },
-                fontNamesToAdd = new[] { "Teko-Medium SDF Latin-1 Supplement", "SourceHanSansSC-Medium SDF" }
+                fontNamesToAdd = new[] { "Teko-Medium SDF Latin-1 Supplement", "SourceHanSans-Medium SDF" }
             },
             new FontReplacementStrategy()
             {
                 targetFontNames = new[] { "Teko-Bold SDF" },
-                fontNamesToAdd = new[] { "Teko-Bold SDF Latin-1 Supplement", "SourceHanSansSC-Bold SDF" }
+                fontNamesToAdd = new[] { "Teko-Bold SDF Latin-1 Supplement", "SourceHanSans-Bold SDF" }
             },
         };
 
