@@ -12,7 +12,7 @@ namespace SiraLocalizer.HarmonyPatches
     {
         public static void Postfix(ComboUIController __instance)
         {
-            Transform textTransform = __instance.transform.Find("ComboText");
+            RectTransform textTransform = __instance.transform.Find("ComboText") as RectTransform;
 
             if (!textTransform) return;
 
@@ -23,6 +23,11 @@ namespace SiraLocalizer.HarmonyPatches
 
             TextMeshProUGUI text = textObject.GetComponent<CurvedTextMeshPro>();
             text.fontStyle |= FontStyles.UpperCase;
+            text.alignment = TextAlignmentOptions.Baseline;
+
+            var offset = new Vector2(0, 6);
+            textTransform.offsetMin -= offset;
+            textTransform.offsetMax -= offset;
 
             LocalizedTextMeshProUGUI localizedText = textObject.AddComponent<LocalizedTextMeshProUGUI>();
             localizedText.SetField<LocalizedTextComponent<TextMeshProUGUI>, TextMeshProUGUI>("localizedComponent", text);
