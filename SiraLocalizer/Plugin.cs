@@ -6,6 +6,12 @@ using IPA.Config.Stores;
 using SiraLocalizer.Installers;
 using Conf = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
+using System;
+using System.Linq;
+using Polyglot;
+using System.IO;
+using IPA.Utilities;
+using System.Text;
 
 namespace SiraLocalizer
 {
@@ -25,6 +31,9 @@ namespace SiraLocalizer
 
             _harmony = new Harmony(kHarmonyId);
 
+            if (Environment.GetCommandLineArgs().Contains("--dump-localization")) DumpBaseGameLocalization();
+            if (Environment.GetCommandLineArgs().Contains("--dump-keys")) DumpBaseGameKeys();
+
             zenjector.OnApp<SiraLocalizerCoreInstaller>().WithParameters(conf.Generated<Config>());
             zenjector.OnMenu<SiraLocalizerUIInstaller>();
             zenjector.Register<SiraLocalizerGameplayInstaller>().On<GameplayCoreInstaller>().Expose<MissedNoteEffectSpawner>();
@@ -40,6 +49,48 @@ namespace SiraLocalizer
         public void OnDisable()
         {
             _harmony.UnpatchAll(kHarmonyId);
+        }
+
+        private void DumpBaseGameLocalization()
+        {
+            LocalizationAsset baseAsset = Localization.Instance.InputFiles.FirstOrDefault();
+
+            if (baseAsset == null)
+            {
+                Log.Error("Could not dump base game localization: no input files found!");
+                return;
+            }
+
+            string filePath = Path.Combine(UnityGame.InstallPath, baseAsset.TextAsset.name + ".csv");
+
+            try
+            {
+                File.WriteAllText(filePath, baseAsset.TextAsset.text, Encoding.UTF8);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Could not dump base game localization: " + ex);
+            }
+        }
+
+        private void DumpBaseGameKeys()
+        {
+            string filePath = Path.Combine(UnityGame.InstallPath, "keys.txt");
+
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    foreach (string key in Localization.GetKeys())
+                    {
+                        writer.WriteLine(key);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Could not dump base game localization: " + ex);
+            }
         }
     }
 }
