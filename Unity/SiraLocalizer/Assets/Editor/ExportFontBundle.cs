@@ -18,7 +18,7 @@ public class BuildFontsAssetBundle : MonoBehaviour
 
         AssetBundleBuild assetBundleBuild = new AssetBundleBuild {
             assetBundleName = fileName,
-            assetNames = Directory.GetFiles(Path.Combine("Assets", "Fonts", "TextMesh Pro"), "*.asset")
+            assetNames = Directory.GetFiles(Path.Combine("Assets", "Text Assets"), "*.asset", SearchOption.TopDirectoryOnly)
         };
 
         BuildTargetGroup selectedBuildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;

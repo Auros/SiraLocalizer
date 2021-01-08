@@ -27,7 +27,7 @@ namespace SiraLocalizer.UI
             new FontReplacementStrategy()
             {
                 targetFontNames = new[] { "Teko-Bold SDF" },
-                fontNamesToAdd = new[] { "Teko-Bold SDF Latin-1 Supplement", "SourceHanSans-Bold SDF" }
+                fontNamesToAdd = new[] { "Teko-Bold SDF Latin-1 Supplement", "SourceHanSans-Medium SDF" }
             },
         };
 
@@ -66,7 +66,7 @@ namespace SiraLocalizer.UI
                 yield break;
             }
 
-            foreach (string fontName in kFontReplacementStrategies.SelectMany(s => s.fontNamesToAdd))
+            foreach (string fontName in kFontReplacementStrategies.SelectMany(s => s.fontNamesToAdd).Distinct())
             {
                 LoadFontAsset(assetBundle, fontName);
             }
@@ -103,7 +103,7 @@ namespace SiraLocalizer.UI
 
                 foreach (TMP_FontAsset fontAsset in originalFontAssets)
                 {
-                    AddFallbacksToFont(fontAsset, _fallbackFontAssets.Where(f => strategy.fontNamesToAdd.Contains(f.name)));
+                    AddFallbacksToFont(fontAsset, strategy.fontNamesToAdd.Select(n => _fallbackFontAssets.Find(f => f.name == n)).Where(f => f));
                 }
 
                 // force update any text that has already rendered
@@ -118,9 +118,7 @@ namespace SiraLocalizer.UI
         {
             Plugin.Log.Info($"Adding fallbacks to '{fontAsset.name}' ({(uint)fontAsset.GetHashCode()})");
 
-            IEnumerable<string> fontNamesToRemove = Enumerable.Concat(kFontNamesToRemove, fallbacks.Select(f => f.name));
-
-            fontAsset.fallbackFontAssetTable.RemoveAll(f => fontNamesToRemove.Contains(f.name));
+            fontAsset.fallbackFontAssetTable.RemoveAll(f => kFontNamesToRemove.Contains(f.name));
 
             foreach (TMP_FontAsset fallback in fallbacks.Reverse())
             {
