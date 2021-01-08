@@ -8,6 +8,7 @@
     <BeatSaberDir>$(LocalRefsDir)</BeatSaberDir>
     <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB3277</MSBuildWarningsAsMessages>
     <Copyright>Copyright © SIRA 2020-2021</Copyright>
+    <SteamExecutable>C:\Program Files (x86)\Steam\steam.exe</SteamExecutable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

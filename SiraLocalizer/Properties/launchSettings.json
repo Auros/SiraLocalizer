@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "Beat Saber": {
+      "commandName": "Executable",
+      "executablePath": "$(SteamExecutable)",
+      "commandLineArgs": "-applaunch 620980 --verbose --trace"
+    },
+    "Beat Saber (FPFC)": {
+      "commandName": "Executable",
+      "executablePath": "$(SteamExecutable)",
+      "commandLineArgs": "-applaunch 620980 fpfc --verbose --trace"
+    },
+    "Beat Saber (dump localization)": {
+      "commandName": "Executable",
+      "executablePath": "$(SteamExecutable)",
+      "commandLineArgs": "-applaunch 620980 fpfc --verbose --trace --dump-localization --dump-keys"
+    }
+  }
+}
