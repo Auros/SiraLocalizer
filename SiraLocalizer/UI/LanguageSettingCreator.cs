@@ -84,12 +84,12 @@ namespace SiraLocalizer.UI
         private void OnSelectedLanguageChanged(Language language)
         {
             string contributors = Localization.Get("LANGUAGE_CONTRIBUTORS", language);
-            string name = Localization.Get("MENU_LANGUAGE_THIS", language);
+            string translatedBy = Localization.Get("MENU_TRANSLATED_BY", language);
 
             if (!string.IsNullOrEmpty(contributors))
             {
                 _credits.gameObject.SetActive(true);
-                _credits.text = $"<b>{name}</b>   <color=#bababa>{contributors}</color>\n";
+                _credits.text = $"<b>{translatedBy}</b>   <color=#bababa>{contributors}</color>";
             }
             else
             {
