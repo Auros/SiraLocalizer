@@ -1,10 +1,10 @@
 ﻿using Polyglot;
 using System.Linq;
 using UnityEngine;
-using IPA.Utilities;
-using System.Reflection;
 using SiraUtil.Interfaces;
 using System.Collections.Generic;
+using System;
+using System.Reflection;
 
 namespace SiraLocalizer
 {
@@ -40,16 +40,14 @@ namespace SiraLocalizer
             {
                 return;
             }
-            Localization.Instance.GetField<List<LocalizationAsset>, Localization>("inputFiles").Add(localizationAsset);
+            Localization.Instance.InputFiles.Add(localizationAsset);
             LocalizationImporter.Refresh();
             RecalculateLanguages();
         }
 
         public void RecalculateLanguages()
         {
-            FieldInfo field = typeof(LocalizationImporter).GetField("languageStrings", BindingFlags.NonPublic | BindingFlags.Static);
             var supported = new HashSet<Language>();
-            var locTable = (Dictionary<string, List<string>>)field.GetValue(null);
             var nonShadowLanguages = GetLanguagesInSheets(_lockedAssetCache.Values.Where(x => x.shadowLocalization == false).Select(x => x.asset).ToArray());
 
             // We know English will always be present.
@@ -70,8 +68,8 @@ namespace SiraLocalizer
                     supported.Add(lang);
                 }
             }
-            Localization.Instance.GetField<List<Language>, Localization>("supportedLanguages").Clear();
-            Localization.Instance.GetField<List<Language>, Localization>("supportedLanguages").AddRange(supported);
+            Localization.Instance.SupportedLanguages.Clear();
+            Localization.Instance.SupportedLanguages.AddRange(supported);
             Localization.Instance.InvokeOnLocalize();
         }
 
@@ -120,65 +118,57 @@ namespace SiraLocalizer
 
         internal List<Language> GetLanguagesInSheets(params LocalizationAsset[] assets)
         {
-            List<Language> supported = new List<Language>();
-            supported.AddRange(Localization.Instance.GetField<List<Language>, Localization>("supportedLanguages"));
-            var locTable = new Dictionary<string, List<string>>();
-            for (int i = 0; i < assets.Length; i++)
+            var localizationsTable = new Dictionary<string, List<string>>();
+
+            foreach (LocalizationAsset asset in assets)
             {
-                var asset = assets[i];
-                List<List<string>> textData;
+                List<List<string>> lines;
+                string text = asset.TextAsset.text.Replace("\r\n", "\n");
+
                 if (asset.Format == GoogleDriveDownloadFormat.CSV)
                 {
-                    textData = CsvReader.Parse(asset.TextAsset.text.Replace("\r\n", "\n"));
+                    lines = CsvReader.Parse(text);
                 }
                 else
                 {
-                    textData = TsvReader.Parse(asset.TextAsset.text.Replace("\r\n", "\n"));
+                    lines = TsvReader.Parse(text);
                 }
-                bool isValid = false;
-                for (int a = 0; a < textData.Count; a++)
+
+                foreach (List<string> line in lines.SkipWhile(l => l[0] != "Polyglot").Skip(1))
                 {
-                    List<string> valList = textData[a];
-                    string keyName = valList[0];
-                    if (!string.IsNullOrEmpty(keyName) && !LocalizationImporter.IsLineBreak(keyName) && valList.Count > 1)
+                    string keyName = line[0];
+
+                    if (!string.IsNullOrWhiteSpace(keyName) && line.Count > 1)
                     {
-                        if (!isValid && keyName.StartsWith("Polyglot"))
+                        List<string> localizations = line.Skip(2).ToList();
+
+                        if (localizationsTable.ContainsKey(keyName))
                         {
-                            isValid = true;
+                            localizationsTable[keyName] = localizations;
                         }
-                        else if (isValid)
+                        else
                         {
-                            valList.RemoveAt(0);
-                            valList.RemoveAt(0);
-                            if (locTable.ContainsKey(keyName))
-                            {
-                                locTable[keyName] = valList;
-                            }
-                            else
-                            {
-                                locTable.Add(keyName, valList);
-                            }
+                            localizationsTable.Add(keyName, localizations);
                         }
                     }
                 }
             }
-            ISet<int> validLanguages = new HashSet<int>();
-            foreach (var value in locTable.Values)
+
+            var supportedLanguages = new List<Language>();
+
+            foreach (int lang in Enum.GetValues(typeof(Language)))
             {
-                for (int i = 0; i < value.Count; i++)
+                foreach (List<string> localizations in localizationsTable.Values)
                 {
-                    if (!string.IsNullOrEmpty(value.ElementAtOrDefault(i)))
+                    if (!string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
                     {
-                        validLanguages.Add(i);
+                        supportedLanguages.Add((Language)lang);
+                        break;
                     }
                 }
             }
-            supported.Clear();
-            for (int i = 0; i < validLanguages.Count; i++)
-            {
-                supported.Add((Language)validLanguages.ElementAt(i));
-            }
-            return supported;
+
+            return supportedLanguages;
         }
 
         private struct LocalizationData
