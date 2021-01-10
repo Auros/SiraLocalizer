@@ -4,6 +4,7 @@ using System;
 using Zenject;
 using Polyglot;
 using UnityEngine;
+using System.Linq;
 
 namespace SiraLocalizer.UI
 {
@@ -83,11 +84,11 @@ namespace SiraLocalizer.UI
 
         private void OnSelectedLanguageChanged(Language language)
         {
-            string contributors = Localization.Get("LANGUAGE_CONTRIBUTORS", language);
-            string translatedBy = Localization.Get("MENU_TRANSLATED_BY", language);
-
-            if (!string.IsNullOrEmpty(contributors))
+            if (language != Language.English && KeyHasValueForLanguage("LANGUAGE_CONTRIBUTORS", language))
             {
+                string contributors = Localization.Get("LANGUAGE_CONTRIBUTORS", language);
+                string translatedBy = Localization.Get("MENU_TRANSLATED_BY", language);
+
                 _credits.gameObject.SetActive(true);
                 _credits.text = $"<b>{translatedBy}</b>   <color=#bababa>{contributors}</color>";
             }
@@ -95,6 +96,11 @@ namespace SiraLocalizer.UI
             {
                 _credits.gameObject.SetActive(false);
             }
+        }
+
+        private bool KeyHasValueForLanguage(string key, Language language)
+        {
+            return !string.IsNullOrWhiteSpace(LocalizationImporter.GetLanguages(key).ElementAtOrDefault((int)language));
         }
     }
 }
