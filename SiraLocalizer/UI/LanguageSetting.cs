@@ -11,9 +11,7 @@ namespace SiraLocalizer.UI
     {
         public event Action<Language> selectedLanguageChanged;
 
-        public Language selectedLanguage => _selectedLanguage;
-
-        private LanguageManager _languageManager;
+        private Config _config;
 
         private SimpleTextDropdown _dropdown;
         private SettingsNavigationController _settingsNavigationController;
@@ -24,9 +22,9 @@ namespace SiraLocalizer.UI
         private IReadOnlyList<string> _languageDisplayNames;
 
         [Inject]
-        public void Construct(LanguageManager languageManager)
+        public void Construct(Config config)
         {
-            _languageManager = languageManager;
+            _config = config;
         }
 
         public void Awake()
@@ -38,7 +36,7 @@ namespace SiraLocalizer.UI
             _languages = Localization.Instance.SupportedLanguages.AsReadOnly();
             _languageDisplayNames = Localization.Instance.LocalizedLanguageNames.AsReadOnly();
 
-            _selectedLanguage = _languageManager.selectedLanguage;
+            _selectedLanguage = _config.language;
             selectedLanguageChanged?.Invoke(_selectedLanguage);
         }
 
@@ -71,12 +69,12 @@ namespace SiraLocalizer.UI
         {
             if (finishAction == SettingsNavigationController.FinishAction.Cancel)
             {
-                _selectedLanguage = _languageManager.selectedLanguage;
+                _selectedLanguage = _config.language;
                 selectedLanguageChanged?.Invoke(_selectedLanguage);
             }
             else
             {
-                _languageManager.selectedLanguage = _selectedLanguage;
+                _config.language = _selectedLanguage;
             }
         }
 

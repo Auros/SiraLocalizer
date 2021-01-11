@@ -20,7 +20,7 @@ namespace SiraLocalizer.Installers
             Container.Bind<ILocalizer>().WithId("SIRA.Localizer").To<Localizer>().AsSingle();
             Container.Bind<IInitializable>().To<CustomLocaleLoader>().AsSingle();
 
-            Container.BindInterfacesAndSelfTo<LanguageManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<LanguageEnforcer>().AsSingle();
             Container.BindInterfacesAndSelfTo<FontLoader>().AsSingle();
         }
     }

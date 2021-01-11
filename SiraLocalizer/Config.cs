@@ -1,4 +1,7 @@
 ﻿using IPA.Config.Stores;
+using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
+using Polyglot;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
@@ -6,6 +9,6 @@ namespace SiraLocalizer
 {
     internal class Config
     {
-        public virtual string Language { get; set; }
+        [UseConverter(typeof(EnumConverter<Language>))] public virtual Language language { get; set; }
     }
 }
