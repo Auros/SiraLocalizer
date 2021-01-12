@@ -22,12 +22,15 @@ You can change the language in-game by going to *Options* > *Settings* > *Others
 * 四条
 * 椰子
 
-# Creating Custom Localization Sheets
-You can create a copy of [this spreadsheet](https://docs.google.com/spreadsheets/d/1NERV_PftlFQFKByvCxWV6hs9XaRLmNyMBOSLf4285AY/edit?usp=sharing) and fill out the keys for your language. Once completed, it can be exported as a **csv** and be placed into `UserData/SIRA/Localizations`. If the mod is installed, this folder will be created for you. Launch the game and the localizations will be loaded into the game.
+## Becoming a Translator
+We use [Crowdin](https://crowdin.com/) to make translating easier. You can request access to [the SiraLocalizer project](https://crowdin.com/project/siralocalizer) by filling out [this form](https://docs.google.com/forms/d/e/1FAIpQLSfk7z1EGqS2zl1jSomigSntvxQH0pTTKsxDlrpd9c53jKNpwA/viewform). We will get back to you as soon as possible!
 
 # Using SiraLocalizer in Your Mod
 Modders can implement localizations into their own mods as well. Requires SiraUtil and some very basic knowledge of Zenject. Check out [SiraUtil's README](https://github.com/Auros/SiraUtil#zenject) for more information.
- 
+
+## Creating a Localization Sheet
+Create a copy of [the Polyglot Template Google Sheet](https://docs.google.com/spreadsheets/d/17f0dQawb-s_Fd7DHgmVvJoEGDMH_yoSd8EYigrb0zmM/edit), erase all the keys that are there (starting at line 7 then all the way down), and add your own instead. **Do not delete any of the columns even if you don't plan on supporting that language** because Polyglot expects the specific order of languages used in the sheet.
+
 ## Retrieving and Using an `ILocalizer` Instance
 You can get access to an `ILocalizer` instance by injecting it into a class. The example below uses constructor injection and [Zenject's IInitializable interface](https://github.com/svermeulen/Extenject#iinitializable). Note that you **must** use the `[InjectOptional]` attribute.
 
