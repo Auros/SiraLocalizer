@@ -1,28 +1,27 @@
-﻿using HMUI;
-using TMPro;
+﻿using TMPro;
 using HarmonyLib;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SiraLocalizer.HarmonyPatches
 {
-    [HarmonyPatch(typeof(TextSegmentedControl), "InstantiateCell", MethodType.Normal)]
-    internal static class TextSegmentedControl_InstantiateCell
+    [HarmonyPatch(typeof(TextMeshProUGUI), "OnEnable", MethodType.Normal)]
+    internal static class TextMeshProUGUI_OnEnable
     {
-        public static void Postfix(TextSegmentedControlCell __result)
+        public static void Postfix(TextMeshProUGUI __instance)
         {
-            CurvedTextMeshPro text = __result.transform.Find("Text").GetComponent<CurvedTextMeshPro>();
-
-            if (text.alignment != TextAlignmentOptions.Midline) return;
+            if (__instance.alignment != TextAlignmentOptions.Midline) return;
+            if (__instance.transform.parent && __instance.transform.parent.GetComponent<LayoutGroup>()) return;
 
             // Midline text alignment breaks if certain characters are taller than others
             // e.g. the accent on É makes it taller than regular ASCII letters
-            text.alignment = TextAlignmentOptions.Baseline;
+            __instance.alignment = TextAlignmentOptions.Baseline;
 
             // this value is eyeballed
-            Vector2 offset = new Vector2(0, 0.3f * text.fontSize);
+            Vector2 offset = new Vector2(0, 0.31f * __instance.fontSize);
 
-            text.rectTransform.offsetMin -= offset;
-            text.rectTransform.offsetMax -= offset;
+            __instance.rectTransform.offsetMin -= offset;
+            __instance.rectTransform.offsetMax -= offset;
         }
     }
 }
