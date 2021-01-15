@@ -12,16 +12,20 @@ You can change the language in-game by going to *Options* > *Settings* > *Others
 ![Localization Location](https://i.imgur.com/tazj6Tl.png)
 
 ## Contributors
-### French
-* [Nicolas (nicoco007)](https://github.com/nicoco007)
-
-### Simplified Chinese
+### Chinese (Simplified)
 * 乾杯君
 * [WGzeyu](https://github.com/WGzeyu)
 * 暗黑幻想Dark师
 * 包子侯爵
 * 四条
 * 椰子
+
+### French
+* [nicoco007](https://github.com/nicoco007)
+
+### German
+* [DavySW](https://github.com/DavySW)
+* [XCraftTM](https://github.com/XCraftTM)
 
 ### Korean
 * [Cryental](https://github.com/Cryental)
