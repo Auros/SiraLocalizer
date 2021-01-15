@@ -29,6 +29,8 @@ namespace SiraLocalizer.HarmonyPatches
             textTransform.offsetMin -= offset;
             textTransform.offsetMax -= offset;
 
+            textTransform.sizeDelta = new Vector2(180, textTransform.sizeDelta.y);
+
             LocalizedTextMeshProUGUI localizedText = textObject.AddComponent<LocalizedTextMeshProUGUI>();
             localizedText.SetField<LocalizedTextComponent<TextMeshProUGUI>, TextMeshProUGUI>("localizedComponent", text);
             localizedText.Key = "LABEL_COMBO";
