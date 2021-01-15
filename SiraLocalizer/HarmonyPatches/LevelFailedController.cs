@@ -2,6 +2,7 @@
 using IPA.Utilities;
 using Polyglot;
 using TMPro;
+using UnityEngine;
 
 namespace SiraLocalizer.HarmonyPatches
 {
@@ -38,6 +39,9 @@ namespace SiraLocalizer.HarmonyPatches
         {
             bool wasActive = levelFailedTextEffect.gameObject.activeSelf;
             levelFailedTextEffect.gameObject.SetActive(false);
+
+            RectTransform transform = (RectTransform)levelFailedTextEffect.transform;
+            transform.sizeDelta = new Vector2(12, transform.sizeDelta.y);
 
             TextMeshPro text = levelFailedTextEffect.GetComponent<TextMeshPro>();
             text.fontStyle |= FontStyles.UpperCase;
