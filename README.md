@@ -30,6 +30,9 @@ You can change the language in-game by going to *Options* > *Settings* > *Others
 
 # Creating Custom Localization Sheets
 You can create a copy of [this spreadsheet](https://docs.google.com/spreadsheets/d/1NERV_PftlFQFKByvCxWV6hs9XaRLmNyMBOSLf4285AY/edit?usp=sharing) and fill out the keys for your language. Once completed, it can be exported as a **csv** and be placed into `UserData/SIRA/Localizations`. If the mod is installed, this folder will be created for you. Launch the game and the localizations will be loaded into the game.
+
+Note that you will need to change `showIncompleteTranslations` to `true` if you are translating to a language that isn't officially in SiraLocalizer yet.
+
 ## Becoming a Translator
 We use [Crowdin](https://crowdin.com/) to make translating easier. You can request access to [the SiraLocalizer project](https://crowdin.com/project/siralocalizer) by filling out [this form](https://docs.google.com/forms/d/e/1FAIpQLSfk7z1EGqS2zl1jSomigSntvxQH0pTTKsxDlrpd9c53jKNpwA/viewform). We will get back to you as soon as possible!
 

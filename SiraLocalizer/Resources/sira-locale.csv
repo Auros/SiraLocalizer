@@ -226,8 +226,6 @@ Beat Saber를 플레이하는 동안 플레이어는 높은 강도의 신체 활
 "MODIFIER_NO_ARROWS_HINT","","You can cut all the cubes in any direction.","Vous pouvez couper les cubes dans n'importe quelle direction.","","Du kannst die Würfel aus jeder Richtung verschlagen.","","","","","","","","","Du kan skära kuberna i valfri riktning.","","","","","你可以从任何角度挥砍方块","","모든 큐브를 모든 방향에서 자를 수 있습니다.","","","","","","","",""
 "MODIFIER_NO_BOMBS","","No Bombs","Pas de bombes","","Keine Bomben","","","","","","","","","Inga bomber","","","","","没有炸弹","","폭탄 없음","","","","","","","",""
 "MODIFIER_NO_BOMBS_HINT","","There will be no bombs in the level.","Il n'y aura pas de bombes dans le niveau.","","Es werden keine Bomben in den Leveln auftauchen.","","","","","","","","","Det kommer inga bomber i nivån.","","","","","关卡中不会出现炸弹","","레벨에 폭탄이 없어집니다.","","","","","","","",""
-"MODIFIER_PRO_MODE","","Pro Mode","Mode professionnel","","Experten-Modus","","","","","","","","","Proffsläge","","","","","专家模式","","프로 모드","","","","","","","",""
-"MODIFIER_PRO_MODE_HINT","","There's no tolerance in hitting cubes.","Il n'y a aucune tolérance pour la coupe des cubes.","","Es gibt keine Toleranz, Würfel zu schlagen.","","","","","","","","","Det finns ingen tolerans i att träffa kuberna.","","","","","在击打方块时将没有容错值","","","","","","","","","",""
 "MODIFIER_SLOWER_SONG","","Slower Song","Chanson plus lente","","Langsameres Lied","","Música Lenta","","","","","","","Långsam låt","","","","","歌曲减速","","느린 음악","","","","","","","",""
 "MODIFIER_SLOWER_SONG_HINT","","Song will play slower.","La chanson jouera plus lentement.","","Der Song wird langsamer abgespielt.","","A música tocará mais devagar.","","","","","","","Låten kommer spela långsammare.","","","","","歌曲将减速至0.8倍","","음악이 느리게 연주됩니다.","","","","","","","",""
 "MODIFIER_STRICT_ANGLES","","Strict Angles","Angles stricts","","Strenge Winkel","","Ângulos Estritos","","","","","","","Stränga vinklar","","","","","精确角度","","엄격한 각도","","","","","","","",""
@@ -617,7 +615,6 @@ Pour plus d'information, cherchez « Getting Started With Mixed Reality Capture
 "TITLE_CLIENT_DISCONNECTED","","Client Disconnected","Client déconnecté","","Client getrennt","","Cliente Desconectado","","","","","","","","","","","","客户端连接断开","","클라이언트 연결 끊김","","","","","","","",""
 "BUTTON_RECOMMEND","","Recommend","Recommander","","Empfehlen","","","","","","","","","","","","","","推荐","","추천","","","","","","","",""
 "MULTIPLAYER_DISCLAIMER","","If you play in multiplayer mode, other players will be able to see your username, avatar, and other information necessary to enable you to play multiplayer games.","Si vous jouez en multijoueur, les autres joueurs pourront voir votre nom d'utilisateur, votre avatar et d'autres informations nécessaires vous permettant de jouer des parties à plusieurs joueurs.","","Wenn Sie im Mehrspielermodus spielen, können andere Spieler Ihren Benutzernamen, Ihren Avatar und andere Informationen sehen, die für das Spielen von Mehrspielerspielen erforderlich sind.","","","","","","","","","","","","","","在联机模式中，你需要让其他玩家看到你的昵称、角色造型和其他一些必要的信息以继续游玩该模式。","","멀티 플레이어 모드로 플레이하는 경우, 다른 플레이어가 사용자 이름, 아바타, 그리고 게임에 필요한 다른 정보들을 볼 수 있습니다.","","","","","","","",""
-"MP_MISSING_SONG_ENTITLEMENT","","Missing Song Entitlement","Droit de chanson manquant","","Fehlender Songanspruch","","","","","","","","","","","","","","缺少歌曲授权","","","","","","","","","",""
 "TITLE_RECOMMEND_LEVEL","","Recommend Level","Niveau recommandé","","Level empfehlen","","","","","","","","","","","","","","推荐关卡","","추천 레벨","","","","","","","",""
 "LABEL_JOINING_LOBBY","","Joining Lobby","Connexion au salon","","Lobby beitreten","","","","","","","","","","","","","","进入大厅","","로비 참가 중","","","","","","","",""
 "BUTTON_SELECT","","Select","Sélectionner","","Wählen","","","","","","","","","","","","","","选择","","선택","","","","","","","",""
@@ -733,12 +730,12 @@ Pour plus d'information, cherchez « Getting Started With Mixed Reality Capture
 "HINT_EDITOR_BUTTON","","Beatmap Editor","Éditeur de chansons","","Beatmap Editor","","","","","","","","","","","","","","谱面编辑器","","비트맵 에디터","","","","","","","",""
 "HINT_OPTIONS_BUTTON","","Options","Options","","Einstellungen","","","","","","","","","","Instellingen","","","","设置","","설정","","","","","","","",""
 "HINT_EXIT_BUTTON","","Exit","Quitter","","Ausgang","","","","","","","","","","Afsluiten","","","","退出","","끝내기","","","","","","","",""
-"LEVEL_FAILED","","Level
-Failed","Niveau
-échoué","","Level 
+"LEVEL_FAILED",""," Level
+Failed"," Niveau
+échoué",""," Level 
 Fehlgeschlagen","","","","","","","","","","Level
-gefaald","","","","关卡
-失败","","레벨
+gefaald","","",""," 关卡
+失败",""," 레벨
 실패","","","","","","","",""
 "FLYING_TEXT_MISS","","Miss","Raté","","Verfehlt","","","","","","","","","","Gemist","","","","遗漏","","틀림","","","","","","","",""
 "LABEL_COMBO","","Combo","Combo","","Kombination","","","","","","","","","","","","","","连击","","콤보","","","","","","","",""

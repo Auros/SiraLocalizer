@@ -12,8 +12,12 @@ namespace SiraLocalizer
     {
         private static readonly Dictionary<string, LocalizationData> _lockedAssetCache = new Dictionary<string, LocalizationData>();
 
-        public Localizer()
+        private readonly Config _config;
+
+        public Localizer(Config config)
         {
+            _config = config;
+
             // Add ours FIRST
             AddLocalizationSheetFromAssembly("SiraLocalizer.Resources.sira-locale.csv", GoogleDriveDownloadFormat.CSV);
             AddLocalizationSheetFromAssembly("SiraLocalizer.Resources.contributors.csv", GoogleDriveDownloadFormat.CSV, true);
@@ -48,45 +52,11 @@ namespace SiraLocalizer
 
         public void RecalculateLanguages()
         {
-            var supported = new HashSet<Language>();
-            var nonShadowLanguages = GetLanguagesInSheets(_lockedAssetCache.Values.Where(x => x.shadowLocalization == false).Select(x => x.asset).ToArray());
+            List<Language> supported = GetLanguagesInSheets(_lockedAssetCache.Values.Where(x => x.shadowLocalization == false).Select(x => x.asset));
 
-            // We know English will always be present.
-            supported.Add(Language.English);
-            for (int i = 0; i < _lockedAssetCache.Count; i++)
-            {
-                var locData = _lockedAssetCache.Values.ElementAt(i);
-                var langs = GetLanguagesInSheets(locData.asset);
-                if (locData.shadowLocalization)
-                {
-                    if (!LanguageMatch(nonShadowLanguages, langs))
-                    {
-                        continue;
-                    }
-                }
-                foreach (var lang in langs)
-                {
-                    supported.Add(lang);
-                }
-            }
             Localization.Instance.SupportedLanguages.Clear();
             Localization.Instance.SupportedLanguages.AddRange(supported);
             Localization.Instance.InvokeOnLocalize();
-        }
-
-        private bool LanguageMatch(List<Language> pairOne, List<Language> pairTwo)
-        {
-            for (int i = 0; i < pairOne.Count; i++)
-            {
-                for (int x = 0; x < pairTwo.Count; x++)
-                {
-                    if (pairOne[i] == pairTwo[x])
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
 
         public LocalizationAsset AddLocalizationSheetFromAssembly(string assemblyPath, GoogleDriveDownloadFormat type, bool shadow = false)
@@ -117,7 +87,7 @@ namespace SiraLocalizer
             RecalculateLanguages();
         }
 
-        internal List<Language> GetLanguagesInSheets(params LocalizationAsset[] assets)
+        private List<Language> GetLanguagesInSheets(IEnumerable<LocalizationAsset> assets)
         {
             var localizationsTable = new Dictionary<string, List<string>>();
 
@@ -155,16 +125,35 @@ namespace SiraLocalizer
                 }
             }
 
-            var supportedLanguages = new List<Language>();
+            List<Language> supportedLanguages;
+
+            if (_config.showIncompleteTranslations)
+            {
+                supportedLanguages = new List<Language>();
+            }
+            else
+            {
+                supportedLanguages = ((Language[])Enum.GetValues(typeof(Language))).ToList();
+            }
 
             foreach (int lang in Enum.GetValues(typeof(Language)))
             {
                 foreach (List<string> localizations in localizationsTable.Values)
                 {
-                    if (!string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
+                    if (_config.showIncompleteTranslations)
                     {
-                        supportedLanguages.Add((Language)lang);
-                        break;
+                        if (!string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
+                        {
+                            supportedLanguages.Add((Language)lang);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
+                        {
+                            supportedLanguages.Remove((Language)lang);
+                        }
                     }
                 }
             }

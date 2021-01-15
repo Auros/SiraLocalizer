@@ -10,5 +10,6 @@ namespace SiraLocalizer
     internal class Config
     {
         [UseConverter(typeof(EnumConverter<Language>))] public virtual Language language { get; set; }
+        public virtual bool showIncompleteTranslations { get; set; }
     }
 }
