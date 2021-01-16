@@ -13,7 +13,7 @@
     "Beat Saber (dump localization)": {
       "commandName": "Executable",
       "executablePath": "$(SteamExecutable)",
-      "commandLineArgs": "-applaunch 620980 fpfc --verbose --trace --dump-localization --dump-keys"
+      "commandLineArgs": "-applaunch 620980 fpfc --verbose --trace --dump-localization"
     }
   }
 }

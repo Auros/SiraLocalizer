@@ -12,6 +12,7 @@ using Polyglot;
 using System.IO;
 using IPA.Utilities;
 using System.Text;
+using System.Collections.Generic;
 
 namespace SiraLocalizer
 {
@@ -19,6 +20,9 @@ namespace SiraLocalizer
     public class Plugin
     {
         private const string kHarmonyId = "pro.sira.siralocalizer";
+
+        // keys that aren't actually used
+        private static readonly string[] kLocalizationKeyIgnoreList = { "MP_MISSING_SONG_ENTITLEMENT", "MODIFIER_PRO_MODE", "MODIFIER_PRO_MODE_HINT", "LANGUAGE_EN", "LANGUAGE_SC" };
 
         internal static IPALogger Log { get; private set; }
 
@@ -32,7 +36,6 @@ namespace SiraLocalizer
             _harmony = new Harmony(kHarmonyId);
 
             if (Environment.GetCommandLineArgs().Contains("--dump-localization")) DumpBaseGameLocalization();
-            if (Environment.GetCommandLineArgs().Contains("--dump-keys")) DumpBaseGameKeys();
 
             zenjector.OnApp<SiraLocalizerCoreInstaller>().WithParameters(conf.Generated<Config>());
             zenjector.OnMenu<SiraLocalizerUIInstaller>();
@@ -53,37 +56,26 @@ namespace SiraLocalizer
 
         private void DumpBaseGameLocalization()
         {
-            LocalizationAsset baseAsset = Localization.Instance.InputFiles.FirstOrDefault();
-
-            if (baseAsset == null)
-            {
-                Log.Error("Could not dump base game localization: no input files found!");
-                return;
-            }
-
-            string filePath = Path.Combine(UnityGame.InstallPath, baseAsset.TextAsset.name + ".csv");
-
-            try
-            {
-                File.WriteAllText(filePath, baseAsset.TextAsset.text, Encoding.UTF8);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Could not dump base game localization: " + ex);
-            }
-        }
-
-        private void DumpBaseGameKeys()
-        {
-            string filePath = Path.Combine(UnityGame.InstallPath, "keys.txt");
+            string filePath = Path.Combine(UnityGame.InstallPath, "localization.csv");
 
             try
             {
                 using (StreamWriter writer = new StreamWriter(filePath))
                 {
-                    foreach (string key in Localization.GetKeys())
+                    LocalizationAsset baseGameAsset = Localization.Instance.InputFiles.First();
+                    List<List<string>> rows = CsvReader.Parse(baseGameAsset.TextAsset.text);
+
+                    writer.WriteLine("Polyglot,100,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+
+                    foreach (List<string> row in rows.SkipWhile(r => r[0] != "Polyglot").Skip(1))
                     {
-                        writer.WriteLine(key);
+                        if (string.IsNullOrEmpty(row[0]) || kLocalizationKeyIgnoreList.Contains(row[0])) continue;
+
+                        string key     = EscapeCsvValue(row.ElementAtOrDefault(0));
+                        string context = EscapeCsvValue(row.ElementAtOrDefault(1));
+                        string english = EscapeCsvValue(row.ElementAtOrDefault(2));
+
+                        writer.WriteLine($"{key},{context},{english},,,,,,,,,,,,,,,,,,,,,,,,,,,");
                     }
                 }
             }
@@ -91,6 +83,14 @@ namespace SiraLocalizer
             {
                 Log.Error("Could not dump base game localization: " + ex);
             }
+        }
+
+        private string EscapeCsvValue(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return null;
+            if (!value.Contains(',') && !value.Contains('"') && !value.Contains('\n')) return value;
+
+            return "\"" + value.Replace("\"", "\"\"") + "\"";
         }
     }
 }
