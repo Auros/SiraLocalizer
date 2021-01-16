@@ -4,8 +4,9 @@ Community localization support in Beat Saber. Created by nicoco007 and Auros.
 Requires [SiraUtil](https://github.com/Auros/SiraUtil/releases/latest) 2.1.0 or greater.
 # Supported Languages for the Base Game
 The community has unofficially translated the base game into the following languages:
+* Chinese (Simplified)
 * French
-* Simplified Chinese
+* German
 * Korean
 
 You can change the language in-game by going to *Options* > *Settings* > *Others*.
