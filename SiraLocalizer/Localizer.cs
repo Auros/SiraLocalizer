@@ -153,6 +153,7 @@ namespace SiraLocalizer
                         if (string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
                         {
                             supportedLanguages.Remove((Language)lang);
+                            break;
                         }
                     }
                 }
