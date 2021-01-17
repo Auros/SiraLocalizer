@@ -19,7 +19,9 @@ namespace SiraLocalizer
             ("MENU_TRANSLATED_BY", "Translated by"),
             ("LEVEL_FAILED", " Level\nFailed"),
             ("FLYING_TEXT_MISS", "Miss"),
-            ("LABEL_COMBO", "Combo")
+            ("LABEL_COMBO", "Combo"),
+            ("OBJECTIVE_COMPARISON_MINIMUM", "Min"),
+            ("OBJECTIVE_COMPARISON_MAXIMUM", "Max")
         };
 
         // because there's typos and weirdness
