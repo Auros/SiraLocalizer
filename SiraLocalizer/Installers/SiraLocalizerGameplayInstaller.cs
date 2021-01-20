@@ -26,7 +26,6 @@ namespace SiraLocalizer.Installers
             textObject.transform.localRotation = Quaternion.identity;
 
             TextMeshPro text = textObject.AddComponent<TextMeshPro>();
-            FlyingTextEffect flyingTextEffect = gameObject.AddComponent<FlyingTextEffect>();
 
             // TODO figure out how to get a reference to EffectPoolsManualInstaller._flyingTextEffectPrefab to get font
             text.fontStyle = FontStyles.Italic | FontStyles.UpperCase | FontStyles.Bold;
@@ -45,6 +44,9 @@ namespace SiraLocalizer.Installers
             moveAnimationCurve.AddKey(new Keyframe() { time = 0.1588104f, value = 0.7196346f, inWeight = 0.3333333f, outWeight = 0.3333333f, inTangent = 1.049638f, outTangent = 1.049638f });
             moveAnimationCurve.AddKey(new Keyframe() { time = 1, value = 1, inWeight = 0.3333333f, outWeight = 0.3333333f, inTangent = 0, outTangent = 0 });
 
+            gameObject.SetActive(false);
+
+            FlyingTextEffect flyingTextEffect = gameObject.AddComponent<ItalicizedFlyingTextEffect>();
             flyingTextEffect.SetField("_text", text);
             flyingTextEffect.SetField("_fadeAnimationCurve", fadeAnimationCurve);
             flyingTextEffect.SetField<FlyingObjectEffect, AnimationCurve>("_moveAnimationCurve", moveAnimationCurve);
