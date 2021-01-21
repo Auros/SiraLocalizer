@@ -10,6 +10,7 @@ namespace SiraLocalizer
 {
     internal class Localizer : ILocalizer
     {
+        private static readonly Language[] kSupportedLanguages = { Language.English, Language.French, Language.German, Language.Portuguese_Brazil, Language.Russian, Language.Simplified_Chinese, Language.Korean };
         private static readonly Dictionary<string, LocalizationData> _lockedAssetCache = new Dictionary<string, LocalizationData>();
 
         private readonly Config _config;
@@ -52,10 +53,15 @@ namespace SiraLocalizer
 
         public void RecalculateLanguages()
         {
-            List<Language> supported = GetLanguagesInSheets(_lockedAssetCache.Values.Where(x => x.shadowLocalization == false).Select(x => x.asset));
+            IEnumerable<Language> languages = kSupportedLanguages;
+
+            if (_config.showIncompleteTranslations)
+            {
+                languages = kSupportedLanguages.Union(GetLanguagesInSheets(_lockedAssetCache.Values.Where(x => x.shadowLocalization == false).Select(x => x.asset)));
+            }
 
             Localization.Instance.SupportedLanguages.Clear();
-            Localization.Instance.SupportedLanguages.AddRange(supported);
+            Localization.Instance.SupportedLanguages.AddRange(languages);
             Localization.Instance.InvokeOnLocalize();
         }
 
@@ -125,41 +131,21 @@ namespace SiraLocalizer
                 }
             }
 
-            List<Language> supportedLanguages;
-
-            if (_config.showIncompleteTranslations)
-            {
-                supportedLanguages = new List<Language>();
-            }
-            else
-            {
-                supportedLanguages = ((Language[])Enum.GetValues(typeof(Language))).ToList();
-            }
-
+            var presentLanguages = new List<Language>();
+            
             foreach (int lang in Enum.GetValues(typeof(Language)))
             {
                 foreach (List<string> localizations in localizationsTable.Values)
                 {
                     if (_config.showIncompleteTranslations)
                     {
-                        if (!string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
-                        {
-                            supportedLanguages.Add((Language)lang);
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        if (string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
-                        {
-                            supportedLanguages.Remove((Language)lang);
-                            break;
-                        }
+                        presentLanguages.Add((Language)lang);
+                        break;
                     }
                 }
             }
 
-            return supportedLanguages;
+            return presentLanguages;
         }
 
         private struct LocalizationData
