@@ -1430,7 +1430,7 @@ MonoBehaviour:
   normalSpacingOffset: 0
   boldStyle: 0.75
   boldSpacing: 7
-  italicStyle: 35
+  italicStyle: 22
   tabSize: 10
 --- !u!28 &6753593770830623789
 Texture2D:

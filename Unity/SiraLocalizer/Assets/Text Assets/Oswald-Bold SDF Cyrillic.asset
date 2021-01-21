@@ -1345,7 +1345,7 @@ MonoBehaviour:
   normalSpacingOffset: 0
   boldStyle: 0.75
   boldSpacing: 7
-  italicStyle: 35
+  italicStyle: 30
   tabSize: 10
 --- !u!21 &6449677141541646135
 Material:
