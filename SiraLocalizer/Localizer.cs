@@ -61,7 +61,7 @@ namespace SiraLocalizer
             }
 
             Localization.Instance.SupportedLanguages.Clear();
-            Localization.Instance.SupportedLanguages.AddRange(languages);
+            Localization.Instance.SupportedLanguages.AddRange(languages.OrderBy(lang => lang));
             Localization.Instance.InvokeOnLocalize();
         }
 
@@ -137,7 +137,7 @@ namespace SiraLocalizer
             {
                 foreach (List<string> localizations in localizationsTable.Values)
                 {
-                    if (_config.showIncompleteTranslations)
+                    if (!string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
                     {
                         presentLanguages.Add((Language)lang);
                         break;
