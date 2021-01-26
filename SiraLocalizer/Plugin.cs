@@ -1,13 +1,13 @@
 ﻿using IPA;
+using System;
 using HarmonyLib;
+using System.Linq;
 using SiraUtil.Zenject;
 using System.Reflection;
 using IPA.Config.Stores;
 using SiraLocalizer.Installers;
 using Conf = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
-using System;
-using System.Linq;
 
 namespace SiraLocalizer
 {
@@ -15,8 +15,6 @@ namespace SiraLocalizer
     public class Plugin
     {
         private const string kHarmonyId = "pro.sira.siralocalizer";
-
-        
 
         internal static IPALogger Log { get; private set; }
 
@@ -33,7 +31,7 @@ namespace SiraLocalizer
 
             zenjector.OnApp<SiraLocalizerCoreInstaller>().WithParameters(conf.Generated<Config>());
             zenjector.OnMenu<SiraLocalizerUIInstaller>();
-            zenjector.Register<SiraLocalizerGameplayInstaller>().On<GameplayCoreInstaller>().Expose<MissedNoteEffectSpawner>();
+
         }
 
         [OnEnable]

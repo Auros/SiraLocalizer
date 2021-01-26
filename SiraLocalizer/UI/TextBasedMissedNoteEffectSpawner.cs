@@ -1,51 +1,36 @@
-﻿using Polyglot;
+﻿using Zenject;
+using Polyglot;
 using UnityEngine;
-using Zenject;
 
 namespace SiraLocalizer.UI
 {
-	public class TextBasedMissedNoteEffectSpawner : MonoBehaviour
+	internal class TextBasedMissedNoteEffectSpawner : MissedNoteEffectSpawner
 	{
-		private BeatmapObjectManager _beatmapObjectManager;
-		private AudioTimeSyncController _audioTimeSyncController;
-		private CoreGameHUDController.InitData _initData;
-
+		private DiContainer _container;
 		private FlyingTextSpawner _flyingTextSpawner;
-		private float _spawnPosZ;
 
-		[Inject]
-		public void Construct(DiContainer container, BeatmapObjectManager beatmapObjectManager, AudioTimeSyncController audioTimeSyncController, CoreGameHUDController.InitData initData, MissedNoteEffectSpawner original)
+        public override void Start()
         {
-			_beatmapObjectManager = beatmapObjectManager;
-			_audioTimeSyncController = audioTimeSyncController;
-			_initData = initData;
 
-			_flyingTextSpawner = container.InstantiateComponent<ItalicizedFlyingTextSpawner>(gameObject);
+        }
 
-			Destroy(original.gameObject);
-		}
-
-		public void Start()
-		{
+        [Inject]
+		public void Construct(DiContainer container)
+        {
+			_container = container;
+			var original = gameObject.GetComponent<MissedNoteEffectSpawner>();
+			Destroy(original);
 			if (_initData.hide)
 			{
-				enabled = false;
+                enabled = false;
 				return;
 			}
-
 			_beatmapObjectManager.noteWasMissedEvent += HandleNoteWasMissed;
+			_flyingTextSpawner = _container.InstantiateComponent<ItalicizedFlyingTextSpawner>(gameObject);
 			_spawnPosZ = transform.position.z;
 		}
 
-		public void OnDestroy()
-		{
-			if (_beatmapObjectManager != null)
-			{
-				_beatmapObjectManager.noteWasMissedEvent -= HandleNoteWasMissed;
-			}
-		}
-
-		public void HandleNoteWasMissed(NoteController noteController)
+        public override void HandleNoteWasMissed(NoteController noteController)
 		{
 			if (noteController.hide) return;
 			if (noteController.noteData.time + 0.5f < _audioTimeSyncController.songTime) return;
@@ -58,8 +43,12 @@ namespace SiraLocalizer.UI
 			position.x = Mathf.Sign(position.x);
 			position.z = _spawnPosZ;
 			position = worldRotation * position;
-
 			_flyingTextSpawner.SpawnText(position, noteController.worldRotation, noteController.inverseWorldRotation, Localization.Get("FLYING_TEXT_MISS"));
 		}
-	}
+
+        public override void OnDestroy()
+        {
+			_beatmapObjectManager.noteWasMissedEvent -= HandleNoteWasMissed;
+        }
+    }
 }

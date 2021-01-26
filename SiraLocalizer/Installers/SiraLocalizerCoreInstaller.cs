@@ -1,6 +1,7 @@
 ﻿using Zenject;
 using SiraLocalizer.UI;
 using SiraUtil.Interfaces;
+using SiraLocalizer.Providers;
 
 namespace SiraLocalizer.Installers
 {
@@ -22,6 +23,8 @@ namespace SiraLocalizer.Installers
 
             Container.BindInterfacesAndSelfTo<LanguageEnforcer>().AsSingle();
             Container.BindInterfacesAndSelfTo<FontLoader>().AsSingle();
+
+            Container.Bind(typeof(IModelProvider), typeof(FlyingTextYoinkerProvider)).To<FlyingTextYoinkerProvider>().AsSingle();
         }
     }
 }
