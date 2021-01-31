@@ -22,6 +22,8 @@ namespace SiraLocalizer.Installers
 
             Container.BindInterfacesAndSelfTo<LanguageEnforcer>().AsSingle();
             Container.BindInterfacesAndSelfTo<FontLoader>().AsSingle();
+
+            Container.Bind<FontAssetHelper>().AsTransient();
         }
     }
 }

@@ -7,15 +7,12 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using Object = UnityEngine.Object;
-using IPA.Utilities;
 using UnityEngine.SceneManagement;
 
 namespace SiraLocalizer.UI
 {
     internal class FontLoader : IInitializable, IDisposable
     {
-        private static readonly FieldAccessor<TMP_FontAsset, Texture2D>.Accessor kAtlasTextureAccessor = FieldAccessor<TMP_FontAsset, Texture2D>.GetAccessor("m_AtlasTexture");
-
         private readonly string[] kFontNamesToRemove = { "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)" };
         private readonly FontReplacementStrategy[] kFontReplacementStrategies = new[]
         {
@@ -31,8 +28,15 @@ namespace SiraLocalizer.UI
             },
         };
 
+        private readonly FontAssetHelper _fontAssetHelper;
+
         private readonly List<TMP_FontAsset> _fallbackFontAssets = new List<TMP_FontAsset>();
         private readonly List<TMP_FontAsset> _processedFontAssets = new List<TMP_FontAsset>();
+
+        public FontLoader(FontAssetHelper fontAssetHelper)
+        {
+            _fontAssetHelper = fontAssetHelper;
+        }
 
         public void Initialize()
         {
@@ -122,32 +126,13 @@ namespace SiraLocalizer.UI
 
             foreach (TMP_FontAsset fallback in fallbacks.Reverse())
             {
-                TMP_FontAsset fallbackCopy = CopyFontAsset(fallback, fontAsset.material);
+                TMP_FontAsset fallbackCopy = _fontAssetHelper.CopyFontAsset(fallback, fontAsset.material);
 
                 // insert as first possible fallback font
                 fontAsset.fallbackFontAssetTable.Insert(0, fallbackCopy);
             }
 
             _processedFontAssets.Add(fontAsset);
-        }
-
-        private TMP_FontAsset CopyFontAsset(TMP_FontAsset fontAsset, Material referenceMaterial)
-        {
-            TMP_FontAsset copy = Object.Instantiate(fontAsset);
-
-            Texture2D texture = fontAsset.atlasTexture;
-            Texture2D newTexture = new Texture2D(texture.width, texture.height, texture.format, texture.mipmapCount, true);
-            Graphics.CopyTexture(texture, newTexture);
-
-            Material material = new Material(referenceMaterial);
-            material.SetTexture("_MainTex", newTexture);
-
-            kAtlasTextureAccessor(ref copy) = newTexture;
-            copy.name = fontAsset.name;
-            copy.atlasTextures = new[] { newTexture };
-            copy.material = material;
-
-            return copy;
         }
 
         private struct FontReplacementStrategy

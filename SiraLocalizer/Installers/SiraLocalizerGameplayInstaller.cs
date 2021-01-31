@@ -1,6 +1,5 @@
 ﻿using IPA.Utilities;
 using SiraLocalizer.UI;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -9,6 +8,13 @@ namespace SiraLocalizer.Installers
 {
     internal class SiraLocalizerGameplayInstaller : Installer
     {
+        private FontAssetHelper _fontAssetHelper;
+
+        public SiraLocalizerGameplayInstaller(FontAssetHelper fontAssetHelper)
+        {
+            _fontAssetHelper = fontAssetHelper;
+        }
+
         public override void InstallBindings()
         {
             Container.Bind<TextBasedMissedNoteEffectSpawner>().FromNewComponentOn(new GameObject(nameof(TextBasedMissedNoteEffectSpawner))).AsSingle().NonLazy();
@@ -26,12 +32,16 @@ namespace SiraLocalizer.Installers
             textObject.transform.localRotation = Quaternion.identity;
 
             TextMeshPro text = textObject.AddComponent<TextMeshPro>();
-
-            // TODO figure out how to get a reference to EffectPoolsManualInstaller._flyingTextEffectPrefab to get font
             text.fontStyle = FontStyles.Italic | FontStyles.UpperCase | FontStyles.Bold;
-            text.font = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().First(f => f.name == "Teko-Medium SDF No Glow");
             text.alignment = TextAlignmentOptions.Center;
             text.fontSize = 3;
+
+            // default font is Teko-Medium SDF No Glow (standard UI text)
+            // we create a copy that doesn't do weird stuff when not on a curved canvas (i.e. doesn't have the CURVED shader keyword)
+            TMP_FontAsset originalFont = text.font;
+            TMP_FontAsset replacementFont = _fontAssetHelper.CopyFontAsset(originalFont, originalFont.material, "Teko-Medium SDF No Glow Flat");
+            replacementFont.material.shaderKeywords = new string[0];
+            text.font = replacementFont;
 
             // TODO figure out how to get a reference to EffectPoolsManualInstaller._flyingSpriteEffectPrefab to get animations
             var fadeAnimationCurve = new AnimationCurve();
