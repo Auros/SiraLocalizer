@@ -10,7 +10,7 @@ namespace SiraLocalizer
 {
     internal class Localizer : ILocalizer
     {
-        private static readonly Language[] kSupportedLanguages = { Language.English, Language.French, Language.German, Language.Portuguese_Brazil, Language.Russian, Language.Simplified_Chinese, Language.Korean };
+        private static readonly Language[] kSupportedLanguages = { Language.English, Language.French, Language.German, Language.Italian, Language.Portuguese_Brazil, Language.Russian, Language.Simplified_Chinese, Language.Korean };
         private static readonly Dictionary<string, LocalizationData> _lockedAssetCache = new Dictionary<string, LocalizationData>();
 
         private readonly Config _config;
