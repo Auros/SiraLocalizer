@@ -1,65 +1,47 @@
 ﻿using Polyglot;
 using UnityEngine;
-using Zenject;
 
 namespace SiraLocalizer.UI
 {
-	public class TextBasedMissedNoteEffectSpawner : MonoBehaviour
-	{
-		private BeatmapObjectManager _beatmapObjectManager;
-		private AudioTimeSyncController _audioTimeSyncController;
-		private CoreGameHUDController.InitData _initData;
+    internal class TextBasedMissedNoteEffectSpawner : MissedNoteEffectSpawner
+    {
+        private FlyingTextSpawner _flyingTextSpawner;
 
-		private FlyingTextSpawner _flyingTextSpawner;
-		private float _spawnPosZ;
-
-		[Inject]
-		public void Construct(DiContainer container, BeatmapObjectManager beatmapObjectManager, AudioTimeSyncController audioTimeSyncController, CoreGameHUDController.InitData initData, MissedNoteEffectSpawner original)
+        private void Awake()
         {
-			_beatmapObjectManager = beatmapObjectManager;
-			_audioTimeSyncController = audioTimeSyncController;
-			_initData = initData;
+            _flyingTextSpawner = GetComponent<ItalicizedFlyingTextSpawner>();
+        }
 
-			_flyingTextSpawner = container.InstantiateComponent<ItalicizedFlyingTextSpawner>(gameObject);
+        public override void Start()
+        {
+            base.Start();
 
-			Destroy(original.gameObject);
-		}
+            _beatmapObjectManager.noteWasMissedEvent -= base.HandleNoteWasMissed;
+            _beatmapObjectManager.noteWasMissedEvent += HandleNoteWasMissed;
+        }
 
-		public void Start()
-		{
-			if (_initData.hide)
-			{
-				enabled = false;
-				return;
-			}
+        public override void HandleNoteWasMissed(NoteController noteController)
+        {
+            if (noteController.hide) return;
+            if (noteController.noteData.time + 0.5f < _audioTimeSyncController.songTime) return;
+            if (noteController.noteData.colorType == ColorType.None) return;
 
-			_beatmapObjectManager.noteWasMissedEvent += HandleNoteWasMissed;
-			_spawnPosZ = transform.position.z;
-		}
+            Vector3 position = noteController.noteTransform.position;
+            Quaternion worldRotation = noteController.worldRotation;
 
-		public void OnDestroy()
-		{
-			if (_beatmapObjectManager != null)
-			{
-				_beatmapObjectManager.noteWasMissedEvent -= HandleNoteWasMissed;
-			}
-		}
+            position = noteController.inverseWorldRotation * position;
+            position.x = Mathf.Sign(position.x);
+            position.z = _spawnPosZ;
+            position = worldRotation * position;
 
-		public void HandleNoteWasMissed(NoteController noteController)
-		{
-			if (noteController.hide) return;
-			if (noteController.noteData.time + 0.5f < _audioTimeSyncController.songTime) return;
-			if (noteController.noteData.colorType == ColorType.None) return;
+            _flyingTextSpawner.SpawnText(position, noteController.worldRotation, noteController.inverseWorldRotation, Localization.Get("FLYING_TEXT_MISS"));
+        }
 
-			Vector3 position = noteController.noteTransform.position;
-			Quaternion worldRotation = noteController.worldRotation;
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
 
-			position = noteController.inverseWorldRotation * position;
-			position.x = Mathf.Sign(position.x);
-			position.z = _spawnPosZ;
-			position = worldRotation * position;
-
-			_flyingTextSpawner.SpawnText(position, noteController.worldRotation, noteController.inverseWorldRotation, Localization.Get("FLYING_TEXT_MISS"));
-		}
-	}
+            _beatmapObjectManager.noteWasMissedEvent -= HandleNoteWasMissed;
+        }
+    }
 }
