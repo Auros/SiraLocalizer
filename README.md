@@ -7,7 +7,10 @@ The community has unofficially translated the base game into the following langu
 * Chinese (Simplified)
 * French
 * German
+* Italian
 * Korean
+* Portuguese (Brazilian)
+* Russian
 
 You can change the language in-game by going to *Options* > *Settings* > *Others*.
 ![Localization Location](https://i.imgur.com/tazj6Tl.png)
@@ -22,16 +25,28 @@ You can change the language in-game by going to *Options* > *Settings* > *Others
 * 椰子
 
 ### French
+* Moréo
 * [nicoco007](https://github.com/nicoco007)
 
 ### German
-* [DavySW](https://github.com/DavySW)
+* Syskoh
+* Ubivis
 * [XCraftTM](https://github.com/XCraftTM)
+
+### Italian
+* Daniele1926
+* Vincentmrl
 
 ### Korean
 * [Cryental](https://github.com/Cryental)
 * [Helloyunho](https://github.com/Helloyunho)
 * [SieR](https://github.com/SieR-VR)
+
+### Portuguese (Brazilian)
+* Inexorável
+
+### Russian
+* Stormmonster
 
 # Creating Custom Localization Sheets
 You can create a copy of [this spreadsheet](https://docs.google.com/spreadsheets/d/1NERV_PftlFQFKByvCxWV6hs9XaRLmNyMBOSLf4285AY/edit?usp=sharing) and fill out the keys for your language. Once completed, it can be exported as a **csv** and be placed into `UserData/SIRA/Localizations`. If the mod is installed, this folder will be created for you. Launch the game and the localizations will be loaded into the game.
@@ -62,7 +77,7 @@ internal class MyLocalizationHandler : IInitializable
 
     public void Initialize()
     {
-        _localizer.AddLocalizationSheetFromAssembly("YourAssemblyPath.ToThe.Localization.sheet.csv", GoogleDriveDownloadFormat.CSV);
+        _localizer?.AddLocalizationSheetFromAssembly("YourAssemblyPath.ToThe.Localization.sheet.csv", GoogleDriveDownloadFormat.CSV);
     }
 }
 ```
