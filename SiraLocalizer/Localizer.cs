@@ -5,6 +5,7 @@ using SiraUtil.Interfaces;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
+using System.Globalization;
 
 namespace SiraLocalizer
 {
@@ -62,6 +63,18 @@ namespace SiraLocalizer
 
             Localization.Instance.SupportedLanguages.Clear();
             Localization.Instance.SupportedLanguages.AddRange(languages.OrderBy(lang => lang));
+
+            if (_config.language < 0)
+            {
+                Language potential = AutoDetectLanguage();
+
+                if (Localization.Instance.SupportedLanguages.Contains(potential))
+                {
+                    _config.language = potential;
+                    Localization.Instance.SelectLanguage(_config.language);
+                }
+            }
+
             Localization.Instance.InvokeOnLocalize();
         }
 
@@ -146,6 +159,110 @@ namespace SiraLocalizer
             }
 
             return presentLanguages;
+        }
+
+        private Language AutoDetectLanguage()
+        {
+            string name = CultureInfo.CurrentUICulture.Name;
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return Language.English;
+            }
+
+            string[] parts = name.Split('-');
+            string iso639 = parts[0];
+            string bcp47 = parts.Length >= 2 ? parts[1] : string.Empty;
+
+            Plugin.Log.Info($"User language: '{name}' (ISO 639-1 code: '{iso639}', BCP-47 code: '{bcp47}')");
+
+            switch (iso639)
+            {
+                case "fr":
+                    return Language.French;
+
+                case "es":
+                    return Language.Spanish;
+
+                case "de":
+                    return Language.German;
+                    
+                case "it":
+                    return Language.Italian;
+                    
+                case "pt":
+                    return bcp47 == "BR" ? Language.Portuguese_Brazil : Language.Portuguese;
+                    
+                case "ru":
+                    return Language.Russian;
+                    
+                case "el":
+                    return Language.Greek;
+                    
+                case "tr":
+                    return Language.Turkish;
+                    
+                case "da":
+                    return Language.Danish;
+                    
+                case "nb":
+                    return Language.Norwegian;
+                    
+                case "sv":
+                    return Language.Swedish;
+                    
+                case "nl":
+                    return Language.Dutch;
+                    
+                case "pl":
+                    return Language.Polish;
+                    
+                case "fi":
+                    return Language.Finnish;
+                    
+                case "ja":
+                    return Language.Japanese;
+                    
+                case "zh":
+                    if (bcp47 == "Hant" || bcp47 == "HK" || bcp47 == "MO" || bcp47 == "TW")
+                    {
+                        return Language.Traditional_Chinese;
+                    }
+                    else
+                    {
+                        return Language.Simplified_Chinese;
+                    }
+
+                case "ko":
+                    return Language.Korean;
+                    
+                case "cs":
+                    return Language.Czech;
+                    
+                case "hu":
+                    return Language.Hungarian;
+                    
+                case "ro":
+                    return Language.Romanian;
+                    
+                case "th":
+                    return Language.Thai;
+                    
+                case "bg":
+                    return Language.Bulgarian;
+                    
+                case "he":
+                    return Language.Hebrew;
+
+                case "ar":
+                    return Language.Arabic;
+
+                case "bs":
+                    return Language.Bosnian;
+
+                default:
+                    return Language.English;
+            }
         }
 
         private struct LocalizationData
