@@ -82,12 +82,12 @@ namespace SiraLocalizer.UI
 
         }
 
-        private void OnSelectedLanguageChanged(Language language)
+        private void OnSelectedLanguageChanged(Locale language)
         {
-            if (language != Language.English && KeyHasValueForLanguage("LANGUAGE_CONTRIBUTORS", language))
+            if (language != Locale.English && KeyHasValueForLanguage("LANGUAGE_CONTRIBUTORS", language))
             {
-                string contributors = Localization.Get("LANGUAGE_CONTRIBUTORS", language);
-                string translatedBy = Localization.Get("MENU_TRANSLATED_BY", language);
+                string contributors = Localization.Get("LANGUAGE_CONTRIBUTORS", (Language)language);
+                string translatedBy = Localization.Get("MENU_TRANSLATED_BY", (Language)language);
 
                 _credits.gameObject.SetActive(true);
                 _credits.text = $"<b>{translatedBy}</b>   <color=#bababa>{contributors}</color>";
@@ -98,7 +98,7 @@ namespace SiraLocalizer.UI
             }
         }
 
-        private bool KeyHasValueForLanguage(string key, Language language)
+        private bool KeyHasValueForLanguage(string key, Locale language)
         {
             return !string.IsNullOrWhiteSpace(LocalizationImporter.GetLanguages(key).ElementAtOrDefault((int)language));
         }

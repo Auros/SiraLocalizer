@@ -4,21 +4,22 @@ using Polyglot;
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace SiraLocalizer.UI
 {
     internal class LanguageSetting : MonoBehaviour
     {
-        public event Action<Language> selectedLanguageChanged;
+        public event Action<Locale> selectedLanguageChanged;
 
         private Config _config;
 
         private SimpleTextDropdown _dropdown;
         private SettingsNavigationController _settingsNavigationController;
 
-        private Language _selectedLanguage;
+        private Locale _selectedLanguage;
 
-        private IReadOnlyList<Language> _languages;
+        private IReadOnlyList<Locale> _languages;
         private IReadOnlyList<string> _languageDisplayNames;
 
         [Inject]
@@ -33,7 +34,7 @@ namespace SiraLocalizer.UI
             _settingsNavigationController = GetComponentInParent<SettingsNavigationController>();
 
             // AsReadOnly to avoid accidentally messing around with values inside Polyglot
-            _languages = Localization.Instance.SupportedLanguages.AsReadOnly();
+            _languages = Localization.Instance.SupportedLanguages.Select(l => (Locale)l).ToList().AsReadOnly();
             _languageDisplayNames = Localization.Instance.LocalizedLanguageNames.AsReadOnly();
 
             _selectedLanguage = _config.language;
@@ -55,7 +56,7 @@ namespace SiraLocalizer.UI
             }
             else
             {
-                _selectedLanguage = Language.English;
+                _selectedLanguage = Locale.English;
             }
         }
 

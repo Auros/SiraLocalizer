@@ -16,7 +16,7 @@ namespace SiraLocalizer.UI
         public void Initialize()
         {
             Localization.Instance.AddOnLocalizeEvent(this);
-            Localization.Instance.SelectLanguage(_config.language);
+            Localization.Instance.SelectLanguage((Language)_config.language);
         }
 
         public void Dispose()
@@ -26,13 +26,13 @@ namespace SiraLocalizer.UI
 
         public void OnLocalize()
         {
-            Language wantedLanguage = _config.language;
+            Locale wantedLanguage = _config.language;
 
             // enforce our language selection
-            if (Localization.Instance.SelectedLanguage != wantedLanguage)
+            if (Localization.Instance.SelectedLanguage != (Language)wantedLanguage)
             {
                 Plugin.Log.Trace("Enforcing language " + wantedLanguage);
-                Localization.Instance.SelectLanguage(wantedLanguage);
+                Localization.Instance.SelectLanguage((Language)wantedLanguage);
             }
         }
     }

@@ -11,7 +11,7 @@ namespace SiraLocalizer
 {
     internal class Localizer : ILocalizer
     {
-        private static readonly Language[] kSupportedLanguages = { Language.English, Language.French, Language.German, Language.Italian, Language.Portuguese_Brazil, Language.Russian, Language.Simplified_Chinese, Language.Korean };
+        private static readonly Locale[] kSupportedLanguages = { Locale.English, Locale.French, Locale.German, Locale.Italian, Locale.Portuguese_Brazil, Locale.Russian, Locale.Simplified_Chinese, Locale.Korean };
         private static readonly Dictionary<string, LocalizationData> _lockedAssetCache = new Dictionary<string, LocalizationData>();
 
         private readonly Config _config;
@@ -54,7 +54,7 @@ namespace SiraLocalizer
 
         public void RecalculateLanguages()
         {
-            IEnumerable<Language> languages = kSupportedLanguages;
+            IEnumerable<Locale> languages = kSupportedLanguages;
 
             if (_config.showIncompleteTranslations)
             {
@@ -62,16 +62,16 @@ namespace SiraLocalizer
             }
 
             Localization.Instance.SupportedLanguages.Clear();
-            Localization.Instance.SupportedLanguages.AddRange(languages.OrderBy(lang => lang));
+            Localization.Instance.SupportedLanguages.AddRange(languages.OrderBy(lang => lang).Select(lang => (Language)lang));
 
             if (_config.language < 0)
             {
-                Language potential = AutoDetectLanguage();
+                Locale potential = AutoDetectLanguage();
 
-                if (Localization.Instance.SupportedLanguages.Contains(potential))
+                if (Localization.Instance.SupportedLanguages.Contains((Language)potential))
                 {
                     _config.language = potential;
-                    Localization.Instance.SelectLanguage(_config.language);
+                    Localization.Instance.SelectLanguage((Language)_config.language);
                 }
             }
 
@@ -106,7 +106,7 @@ namespace SiraLocalizer
             RecalculateLanguages();
         }
 
-        private List<Language> GetLanguagesInSheets(IEnumerable<LocalizationAsset> assets)
+        private List<Locale> GetLanguagesInSheets(IEnumerable<LocalizationAsset> assets)
         {
             var localizationsTable = new Dictionary<string, List<string>>();
 
@@ -144,15 +144,15 @@ namespace SiraLocalizer
                 }
             }
 
-            var presentLanguages = new List<Language>();
+            var presentLanguages = new List<Locale>();
             
-            foreach (int lang in Enum.GetValues(typeof(Language)))
+            foreach (int lang in Enum.GetValues(typeof(Locale)))
             {
                 foreach (List<string> localizations in localizationsTable.Values)
                 {
                     if (!string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
                     {
-                        presentLanguages.Add((Language)lang);
+                        presentLanguages.Add((Locale)lang);
                         break;
                     }
                 }
@@ -161,13 +161,13 @@ namespace SiraLocalizer
             return presentLanguages;
         }
 
-        private Language AutoDetectLanguage()
+        private Locale AutoDetectLanguage()
         {
             string name = CultureInfo.CurrentUICulture.Name;
 
             if (string.IsNullOrEmpty(name))
             {
-                return Language.English;
+                return Locale.English;
             }
 
             string[] parts = name.Split('-');
@@ -179,89 +179,89 @@ namespace SiraLocalizer
             switch (iso639)
             {
                 case "fr":
-                    return Language.French;
+                    return Locale.French;
 
                 case "es":
-                    return Language.Spanish;
+                    return Locale.Spanish;
 
                 case "de":
-                    return Language.German;
+                    return Locale.German;
                     
                 case "it":
-                    return Language.Italian;
+                    return Locale.Italian;
                     
                 case "pt":
-                    return bcp47 == "BR" ? Language.Portuguese_Brazil : Language.Portuguese;
+                    return bcp47 == "BR" ? Locale.Portuguese_Brazil : Locale.Portuguese;
                     
                 case "ru":
-                    return Language.Russian;
+                    return Locale.Russian;
                     
                 case "el":
-                    return Language.Greek;
+                    return Locale.Greek;
                     
                 case "tr":
-                    return Language.Turkish;
+                    return Locale.Turkish;
                     
                 case "da":
-                    return Language.Danish;
+                    return Locale.Danish;
                     
                 case "nb":
-                    return Language.Norwegian;
+                    return Locale.Norwegian;
                     
                 case "sv":
-                    return Language.Swedish;
+                    return Locale.Swedish;
                     
                 case "nl":
-                    return Language.Dutch;
+                    return Locale.Dutch;
                     
                 case "pl":
-                    return Language.Polish;
+                    return Locale.Polish;
                     
                 case "fi":
-                    return Language.Finnish;
+                    return Locale.Finnish;
                     
                 case "ja":
-                    return Language.Japanese;
+                    return Locale.Japanese;
                     
                 case "zh":
                     if (bcp47 == "Hant" || bcp47 == "HK" || bcp47 == "MO" || bcp47 == "TW")
                     {
-                        return Language.Traditional_Chinese;
+                        return Locale.Traditional_Chinese;
                     }
                     else
                     {
-                        return Language.Simplified_Chinese;
+                        return Locale.Simplified_Chinese;
                     }
 
                 case "ko":
-                    return Language.Korean;
+                    return Locale.Korean;
                     
                 case "cs":
-                    return Language.Czech;
+                    return Locale.Czech;
                     
                 case "hu":
-                    return Language.Hungarian;
+                    return Locale.Hungarian;
                     
                 case "ro":
-                    return Language.Romanian;
+                    return Locale.Romanian;
                     
                 case "th":
-                    return Language.Thai;
+                    return Locale.Thai;
                     
                 case "bg":
-                    return Language.Bulgarian;
+                    return Locale.Bulgarian;
                     
                 case "he":
-                    return Language.Hebrew;
+                    return Locale.Hebrew;
 
                 case "ar":
-                    return Language.Arabic;
+                    return Locale.Arabic;
 
                 case "bs":
-                    return Language.Bosnian;
+                    return Locale.Bosnian;
 
                 default:
-                    return Language.English;
+                    return Locale.English;
             }
         }
 

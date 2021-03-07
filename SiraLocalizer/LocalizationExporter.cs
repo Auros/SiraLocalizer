@@ -31,12 +31,15 @@ namespace SiraLocalizer
             { "MISSION_HELP_MAX_HANDS_MOVEMENT", (".</color>", "</color>.") },
             { "LABEL_MULTIPLAYER_MAINTENANCE_UPCOMING", ("maintatance", "maintenance") },
             { "HINT_OPTIONS_BUTTON", ("Settings", "Options") },
-            { "SETTINGS_OCULUS_MRC_INFO", ("Mixed Reality Capture Setup Guide", "Getting Started With Mixed Reality Capture") }
+            { "SETTINGS_OCULUS_MRC_INFO", ("Mixed Reality Capture Setup Guide", "Getting Started With Mixed Reality Capture") },
+            { "TEXT_INVALID_PASSWORD", ("You", "Your") }
         };
 
         public void DumpBaseGameLocalization()
         {
             string filePath = Path.Combine(UnityGame.InstallPath, "localization.csv");
+            int numberOfLanguages = Enum.GetNames(typeof(Locale)).Length - 2; // don't include Locale.None and Locale.English
+            string commas = new string(',', numberOfLanguages);
 
             try
             {
@@ -45,7 +48,7 @@ namespace SiraLocalizer
                     LocalizationAsset baseGameAsset = Localization.Instance.InputFiles.First();
                     List<List<string>> rows = CsvReader.Parse(baseGameAsset.TextAsset.text);
 
-                    writer.WriteLine("Polyglot,100,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+                    writer.WriteLine("Polyglot,100," + commas);
 
                     foreach (List<string> row in rows.SkipWhile(r => r[0] != "Polyglot").Skip(1))
                     {
@@ -53,7 +56,7 @@ namespace SiraLocalizer
 
                         string key     = row.ElementAtOrDefault(0);
                         string context = row.ElementAtOrDefault(1);
-                        string english = row.ElementAtOrDefault(2).TrimEnd();
+                        string english = row.ElementAtOrDefault(2)?.TrimEnd();
 
                         if (kCorrections.TryGetValue(key, out var rule))
                         {
@@ -62,12 +65,12 @@ namespace SiraLocalizer
                             english = english.Replace(rule.find, rule.replace);
                         }
 
-                        writer.WriteLine($"{EscapeCsvValue(key)},{EscapeCsvValue(context)},{EscapeCsvValue(english)},,,,,,,,,,,,,,,,,,,,,,,,,,,");
+                        writer.WriteLine($"{EscapeCsvValue(key)},{EscapeCsvValue(context)},{EscapeCsvValue(english)}" + commas);
                     }
 
                     foreach ((string key, string value) in kAdditionalKeys)
                     {
-                        writer.WriteLine($"{EscapeCsvValue(key)},,{EscapeCsvValue(value)},,,,,,,,,,,,,,,,,,,,,,,,,,,");
+                        writer.WriteLine($"{EscapeCsvValue(key)},,{EscapeCsvValue(value)}" + commas);
                     }
                 }
             }
