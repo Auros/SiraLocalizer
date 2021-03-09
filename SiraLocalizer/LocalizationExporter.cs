@@ -10,7 +10,7 @@ namespace SiraLocalizer
     internal class LocalizationExporter
     {
         // keys that aren't actually used
-        private static readonly string[] kLocalizationKeyIgnoreList = { "MP_MISSING_SONG_ENTITLEMENT", "MODIFIER_PRO_MODE", "MODIFIER_PRO_MODE_HINT", "LANGUAGE_EN", "LANGUAGE_SC" };
+        private static readonly string[] kLocalizationKeyIgnoreList = { "MP_MISSING_SONG_ENTITLEMENT", "LANGUAGE_EN", "LANGUAGE_SC" };
 
         // keys added by SiraLocalizer
         private static readonly (string, string)[] kAdditionalKeys = new[]
