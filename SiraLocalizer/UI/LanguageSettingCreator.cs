@@ -69,10 +69,11 @@ namespace SiraLocalizer.UI
 
             var textGameObject = new GameObject("SiraLocalizerContributorsText");
             _credits = textGameObject.AddComponent<CurvedTextMeshPro>();
+            _credits.fontMaterial = label.gameObject.GetComponent<CurvedTextMeshPro>().fontMaterial;
 
             var textRectTransform = (RectTransform)textGameObject.transform;
             textRectTransform.SetParent(otherSettingsContent, false);
-            textRectTransform.offsetMin = new Vector2(-45f, -7.4f);
+            textRectTransform.offsetMin = new Vector2(-45f, -14.4f);
             textRectTransform.offsetMax = new Vector2(45f, -7.4f);
 
             _credits.alignment = TextAlignmentOptions.TopLeft;

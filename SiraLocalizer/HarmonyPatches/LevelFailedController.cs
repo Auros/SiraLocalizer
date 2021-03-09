@@ -43,11 +43,19 @@ namespace SiraLocalizer.HarmonyPatches
             RectTransform transform = (RectTransform)levelFailedTextEffect.transform;
             transform.sizeDelta = new Vector2(12, transform.sizeDelta.y);
 
-            TextMeshPro text = levelFailedTextEffect.GetComponent<TextMeshPro>();
+            Transform textTransform = levelFailedTextEffect.transform.Find("Text");
+
+            if (!textTransform)
+            {
+                Plugin.Log.Error($"Could not find 'Text' transform on '{levelFailedTextEffect}'");
+                return;
+            }
+
+            TextMeshPro text = textTransform.GetComponent<TextMeshPro>();
             text.fontStyle |= FontStyles.UpperCase;
             text.lineSpacing = -40;
 
-            LocalizedTextMeshPro localizedText = levelFailedTextEffect.gameObject.AddComponent<LocalizedTextMeshPro>();
+            LocalizedTextMeshPro localizedText = textTransform.gameObject.AddComponent<LocalizedTextMeshPro>();
             localizedText.SetField<LocalizedTextComponent<TextMeshPro>, TextMeshPro>("localizedComponent", text);
             localizedText.Key = "LEVEL_FAILED";
 
