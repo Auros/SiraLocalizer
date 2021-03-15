@@ -15,6 +15,7 @@
 * [nicoco007](https://github.com/nicoco007)
 
 ### German
+* [SteffoSpieler](https://github.com/SteffoSpieler)
 * Syskoh
 * Ubivis
 * [XCraftTM](https://github.com/XCraftTM)
