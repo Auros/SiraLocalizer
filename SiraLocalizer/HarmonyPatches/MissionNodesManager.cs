@@ -15,7 +15,7 @@ namespace SiraLocalizer.HarmonyPatches
             foreach (MissionObjectiveTypeSO objectiveType in ____allMissionNodes.SelectMany(n => n.missionData.missionObjectives).Select(o => o.type).Distinct())
             {
                 MissionObjectiveTypeSO objectiveTypeRef = objectiveType;
-
+                
                 switch (objectiveType.name)
                 {
                     case "MissMissionObjectiveType":
@@ -28,6 +28,10 @@ namespace SiraLocalizer.HarmonyPatches
 
                     case "HandsMovementMissionObjectiveType":
                         kObjectiveNameAccessor(ref objectiveTypeRef) = "OBJECTIVE_HANDS_MOVEMENT";
+                        break;
+
+                    case "FullComboMissionObjectiveType":
+                        kObjectiveNameAccessor(ref objectiveTypeRef) = "OBJECTIVE_FULL_COMBO";
                         break;
                 }
             }
