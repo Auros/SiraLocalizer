@@ -10,5 +10,6 @@ namespace SiraLocalizer
     {
         [UseConverter(typeof(EnumConverter<Locale>))] public virtual Locale language { get; set; } = Locale.None;
         public virtual bool showIncompleteTranslations { get; set; }
+        public virtual bool autoDownloadNewLocalizations { get; set; } = true;
     }
 }
