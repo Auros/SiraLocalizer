@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -37,13 +38,7 @@ namespace SiraLocalizer.Crowdin
 
             try
             {
-                LoadLocalizationSheets();
-
-                if (await DownloadLocalizations())
-                {
-                    Plugin.Log.Info("Reloading localization assets");
-                    LoadLocalizationSheets();
-                }
+                await DownloadLocalizations();
             }
             catch (Exception ex)
             {
@@ -52,8 +47,12 @@ namespace SiraLocalizer.Crowdin
             }
         }
 
-        public async Task<bool> DownloadLocalizations()
+        public async Task DownloadLocalizations()
         {
+            var cancellationTokenSource = new CancellationTokenSource();
+
+            Task loadTask = LoadLocalizationSheets(cancellationTokenSource.Token);
+
             using (var client = new HttpClient())
             {
                 string url = $"https://distributions.crowdin.net/{kDistributionKey}/manifest.json";
@@ -63,7 +62,11 @@ namespace SiraLocalizer.Crowdin
                 string manifestContent = await response.Content.ReadAsStringAsync();
                 CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
 
-                if (!await ShouldDownloadContent(manifest)) return false;
+                if (!await ShouldDownloadContent(manifest)) return;
+
+                // cancel and wait for completion
+                cancellationTokenSource.Cancel();
+                await loadTask;
 
                 if (Directory.Exists(kContentFolder))
                 {
@@ -95,7 +98,7 @@ namespace SiraLocalizer.Crowdin
                     await writer.WriteAsync(manifestContent);
                 }
 
-                return true;
+                await LoadLocalizationSheets(CancellationToken.None);
             }
         }
 
@@ -120,7 +123,7 @@ namespace SiraLocalizer.Crowdin
             return localManifest.Timestamp != remoteManifest.Timestamp;
         }
 
-        private void LoadLocalizationSheets()
+        private async Task LoadLocalizationSheets(CancellationToken cancellationToken)
         {
             foreach (LocalizationAsset asset in _loadedAssets)
             {
@@ -131,12 +134,17 @@ namespace SiraLocalizer.Crowdin
 
             if (!Directory.Exists(kContentFolder)) return;
 
-            foreach (string filePath in Directory.EnumerateFiles(kContentFolder, "*.csv"))
+            foreach (string filePath in Directory.EnumerateFiles(kContentFolder, "*.csv", SearchOption.TopDirectoryOnly))
             {
+                Plugin.Log.Info($"Adding '{filePath}'");
+
                 using (StreamReader reader = new StreamReader(filePath))
                 {
-                    Plugin.Log.Info($"Adding '{filePath}'");
-                    _loadedAssets.Add(_localizer.AddLocalizationSheet(reader.ReadToEnd(), GoogleDriveDownloadFormat.CSV, filePath));
+                    string text = await reader.ReadToEndAsync();
+
+                    if (cancellationToken.IsCancellationRequested) break;
+
+                    _loadedAssets.Add(_localizer.AddLocalizationSheet(text, GoogleDriveDownloadFormat.CSV, filePath));
                 }
             }
 
