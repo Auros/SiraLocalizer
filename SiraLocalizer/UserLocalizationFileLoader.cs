@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SiraLocalizer
 {
-    internal class CustomLocaleLoader : IInitializable
+    internal class UserLocalizationFileLoader : IInitializable
     {
         private readonly ILocalizer _localizer;
 
-        public CustomLocaleLoader([Inject(Id = "SIRA.Localizer")] ILocalizer localizer)
+        public UserLocalizationFileLoader([Inject(Id = "SIRA.Localizer")] ILocalizer localizer)
         {
             _localizer = localizer;
         }
@@ -25,14 +25,14 @@ namespace SiraLocalizer
         public async Task LoadLocales()
         {
             var folder = Path.Combine(UnityGame.UserDataPath, "SIRA", "Localizations");
+
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
             }
-            var files = new DirectoryInfo(folder).EnumerateFiles().Where(x => x.Extension == ".csv" || x.Extension == ".tsv");
-            for (int i = 0; i < files.Count(); i++)
+
+            foreach (FileInfo file in new DirectoryInfo(folder).EnumerateFiles().Where(x => x.Extension == ".csv" || x.Extension == ".tsv"))
             {
-                var file = files.ElementAt(i);
                 using (var reader = File.OpenText(file.FullName))
                 {
                     var fileText = await reader.ReadToEndAsync();
