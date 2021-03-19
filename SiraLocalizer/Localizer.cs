@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System;
 using System.Reflection;
 using System.Globalization;
+using System.IO;
+using SiraLocalizer.Crowdin;
 
 namespace SiraLocalizer
 {
     internal class Localizer : ILocalizer
     {
-        private static readonly Locale[] kSupportedLanguages = { Locale.English, Locale.French, Locale.German, Locale.Italian, Locale.Portuguese_Brazil, Locale.Russian, Locale.Simplified_Chinese, Locale.Korean };
         private static readonly Dictionary<string, LocalizationData> _lockedAssetCache = new Dictionary<string, LocalizationData>();
 
         private readonly Config _config;
@@ -54,11 +55,11 @@ namespace SiraLocalizer
 
         public void RecalculateLanguages()
         {
-            IEnumerable<Locale> languages = kSupportedLanguages;
+            IEnumerable<Locale> languages = GetSupportedLanguages();
 
             if (_config.showIncompleteTranslations)
             {
-                languages = kSupportedLanguages.Union(GetLanguagesInSheets(_lockedAssetCache.Values.Where(x => x.shadowLocalization == false).Select(x => x.asset)));
+                languages = languages.Union(GetLanguagesInSheets(_lockedAssetCache.Values.Where(x => x.shadowLocalization == false).Select(x => x.asset)));
             }
 
             Localization.Instance.SupportedLanguages.Clear();
@@ -104,6 +105,44 @@ namespace SiraLocalizer
         {
             _lockedAssetCache.Remove(key);
             RecalculateLanguages();
+        }
+
+        private List<Locale> GetSupportedLanguages()
+        {
+            List<Locale> languages = new List<Locale>();
+            Stream fileContent = null;
+
+            if (File.Exists(CrowdinDownloader.kLanguagesFilePath))
+            {
+                try
+                {
+                    fileContent = File.OpenRead(CrowdinDownloader.kLanguagesFilePath);
+                }
+                catch (IOException ex)
+                {
+                    Plugin.Log.Error("Failed to load languages from file; falling back to built-in languages");
+                    Plugin.Log.Error(ex.ToString());
+                }
+            }
+            else
+            {
+                fileContent = Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.languages.txt");
+            }
+
+            using (var reader = new StreamReader(fileContent))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+
+                    if (Enum.TryParse(line, out Locale locale))
+                    {
+                        languages.Add(locale);
+                    }
+                }
+            }
+
+            return languages;
         }
 
         private List<Locale> GetLanguagesInSheets(IEnumerable<LocalizationAsset> assets)

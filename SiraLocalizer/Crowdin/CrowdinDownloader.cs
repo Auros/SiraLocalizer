@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,9 +18,16 @@ namespace SiraLocalizer.Crowdin
     {
         private const string kDistributionKey = "ba7660f1409c7f368c973c8o9lk";
 
-        private static readonly string kLocalizationsFolder = Path.Combine(Application.persistentDataPath, "Localizations");
+        private const string kLanguagesUrl = "https://gitcdn.link/repo/Auros/SiraLocalizer/main/SiraLocalizer/Resources/languages.txt";
+        private const string kContributorsUrl = "https://gitcdn.link/repo/Auros/SiraLocalizer/main/SiraLocalizer/Resources/contributors.csv";
+
+        private static readonly string kDataFolder = Path.Combine(Application.persistentDataPath, "SiraLocalizer");
+        private static readonly string kLocalizationsFolder = Path.Combine(kDataFolder, "Localizations");
         private static readonly string kContentFolder = Path.Combine(kLocalizationsFolder, "Content");
         private static readonly string kManifestFilePath = Path.Combine(kLocalizationsFolder, "manifest.json");
+        private static readonly string kContributorsFilePath = Path.Combine(kDataFolder, "contributors.csv");
+
+        internal static readonly string kLanguagesFilePath = Path.Combine(kDataFolder, "languages.txt");
 
         private readonly ILocalizer _localizer;
         private readonly Config _config;
@@ -64,9 +72,9 @@ namespace SiraLocalizer.Crowdin
 
                 if (!await ShouldDownloadContent(manifest)) return;
 
-                // cancel and wait for completion
+                // cancel and wait for completion (and ignore result)
                 cancellationTokenSource.Cancel();
-                await loadTask;
+                await loadTask.ContinueWith(t => { });
 
                 if (Directory.Exists(kContentFolder))
                 {
@@ -77,21 +85,14 @@ namespace SiraLocalizer.Crowdin
 
                 foreach (var fileName in manifest.Files)
                 {
-                    url = $"https://distributions.crowdin.net/{kDistributionKey}/content{fileName}";
-                    Plugin.Log.Info($"Downloading '{url}'");
-
-                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
-                    request.Headers.Add("Accept-Encoding", "gzip");
-
-                    response = await client.SendAsync(request);
-
-                    using (FileStream file = File.OpenWrite(Path.Combine(kContentFolder, fileName.Substring(1))))
-                    using (var gzipStream = new GZipStream(await response.Content.ReadAsStreamAsync(), CompressionMode.Decompress))
-                    {
-                        await gzipStream.CopyToAsync(file);
-                        await file.FlushAsync();
-                    }
+                    // file name has a leading slash so we have to remove that
+                    string filePath = Path.Combine(kContentFolder, fileName.Substring(1));
+                    await DownloadFile(client, $"https://distributions.crowdin.net/{kDistributionKey}/content{fileName}", filePath);
                 }
+
+                // always redownload contributors & available languages if translations changed since we don't currently have a way to figure out if those files have changed
+                await DownloadFile(client, kContributorsUrl, kContributorsFilePath);
+                await DownloadFile(client, kLanguagesUrl, kLanguagesFilePath);
 
                 using (var writer = new StreamWriter(kManifestFilePath))
                 {
@@ -104,7 +105,7 @@ namespace SiraLocalizer.Crowdin
 
         private async Task<bool> ShouldDownloadContent(CrowdinDistributionManifest remoteManifest)
         {
-            if (!File.Exists(kManifestFilePath)) return true;
+            if (!File.Exists(kManifestFilePath) || !File.Exists(kContributorsFilePath) || !File.Exists(kLanguagesFilePath)) return true;
             if (!Directory.Exists(kContentFolder)) return true;
 
             foreach (string fileName in remoteManifest.Files)
@@ -123,6 +124,41 @@ namespace SiraLocalizer.Crowdin
             return localManifest.Timestamp != remoteManifest.Timestamp;
         }
 
+        private async Task DownloadFile(HttpClient client, string url, string filePath)
+        {
+            Plugin.Log.Info($"Downloading '{url}'");
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Add("Accept-Encoding", "gzip");
+
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Plugin.Log.Error($"'{url}' responded with {response.StatusCode} ({response.ReasonPhrase})");
+                return;
+            }
+
+            Stream contentStream = await response.Content.ReadAsStreamAsync();
+
+            using (FileStream file = File.OpenWrite(filePath))
+            {
+                if (response.Headers.TryGetValues("Content-Encoding", out IEnumerable<string> values) && values.Contains("gzip"))
+                {
+                    using (var gzipStream = new GZipStream(contentStream, CompressionMode.Decompress))
+                    {
+                        await gzipStream.CopyToAsync(file);
+                    }
+                }
+                else
+                {
+                    await contentStream.CopyToAsync(file);
+                }
+
+                await file.FlushAsync();
+            }
+        }
+
         private async Task LoadLocalizationSheets(CancellationToken cancellationToken)
         {
             foreach (LocalizationAsset asset in _loadedAssets)
@@ -132,23 +168,36 @@ namespace SiraLocalizer.Crowdin
 
             _loadedAssets.Clear();
 
-            if (!Directory.Exists(kContentFolder)) return;
-
-            foreach (string filePath in Directory.EnumerateFiles(kContentFolder, "*.csv", SearchOption.TopDirectoryOnly))
+            if (Directory.Exists(kContentFolder))
             {
-                Plugin.Log.Info($"Adding '{filePath}'");
-
-                using (StreamReader reader = new StreamReader(filePath))
+                foreach (string filePath in Directory.EnumerateFiles(kContentFolder, "*.csv", SearchOption.TopDirectoryOnly))
                 {
-                    string text = await reader.ReadToEndAsync();
+                    cancellationToken.ThrowIfCancellationRequested();
 
-                    if (cancellationToken.IsCancellationRequested) break;
-
-                    _loadedAssets.Add(_localizer.AddLocalizationSheet(text, GoogleDriveDownloadFormat.CSV, filePath));
+                    await AddLocalizationSheetFromFile(filePath);
                 }
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (File.Exists(kContributorsFilePath))
+            {
+                await AddLocalizationSheetFromFile(kContributorsFilePath);
+            }
+
             _localizer.RecalculateLanguages();
+        }
+
+        private async Task AddLocalizationSheetFromFile(string filePath)
+        {
+            Plugin.Log.Info($"Adding '{filePath}'");
+
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                string text = await reader.ReadToEndAsync();
+
+                _loadedAssets.Add(_localizer.AddLocalizationSheet(text, GoogleDriveDownloadFormat.CSV, filePath));
+            }
         }
     }
 }
