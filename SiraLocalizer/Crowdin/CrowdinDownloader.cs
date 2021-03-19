@@ -16,6 +16,7 @@ namespace SiraLocalizer.Crowdin
 {
     public class CrowdinDownloader : IInitializable
     {
+        private const string kCrowdinHost = "https://distributions.crowdin.net";
         private const string kDistributionKey = "ba7660f1409c7f368c973c8o9lk";
 
         private const string kLanguagesUrl = "https://gitcdn.link/repo/Auros/SiraLocalizer/main/SiraLocalizer/Resources/languages.txt";
@@ -63,14 +64,18 @@ namespace SiraLocalizer.Crowdin
 
             using (var client = new HttpClient())
             {
-                string url = $"https://distributions.crowdin.net/{kDistributionKey}/manifest.json";
+                string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
                 Plugin.Log.Info($"Fetching Crowdin data at '{url}'");
                 HttpResponseMessage response = await client.GetAsync(url);
 
                 string manifestContent = await response.Content.ReadAsStringAsync();
                 CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
 
-                if (!await ShouldDownloadContent(manifest)) return;
+                if (!await ShouldDownloadContent(manifest))
+                {
+                    Plugin.Log.Info("Translations are up-to-date");
+                    return;
+                }
 
                 // cancel and wait for completion (and ignore result)
                 cancellationTokenSource.Cancel();
@@ -87,7 +92,7 @@ namespace SiraLocalizer.Crowdin
                 {
                     // file name has a leading slash so we have to remove that
                     string filePath = Path.Combine(kContentFolder, fileName.Substring(1));
-                    await DownloadFile(client, $"https://distributions.crowdin.net/{kDistributionKey}/content{fileName}", filePath);
+                    await DownloadFile(client, $"{kCrowdinHost}/{kDistributionKey}/content{fileName}", filePath);
                 }
 
                 // always redownload contributors & available languages if translations changed since we don't currently have a way to figure out if those files have changed
@@ -135,11 +140,13 @@ namespace SiraLocalizer.Crowdin
 
             if (!response.IsSuccessStatusCode)
             {
-                Plugin.Log.Error($"'{url}' responded with {response.StatusCode} ({response.ReasonPhrase})");
+                Plugin.Log.Error($"'{url}' responded with {(int)response.StatusCode} {response.StatusCode} ({response.ReasonPhrase})");
                 return;
             }
 
             Stream contentStream = await response.Content.ReadAsStreamAsync();
+
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
             using (FileStream file = File.OpenWrite(filePath))
             {
