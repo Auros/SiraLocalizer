@@ -58,12 +58,16 @@ namespace SiraLocalizer.Crowdin
 
         public async Task DownloadLocalizations()
         {
-            var cancellationTokenSource = new CancellationTokenSource();
-
-            Task loadTask = LoadLocalizationSheets(cancellationTokenSource.Token);
-
             using (var client = new HttpClient())
             {
+                var cancellationTokenSource = new CancellationTokenSource();
+
+                Task loadTask = LoadLocalizationSheets(cancellationTokenSource.Token);
+
+                // always redownload contributors & available languages since we don't currently have a way to figure out if those files have changed
+                Task languagesTask = DownloadFile(client, kLanguagesUrl, kLanguagesFilePath);
+                Task contributorsTask = DownloadFile(client, kContributorsUrl, kContributorsFilePath);
+
                 string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
                 Plugin.Log.Info($"Fetching Crowdin data at '{url}'");
                 HttpResponseMessage response = await client.GetAsync(url);
@@ -71,40 +75,39 @@ namespace SiraLocalizer.Crowdin
                 string manifestContent = await response.Content.ReadAsStringAsync();
                 CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
 
-                if (!await ShouldDownloadContent(manifest))
+                if (await ShouldDownloadContent(manifest))
+                {
+                    // cancel and wait for completion (and ignore result)
+                    cancellationTokenSource.Cancel();
+                    await loadTask.ContinueWith(t => { });
+
+                    if (Directory.Exists(kContentFolder))
+                    {
+                        Directory.Delete(kContentFolder, true);
+                    }
+
+                    Directory.CreateDirectory(kContentFolder);
+
+                    foreach (var fileName in manifest.Files)
+                    {
+                        // file name has a leading slash so we have to remove that
+                        string filePath = Path.Combine(kContentFolder, fileName.Substring(1));
+                        await DownloadFile(client, $"{kCrowdinHost}/{kDistributionKey}/content{fileName}", filePath);
+                    }
+
+                    using (var writer = new StreamWriter(kManifestFilePath))
+                    {
+                        await writer.WriteAsync(manifestContent);
+                    }
+
+                    loadTask = LoadLocalizationSheets(CancellationToken.None);
+                }
+                else
                 {
                     Plugin.Log.Info("Translations are up-to-date");
-                    return;
                 }
 
-                // cancel and wait for completion (and ignore result)
-                cancellationTokenSource.Cancel();
-                await loadTask.ContinueWith(t => { });
-
-                if (Directory.Exists(kContentFolder))
-                {
-                    Directory.Delete(kContentFolder, true);
-                }
-
-                Directory.CreateDirectory(kContentFolder);
-
-                foreach (var fileName in manifest.Files)
-                {
-                    // file name has a leading slash so we have to remove that
-                    string filePath = Path.Combine(kContentFolder, fileName.Substring(1));
-                    await DownloadFile(client, $"{kCrowdinHost}/{kDistributionKey}/content{fileName}", filePath);
-                }
-
-                // always redownload contributors & available languages if translations changed since we don't currently have a way to figure out if those files have changed
-                await DownloadFile(client, kContributorsUrl, kContributorsFilePath);
-                await DownloadFile(client, kLanguagesUrl, kLanguagesFilePath);
-
-                using (var writer = new StreamWriter(kManifestFilePath))
-                {
-                    await writer.WriteAsync(manifestContent);
-                }
-
-                await LoadLocalizationSheets(CancellationToken.None);
+                await Task.WhenAll(loadTask, languagesTask, contributorsTask);
             }
         }
 
@@ -148,9 +151,9 @@ namespace SiraLocalizer.Crowdin
 
             Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
-            using (FileStream file = File.OpenWrite(filePath))
+            using (FileStream file = new FileStream(filePath, FileMode.Create))
             {
-                if (response.Headers.TryGetValues("Content-Encoding", out IEnumerable<string> values) && values.Contains("gzip"))
+                if (response.Content.Headers.TryGetValues("Content-Encoding", out IEnumerable<string> values) && values.Contains("gzip"))
                 {
                     using (var gzipStream = new GZipStream(contentStream, CompressionMode.Decompress))
                     {
