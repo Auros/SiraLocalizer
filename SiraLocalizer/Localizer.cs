@@ -116,6 +116,7 @@ namespace SiraLocalizer
             {
                 try
                 {
+                    Plugin.Log.Trace($"Using locales in '{CrowdinDownloader.kLanguagesFilePath}'");
                     fileContent = File.OpenRead(CrowdinDownloader.kLanguagesFilePath);
                 }
                 catch (IOException ex)
@@ -126,6 +127,7 @@ namespace SiraLocalizer
             }
             else
             {
+                Plugin.Log.Trace("Using built-in locales");
                 fileContent = Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.languages.txt");
             }
 
@@ -137,6 +139,7 @@ namespace SiraLocalizer
 
                     if (Enum.TryParse(line, out Locale locale))
                     {
+                        Plugin.Log.Trace("Got locale " + locale);
                         languages.Add(locale);
                     }
                 }

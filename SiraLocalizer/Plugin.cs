@@ -31,7 +31,6 @@ namespace SiraLocalizer
 
             zenjector.OnApp<SiraLocalizerCoreInstaller>().WithParameters(conf.Generated<Config>());
             zenjector.OnMenu<SiraLocalizerUIInstaller>();
-
         }
 
         [OnEnable]

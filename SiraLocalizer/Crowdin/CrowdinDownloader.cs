@@ -31,20 +31,16 @@ namespace SiraLocalizer.Crowdin
         internal static readonly string kLanguagesFilePath = Path.Combine(kDataFolder, "languages.txt");
 
         private readonly ILocalizer _localizer;
-        private readonly Config _config;
         private readonly List<LocalizationAsset> _loadedAssets;
 
-        internal CrowdinDownloader([Inject(Id = "SIRA.Localizer")] ILocalizer localizer, Config config)
+        internal CrowdinDownloader([Inject(Id = "SIRA.Localizer")] ILocalizer localizer)
         {
             _localizer = localizer;
-            _config = config;
             _loadedAssets = new List<LocalizationAsset>();
         }
 
         public async void Initialize()
         {
-            if (!_config.autoDownloadNewLocalizations) return;
-
             try
             {
                 await DownloadLocalizations();
@@ -194,8 +190,6 @@ namespace SiraLocalizer.Crowdin
             {
                 await AddLocalizationSheetFromFile(kContributorsFilePath);
             }
-
-            _localizer.RecalculateLanguages();
         }
 
         private async Task AddLocalizationSheetFromFile(string filePath)

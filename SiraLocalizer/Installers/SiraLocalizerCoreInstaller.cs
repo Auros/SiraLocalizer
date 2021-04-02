@@ -21,7 +21,6 @@ namespace SiraLocalizer.Installers
 
             Container.Bind<ILocalizer>().WithId("SIRA.Localizer").To<Localizer>().AsSingle();
             Container.Bind<IInitializable>().To<UserLocalizationFileLoader>().AsSingle();
-            Container.Bind<IInitializable>().To<CrowdinDownloader>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<LanguageEnforcer>().AsSingle();
             Container.BindInterfacesAndSelfTo<FontLoader>().AsSingle();
@@ -29,6 +28,11 @@ namespace SiraLocalizer.Installers
             Container.Bind(typeof(IModelProvider), typeof(ItalicizedFlyingTextEffectModelProvider)).To<ItalicizedFlyingTextEffectModelProvider>().AsSingle();
 
             Container.Bind<FontAssetHelper>().AsTransient();
+
+            if (_config.autoDownloadNewLocalizations)
+            {
+                Container.Bind<IInitializable>().To<CrowdinDownloader>().AsSingle();
+            }
         }
     }
 }
