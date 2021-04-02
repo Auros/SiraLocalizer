@@ -41,6 +41,8 @@ namespace SiraLocalizer
             int numberOfLanguages = Enum.GetNames(typeof(Locale)).Length - 2; // don't include Locale.None and Locale.English
             string commas = new string(',', numberOfLanguages);
 
+            Plugin.Log.Info($"Dumping base game localization to '{filePath}'");
+
             try
             {
                 using (StreamWriter writer = new StreamWriter(filePath))
@@ -76,7 +78,8 @@ namespace SiraLocalizer
             }
             catch (Exception ex)
             {
-                Plugin.Log.Error("Could not dump base game localization: " + ex);
+                Plugin.Log.Error("Could not dump base game localization");
+                Plugin.Log.Error(ex.ToString());
             }
         }
 
