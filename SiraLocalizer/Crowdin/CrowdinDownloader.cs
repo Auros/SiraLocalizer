@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -66,7 +66,9 @@ namespace SiraLocalizer.Crowdin
 
                 string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
                 Plugin.Log.Info($"Fetching Crowdin data at '{url}'");
-                HttpResponseMessage response = await client.GetAsync(url);
+                var request = new HttpRequestMessage(HttpMethod.Get, url);
+                request.Headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
+                HttpResponseMessage response = await client.SendAsync(request);
 
                 string manifestContent = await response.Content.ReadAsStringAsync();
                 CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
@@ -109,8 +111,7 @@ namespace SiraLocalizer.Crowdin
 
         private async Task<bool> ShouldDownloadContent(CrowdinDistributionManifest remoteManifest)
         {
-            if (!File.Exists(kManifestFilePath) || !File.Exists(kContributorsFilePath) || !File.Exists(kLanguagesFilePath)) return true;
-            if (!Directory.Exists(kContentFolder)) return true;
+            if (!File.Exists(kManifestFilePath) || !Directory.Exists(kContentFolder)) return true;
 
             foreach (string fileName in remoteManifest.Files)
             {
@@ -133,7 +134,8 @@ namespace SiraLocalizer.Crowdin
             Plugin.Log.Info($"Downloading '{url}'");
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Add("Accept-Encoding", "gzip");
+            request.Headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
+            request.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
 
             HttpResponseMessage response = await client.SendAsync(request);
 
@@ -149,7 +151,7 @@ namespace SiraLocalizer.Crowdin
 
             using (FileStream file = new FileStream(filePath, FileMode.Create))
             {
-                if (response.Content.Headers.TryGetValues("Content-Encoding", out IEnumerable<string> values) && values.Contains("gzip"))
+                if (response.Content.Headers.ContentEncoding.Contains("gzip"))
                 {
                     using (var gzipStream = new GZipStream(contentStream, CompressionMode.Decompress))
                     {
