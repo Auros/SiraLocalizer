@@ -21,7 +21,8 @@ namespace SiraLocalizer
             ("FLYING_TEXT_MISS", "Miss"),
             ("LABEL_COMBO", "Combo"),
             ("OBJECTIVE_COMPARISON_MINIMUM", "Min"),
-            ("OBJECTIVE_COMPARISON_MAXIMUM", "Max")
+            ("OBJECTIVE_COMPARISON_MAXIMUM", "Max"),
+            ("SHOW_UNTRANSLATED_LANGUAGES", "Show incomplete translations")
         };
 
         // because there's typos and weirdness

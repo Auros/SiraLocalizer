@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SiraLocalizer.UI
 {
-    internal class LanguageSetting : MonoBehaviour
+    internal class LanguageSetting : MonoBehaviour, ILocalize
     {
         public event Action<Locale> selectedLanguageChanged;
 
@@ -33,9 +33,7 @@ namespace SiraLocalizer.UI
             _dropdown = GetComponentInChildren<SimpleTextDropdown>();
             _settingsNavigationController = GetComponentInParent<SettingsNavigationController>();
 
-            // AsReadOnly to avoid accidentally messing around with values inside Polyglot
-            _languages = Localization.Instance.SupportedLanguages.Select(l => (Locale)l).ToList().AsReadOnly();
-            _languageDisplayNames = Localization.Instance.LocalizedLanguageNames.AsReadOnly();
+            UpdateLanguages();
 
             _selectedLanguage = _config.language;
             selectedLanguageChanged?.Invoke(_selectedLanguage);
@@ -43,10 +41,10 @@ namespace SiraLocalizer.UI
 
         public void OnEnable()
         {
+            Localization.Instance.AddOnLocalizeEvent(this);
+
             _settingsNavigationController.didFinishEvent += OnSettingsDidFinish;
             _dropdown.didSelectCellWithIdxEvent += OnSelectedCell;
-
-            _dropdown.SetTexts(_languageDisplayNames);
 
             int idx = _languages.IndexOf(_selectedLanguage);
 
@@ -62,8 +60,24 @@ namespace SiraLocalizer.UI
 
         public void OnDisable()
         {
+            Localization.Instance.RemoveOnLocalizeEvent(this);
+
             _settingsNavigationController.didFinishEvent -= OnSettingsDidFinish;
             _dropdown.didSelectCellWithIdxEvent -= OnSelectedCell;
+        }
+
+        public void OnLocalize()
+        {
+            UpdateLanguages();
+        }
+
+        private void UpdateLanguages()
+        {
+            // AsReadOnly to avoid accidentally messing around with values inside Polyglot
+            _languages = Localization.Instance.SupportedLanguages.Select(l => (Locale)l).ToList().AsReadOnly();
+            _languageDisplayNames = Localization.Instance.LocalizedLanguageNames.AsReadOnly();
+
+            _dropdown.SetTexts(_languageDisplayNames);
         }
 
         private void OnSettingsDidFinish(SettingsNavigationController.FinishAction finishAction)
