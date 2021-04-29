@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Polyglot;
-using SiraUtil.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,8 +17,6 @@ namespace SiraLocalizer.Crowdin
     {
         private const string kCrowdinHost = "https://distributions.crowdin.net";
         private const string kDistributionKey = "ba7660f1409c7f368c973c8o9lk";
-
-        private const string kLanguagesUrl = "https://gitcdn.link/repo/Auros/SiraLocalizer/main/SiraLocalizer/Resources/languages.txt";
         private const string kContributorsUrl = "https://gitcdn.link/repo/Auros/SiraLocalizer/main/SiraLocalizer/Resources/contributors.csv";
 
         private static readonly string kDataFolder = Path.Combine(Application.persistentDataPath, "SiraLocalizer");
@@ -28,12 +25,10 @@ namespace SiraLocalizer.Crowdin
         private static readonly string kManifestFilePath = Path.Combine(kLocalizationsFolder, "manifest.json");
         private static readonly string kContributorsFilePath = Path.Combine(kDataFolder, "contributors.csv");
 
-        internal static readonly string kLanguagesFilePath = Path.Combine(kDataFolder, "languages.txt");
-
-        private readonly ILocalizer _localizer;
+        private readonly Localizer _localizer;
         private readonly List<LocalizationAsset> _loadedAssets;
 
-        internal CrowdinDownloader([Inject(Id = "SIRA.Localizer")] ILocalizer localizer)
+        internal CrowdinDownloader(Localizer localizer)
         {
             _localizer = localizer;
             _loadedAssets = new List<LocalizationAsset>();
@@ -61,7 +56,6 @@ namespace SiraLocalizer.Crowdin
                 Task loadTask = LoadLocalizationSheets(cancellationTokenSource.Token);
 
                 // always redownload contributors & available languages since we don't currently have a way to figure out if those files have changed
-                Task languagesTask = DownloadFile(client, kLanguagesUrl, kLanguagesFilePath);
                 Task contributorsTask = DownloadFile(client, kContributorsUrl, kContributorsFilePath);
 
                 string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
@@ -105,7 +99,7 @@ namespace SiraLocalizer.Crowdin
                     Plugin.Log.Info("Translations are up-to-date");
                 }
 
-                await Task.WhenAll(loadTask, languagesTask, contributorsTask);
+                await Task.WhenAll(loadTask, contributorsTask);
             }
         }
 
@@ -182,7 +176,7 @@ namespace SiraLocalizer.Crowdin
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    await AddLocalizationSheetFromFile(filePath);
+                    await AddLocalizationSheetFromFile(filePath, Path.GetFileName(filePath) == "sira-locale.csv"); // TODO this is dumb
                 }
             }
 
@@ -190,11 +184,11 @@ namespace SiraLocalizer.Crowdin
 
             if (File.Exists(kContributorsFilePath))
             {
-                await AddLocalizationSheetFromFile(kContributorsFilePath);
+                await AddLocalizationSheetFromFile(kContributorsFilePath, false);
             }
         }
 
-        private async Task AddLocalizationSheetFromFile(string filePath)
+        private async Task AddLocalizationSheetFromFile(string filePath, bool builtin)
         {
             Plugin.Log.Info($"Adding '{filePath}'");
 
@@ -202,7 +196,7 @@ namespace SiraLocalizer.Crowdin
             {
                 string text = await reader.ReadToEndAsync();
 
-                _loadedAssets.Add(_localizer.AddLocalizationSheet(text, GoogleDriveDownloadFormat.CSV, filePath));
+                _loadedAssets.Add(_localizer.AddLocalizationSheet(text, GoogleDriveDownloadFormat.CSV, builtin));
             }
         }
     }

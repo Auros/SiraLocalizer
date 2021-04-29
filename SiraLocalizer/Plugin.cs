@@ -27,7 +27,7 @@ namespace SiraLocalizer
 
             _harmony = new Harmony(kHarmonyId);
 
-            if (Environment.GetCommandLineArgs().Contains("--dump-localization")) new LocalizationExporter().DumpBaseGameLocalization();
+            if (Environment.GetCommandLineArgs().Contains("--dump-localization")) LocalizationExporter.DumpBaseGameLocalization();
 
             zenjector.OnApp<SiraLocalizerCoreInstaller>().WithParameters(conf.Generated<Config>());
             zenjector.OnMenu<SiraLocalizerUIInstaller>();

@@ -13,7 +13,7 @@ namespace SiraLocalizer.UI
 {
     internal class FontLoader : IInitializable, IDisposable
     {
-        private readonly string[] kFontNamesToRemove = { "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)" };
+        private readonly string[] kFontNamesToRemove = { "NotoSansJP-Medium SDF", "NotoSansKR-Medium SDF", "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)" };
         private readonly FontReplacementStrategy[] kFontReplacementStrategies = new[]
         {
             new FontReplacementStrategy()

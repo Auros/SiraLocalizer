@@ -3,16 +3,15 @@ using Polyglot;
 using System.IO;
 using System.Linq;
 using IPA.Utilities;
-using SiraUtil.Interfaces;
 using System.Threading.Tasks;
 
 namespace SiraLocalizer
 {
     internal class UserLocalizationFileLoader : IInitializable
     {
-        private readonly ILocalizer _localizer;
+        private readonly Localizer _localizer;
 
-        public UserLocalizationFileLoader([Inject(Id = "SIRA.Localizer")] ILocalizer localizer)
+        public UserLocalizationFileLoader(Localizer localizer)
         {
             _localizer = localizer;
         }
@@ -36,7 +35,7 @@ namespace SiraLocalizer
                 using (var reader = File.OpenText(file.FullName))
                 {
                     var fileText = await reader.ReadToEndAsync();
-                    _localizer.AddLocalizationSheet(fileText, file.Extension.EndsWith("csv") ? GoogleDriveDownloadFormat.CSV : GoogleDriveDownloadFormat.TSV, file.FullName);
+                    _localizer.AddLocalizationSheet(fileText, file.Extension.EndsWith("csv") ? GoogleDriveDownloadFormat.CSV : GoogleDriveDownloadFormat.TSV);
                 }
             }
         }

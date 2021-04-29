@@ -9,34 +9,17 @@ namespace SiraLocalizer
 {
     internal class LocalizationExporter
     {
-        // keys that aren't actually used
-        private static readonly string[] kLocalizationKeyIgnoreList = { "MP_MISSING_SONG_ENTITLEMENT", "LANGUAGE_EN", "LANGUAGE_SC" };
+        // languages supported by the base game
+        private static readonly Language[] kSupportedLanguages = new[] { Language.English, Language.French, Language.Spanish, Language.German, Language.Japanese, Language.Korean };
 
         // keys added by SiraLocalizer
-        private static readonly (string, string)[] kAdditionalKeys = new[]
+        private static readonly (string, string)[] kAdditionalKeys = new (string, string)[]
         {
-            ("MENU_LANGUAGE_THIS", "English"),
             ("MENU_TRANSLATED_BY", "Translated by"),
-            ("LEVEL_FAILED", " Level\nFailed"),
-            ("FLYING_TEXT_MISS", "Miss"),
-            ("LABEL_COMBO", "Combo"),
-            ("OBJECTIVE_COMPARISON_MINIMUM", "Min"),
-            ("OBJECTIVE_COMPARISON_MAXIMUM", "Max"),
-            ("SHOW_UNTRANSLATED_LANGUAGES", "Show incomplete translations")
+            ("FLYING_TEXT_MISS", "Miss")
         };
 
-        // because there's typos and weirdness
-        private static readonly Dictionary<string, (string find, string replace)> kCorrections = new Dictionary<string, (string, string)>
-        {
-            { "MISSION_HELP_MIN_HANDS_MOVEMENT_TITLE", (".</color>", "</color>.") },
-            { "MISSION_HELP_MAX_HANDS_MOVEMENT", (".</color>", "</color>.") },
-            { "LABEL_MULTIPLAYER_MAINTENANCE_UPCOMING", ("maintatance", "maintenance") },
-            { "HINT_OPTIONS_BUTTON", ("Settings", "Options") },
-            { "SETTINGS_OCULUS_MRC_INFO", ("Mixed Reality Capture Setup Guide", "Getting Started With Mixed Reality Capture") },
-            { "TEXT_INVALID_PASSWORD", ("You", "Your") }
-        };
-
-        public void DumpBaseGameLocalization()
+        public static void DumpBaseGameLocalization()
         {
             string filePath = Path.Combine(UnityGame.InstallPath, "localization.csv");
             int numberOfLanguages = Enum.GetNames(typeof(Locale)).Length - 2; // don't include Locale.None and Locale.English
@@ -53,22 +36,19 @@ namespace SiraLocalizer
 
                     writer.WriteLine("Polyglot,100," + commas);
 
+                    string[] languages = new string[28]; // there are 28 actual languages in the Polyglot.Language enum
+
                     foreach (List<string> row in rows.SkipWhile(r => r[0] != "Polyglot").Skip(1))
                     {
-                        if (string.IsNullOrEmpty(row[0]) || kLocalizationKeyIgnoreList.Contains(row[0])) continue;
-
                         string key     = row.ElementAtOrDefault(0);
                         string context = row.ElementAtOrDefault(1);
-                        string english = row.ElementAtOrDefault(2)?.TrimEnd();
 
-                        if (kCorrections.TryGetValue(key, out var rule))
+                        foreach (int supportedLanguage in kSupportedLanguages)
                         {
-                            if (!english.Contains(rule.find)) Plugin.Log.Warn($"Rule for '{key}' ('{rule.find}' -> '{rule.replace}') won't do anything on '{english}'");
-
-                            english = english.Replace(rule.find, rule.replace);
+                            languages[supportedLanguage] = EscapeCsvValue(row.ElementAtOrDefault(supportedLanguage + 2));
                         }
 
-                        writer.WriteLine($"{EscapeCsvValue(key)},{EscapeCsvValue(context)},{EscapeCsvValue(english)}" + commas);
+                        writer.WriteLine($"{EscapeCsvValue(key)},{EscapeCsvValue(context)},{string.Join(",", languages)}" + commas);
                     }
 
                     foreach ((string key, string value) in kAdditionalKeys)
@@ -84,7 +64,7 @@ namespace SiraLocalizer
             }
         }
 
-        private string EscapeCsvValue(string value)
+        private static string EscapeCsvValue(string value)
         {
             if (string.IsNullOrEmpty(value)) return null;
             if (!value.Contains(',') && !value.Contains('"') && !value.Contains('\n')) return value;

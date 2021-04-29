@@ -1,151 +1,88 @@
 ﻿using Polyglot;
 using System.Linq;
 using UnityEngine;
-using SiraUtil.Interfaces;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
-using System.Globalization;
-using System.IO;
-using SiraLocalizer.Crowdin;
 
 namespace SiraLocalizer
 {
-    internal class Localizer : ILocalizer
+    internal class Localizer
     {
-        private static readonly Dictionary<string, LocalizationData> _lockedAssetCache = new Dictionary<string, LocalizationData>();
+        private const float kMinimumTranslatedPercent = 0.90f;
 
-        private readonly Config _config;
+        private static readonly HashSet<LocalizationData> _localizationAssets = new HashSet<LocalizationData>();
 
-        public Localizer(Config config)
+        public Localizer()
         {
-            _config = config;
-
             // Add ours FIRST
-            AddLocalizationSheetFromAssembly("SiraLocalizer.Resources.sira-locale.csv", GoogleDriveDownloadFormat.CSV);
-            AddLocalizationSheetFromAssembly("SiraLocalizer.Resources.contributors.csv", GoogleDriveDownloadFormat.CSV, true);
+            AddLocalizationSheetFromAssembly("SiraLocalizer.Resources.sira-locale.csv", GoogleDriveDownloadFormat.CSV, true);
+            AddLocalizationSheetFromAssembly("SiraLocalizer.Resources.contributors.csv", GoogleDriveDownloadFormat.CSV, false);
         }
 
-        public LocalizationAsset AddLocalizationSheet(string localizationAsset, GoogleDriveDownloadFormat type, string id, bool shadow = false)
+        public LocalizationAsset AddLocalizationSheet(LocalizationAsset localizationAsset)
         {
-            var asset = new LocalizationAsset
-            {
-                Format = type,
-                TextAsset = new TextAsset(localizationAsset)
-            };
-            if (!_lockedAssetCache.ContainsKey(id))
-            {
-                _lockedAssetCache.Add(id, new LocalizationData(asset, shadow));
-            }
-            AddLocalizationSheet(asset);
-            return asset;
+            return AddLocalizationSheet(localizationAsset, false);
         }
 
-        public void AddLocalizationSheet(LocalizationAsset localizationAsset, bool shadow = false)
+        public LocalizationAsset AddLocalizationSheet(string content, GoogleDriveDownloadFormat type)
         {
-            var loc = _lockedAssetCache.Where(x => x.Value.asset == localizationAsset || x.Value.asset.TextAsset.text == localizationAsset.TextAsset.text).FirstOrDefault();
-            if (loc.Equals(default(KeyValuePair<string, LocalizationAsset>)))
-            {
-                return;
-            }
-            Localization.Instance.InputFiles.Add(localizationAsset);
-            LocalizationImporter.Refresh();
-            RecalculateLanguages();
+            return AddLocalizationSheet(content, type, false);
+        }
+
+        public LocalizationAsset AddLocalizationSheetFromAssembly(string assemblyPath, GoogleDriveDownloadFormat type)
+        {
+            return AddLocalizationSheetFromAssembly(assemblyPath, type, false);
         }
 
         public void RecalculateLanguages()
         {
-            IEnumerable<Locale> languages = GetSupportedLanguages();
-
-            if (_config.showIncompleteTranslations)
-            {
-                languages = languages.Union(GetLanguagesInSheets(_lockedAssetCache.Values.Where(x => x.shadowLocalization == false).Select(x => x.asset)));
-            }
+            IEnumerable<Locale> languages = GetLanguagesInSheets(_localizationAssets.Where(x => x.builtin).Select(x => x.asset));
 
             Localization.Instance.SupportedLanguages.Clear();
-            Localization.Instance.SupportedLanguages.AddRange(languages.OrderBy(lang => lang).Select(lang => (Language)lang));
-
-            if (_config.language < 0)
-            {
-                Locale potential = AutoDetectLanguage();
-
-                if (Localization.Instance.SupportedLanguages.Contains((Language)potential))
-                {
-                    _config.language = potential;
-                    Localization.Instance.SelectLanguage((Language)_config.language);
-                }
-            }
+            Localization.Instance.SupportedLanguages.AddRange(languages.Select(lang => (Language)lang));
 
             Localization.Instance.InvokeOnLocalize();
         }
 
-        public LocalizationAsset AddLocalizationSheetFromAssembly(string assemblyPath, GoogleDriveDownloadFormat type, bool shadow = false)
+        public void RemoveLocalizationSheet(LocalizationAsset localizationAsset)
+        {
+            _localizationAssets.Remove(new LocalizationData(localizationAsset, false));
+
+            Localization.Instance.InputFiles.RemoveAll(la => la == localizationAsset);
+            LocalizationImporter.Refresh();
+
+            RecalculateLanguages();
+        }
+
+        internal LocalizationAsset AddLocalizationSheet(LocalizationAsset localizationAsset, bool builtin)
+        {
+            _localizationAssets.Add(new LocalizationData(localizationAsset, builtin));
+
+            Localization.Instance.InputFiles.Add(localizationAsset);
+            LocalizationImporter.Refresh();
+
+            RecalculateLanguages();
+
+            return localizationAsset;
+        }
+
+        internal LocalizationAsset AddLocalizationSheet(string content, GoogleDriveDownloadFormat type, bool builtin)
+        {
+            var asset = new LocalizationAsset
+            {
+                Format = type,
+                TextAsset = new TextAsset(content)
+            };
+
+            return AddLocalizationSheet(asset, builtin);
+        }
+
+        internal LocalizationAsset AddLocalizationSheetFromAssembly(string assemblyPath, GoogleDriveDownloadFormat type, bool builtin)
         {
             SiraUtil.Utilities.AssemblyFromPath(assemblyPath, out Assembly assembly, out string path);
             string content = SiraUtil.Utilities.GetResourceContent(assembly, path);
-            var locSheet = AddLocalizationSheet(content, type, path, shadow);
-            if (!_lockedAssetCache.ContainsKey(path))
-            {
-                _lockedAssetCache.Add(path, new LocalizationData(locSheet, shadow));
-            }
-            return locSheet;
-        }
-
-        public void RemoveLocalizationSheet(LocalizationAsset localizationAsset)
-        {
-            var loc = _lockedAssetCache.Where(x => x.Value.asset == localizationAsset || x.Value.asset.TextAsset.text == localizationAsset.TextAsset.text).FirstOrDefault();
-            if (!loc.Equals(default(KeyValuePair<string, LocalizationAsset>)))
-            {
-                _lockedAssetCache.Remove(loc.Key);
-            }
-            RecalculateLanguages();
-        }
-
-        public void RemoveLocalizationSheet(string key)
-        {
-            _lockedAssetCache.Remove(key);
-            RecalculateLanguages();
-        }
-
-        private List<Locale> GetSupportedLanguages()
-        {
-            List<Locale> languages = new List<Locale>();
-            Stream fileContent = null;
-
-            if (File.Exists(CrowdinDownloader.kLanguagesFilePath))
-            {
-                try
-                {
-                    Plugin.Log.Trace($"Using locales in '{CrowdinDownloader.kLanguagesFilePath}'");
-                    fileContent = File.OpenRead(CrowdinDownloader.kLanguagesFilePath);
-                }
-                catch (IOException ex)
-                {
-                    Plugin.Log.Error("Failed to load languages from file; falling back to built-in languages");
-                    Plugin.Log.Error(ex.ToString());
-                }
-            }
-            else
-            {
-                Plugin.Log.Trace("Using built-in locales");
-                fileContent = Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.languages.txt");
-            }
-
-            using (var reader = new StreamReader(fileContent))
-            {
-                while (!reader.EndOfStream)
-                {
-                    string line = reader.ReadLine();
-
-                    if (Enum.TryParse(line, out Locale locale))
-                    {
-                        Plugin.Log.Trace("Got locale " + locale);
-                        languages.Add(locale);
-                    }
-                }
-            }
-
-            return languages;
+            return AddLocalizationSheet(content, type, builtin);
         }
 
         private List<Locale> GetLanguagesInSheets(IEnumerable<LocalizationAsset> assets)
@@ -187,135 +124,47 @@ namespace SiraLocalizer
             }
 
             var presentLanguages = new List<Locale>();
+            List<string> languageNames = localizationsTable["LANGUAGE_THIS"];
             
             foreach (int lang in Enum.GetValues(typeof(Locale)))
             {
+                if (string.IsNullOrWhiteSpace(languageNames.ElementAtOrDefault(lang))) continue;
+
+                int count = 0;
+
                 foreach (List<string> localizations in localizationsTable.Values)
                 {
                     if (!string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
                     {
-                        presentLanguages.Add((Locale)lang);
-                        break;
+                        count++;
                     }
+                }
+
+                float percentTranslated = (float)count / localizationsTable.Count;
+
+                if (percentTranslated > kMinimumTranslatedPercent)
+                {
+                    presentLanguages.Add((Locale)lang);
                 }
             }
 
             return presentLanguages;
         }
 
-        private Locale AutoDetectLanguage()
-        {
-            string name = CultureInfo.CurrentUICulture.Name;
-
-            if (string.IsNullOrEmpty(name))
-            {
-                return Locale.English;
-            }
-
-            string[] parts = name.Split('-');
-            string iso639 = parts[0];
-            string bcp47 = parts.Length >= 2 ? parts[1] : string.Empty;
-
-            Plugin.Log.Info($"User language: '{name}' (ISO 639-1 code: '{iso639}', BCP-47 code: '{bcp47}')");
-
-            switch (iso639)
-            {
-                case "fr":
-                    return Locale.French;
-
-                case "es":
-                    return Locale.Spanish;
-
-                case "de":
-                    return Locale.German;
-                    
-                case "it":
-                    return Locale.Italian;
-                    
-                case "pt":
-                    return bcp47 == "BR" ? Locale.Portuguese_Brazil : Locale.Portuguese;
-                    
-                case "ru":
-                    return Locale.Russian;
-                    
-                case "el":
-                    return Locale.Greek;
-                    
-                case "tr":
-                    return Locale.Turkish;
-                    
-                case "da":
-                    return Locale.Danish;
-                    
-                case "nb":
-                    return Locale.Norwegian;
-                    
-                case "sv":
-                    return Locale.Swedish;
-                    
-                case "nl":
-                    return Locale.Dutch;
-                    
-                case "pl":
-                    return Locale.Polish;
-                    
-                case "fi":
-                    return Locale.Finnish;
-                    
-                case "ja":
-                    return Locale.Japanese;
-                    
-                case "zh":
-                    if (bcp47 == "Hant" || bcp47 == "HK" || bcp47 == "MO" || bcp47 == "TW")
-                    {
-                        return Locale.Traditional_Chinese;
-                    }
-                    else
-                    {
-                        return Locale.Simplified_Chinese;
-                    }
-
-                case "ko":
-                    return Locale.Korean;
-                    
-                case "cs":
-                    return Locale.Czech;
-                    
-                case "hu":
-                    return Locale.Hungarian;
-                    
-                case "ro":
-                    return Locale.Romanian;
-                    
-                case "th":
-                    return Locale.Thai;
-                    
-                case "bg":
-                    return Locale.Bulgarian;
-                    
-                case "he":
-                    return Locale.Hebrew;
-
-                case "ar":
-                    return Locale.Arabic;
-
-                case "bs":
-                    return Locale.Bosnian;
-
-                default:
-                    return Locale.English;
-            }
-        }
-
         private struct LocalizationData
         {
             public LocalizationAsset asset;
-            public bool shadowLocalization;
+            public bool builtin;
 
-            public LocalizationData(LocalizationAsset asset, bool shadow)
+            public LocalizationData(LocalizationAsset asset, bool builtin)
             {
                 this.asset = asset;
-                shadowLocalization = shadow;
+                this.builtin = builtin;
+            }
+
+            public override int GetHashCode()
+            {
+                return asset.GetHashCode();
             }
         }
     }
