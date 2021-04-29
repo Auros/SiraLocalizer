@@ -11,7 +11,7 @@ namespace SiraLocalizer
     {
         private const float kMinimumTranslatedPercent = 0.90f;
 
-        private static readonly HashSet<LocalizationData> _localizationAssets = new HashSet<LocalizationData>();
+        private static readonly Dictionary<LocalizationAsset, LocalizationData> _localizationAssets = new Dictionary<LocalizationAsset, LocalizationData>();
 
         public Localizer()
         {
@@ -35,9 +35,9 @@ namespace SiraLocalizer
             return AddLocalizationSheetFromAssembly(assemblyPath, type, false);
         }
 
-        public void RecalculateLanguages()
+        public void UpdateSupportedLanguages()
         {
-            IEnumerable<Locale> languages = GetLanguagesInSheets(_localizationAssets.Where(x => x.builtin).Select(x => x.asset));
+            IEnumerable<Locale> languages = GetLanguagesInSheets(_localizationAssets.Where(x => x.Value.builtin).Select(x => x.Key));
 
             Localization.Instance.SupportedLanguages.Clear();
             Localization.Instance.SupportedLanguages.AddRange(languages.Select(lang => (Language)lang));
@@ -47,22 +47,22 @@ namespace SiraLocalizer
 
         public void RemoveLocalizationSheet(LocalizationAsset localizationAsset)
         {
-            _localizationAssets.Remove(new LocalizationData(localizationAsset, false));
+            _localizationAssets.Remove(localizationAsset);
 
             Localization.Instance.InputFiles.RemoveAll(la => la == localizationAsset);
             LocalizationImporter.Refresh();
 
-            RecalculateLanguages();
+            UpdateSupportedLanguages();
         }
 
         internal LocalizationAsset AddLocalizationSheet(LocalizationAsset localizationAsset, bool builtin)
         {
-            _localizationAssets.Add(new LocalizationData(localizationAsset, builtin));
+            _localizationAssets.Add(localizationAsset, new LocalizationData(builtin));
 
             Localization.Instance.InputFiles.Add(localizationAsset);
             LocalizationImporter.Refresh();
 
-            RecalculateLanguages();
+            UpdateSupportedLanguages();
 
             return localizationAsset;
         }
@@ -153,18 +153,11 @@ namespace SiraLocalizer
 
         private struct LocalizationData
         {
-            public LocalizationAsset asset;
             public bool builtin;
 
-            public LocalizationData(LocalizationAsset asset, bool builtin)
+            public LocalizationData(bool builtin)
             {
-                this.asset = asset;
                 this.builtin = builtin;
-            }
-
-            public override int GetHashCode()
-            {
-                return asset.GetHashCode();
             }
         }
     }

@@ -28,7 +28,7 @@ namespace SiraLocalizer.Installers
 
             Container.Bind<FontAssetHelper>().AsTransient();
 
-            if (_config.autoDownloadNewLocalizations)
+            if (_config.automaticallyDownloadLocalizations)
             {
                 Container.Bind<IInitializable>().To<CrowdinDownloader>().AsSingle();
             }
