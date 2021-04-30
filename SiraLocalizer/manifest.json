@@ -9,5 +9,14 @@
   "dependsOn": {
     "BSIPA": "^4.0.0",
     "SiraUtil": "^2.5.0"
+  },
+  "features": {
+    "IPA.DefineFeature": {
+      "name": "SiraLocalizer.LocalizedPlugin",
+      "type": "SiraLocalizer.Features.LocalizedPluginFeature"
+    },
+    "SiraLocalizer.LocalizedPlugin": {
+      "id": "sira-locale"
+    }
   }
 }

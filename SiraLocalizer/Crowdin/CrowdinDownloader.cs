@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Polyglot;
+using SiraLocalizer.Features;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -24,6 +26,8 @@ namespace SiraLocalizer.Crowdin
         private static readonly string kContentFolder = Path.Combine(kLocalizationsFolder, "Content");
         private static readonly string kManifestFilePath = Path.Combine(kLocalizationsFolder, "manifest.json");
         private static readonly string kContributorsFilePath = Path.Combine(kDataFolder, "contributors.csv");
+
+        private static readonly string[] kBuiltInFiles = { "sira-locale.csv" };
 
         private readonly Localizer _localizer;
         private readonly List<LocalizationAsset> _loadedAssets;
@@ -82,9 +86,17 @@ namespace SiraLocalizer.Crowdin
 
                     foreach (var fileName in manifest.Files)
                     {
+                        if (!LocalizedPluginFeature.IsLocalizedPluginLoaded(Path.GetFileNameWithoutExtension(fileName)))
+                        {
+                            Plugin.Log.Trace($"'{fileName}' does not belong to a loaded LocalizedPlugin; ignored");
+                            continue;
+                        }
+
                         // file name has a leading slash so we have to remove that
-                        string filePath = Path.Combine(kContentFolder, fileName.Substring(1));
-                        await DownloadFile(client, $"{kCrowdinHost}/{kDistributionKey}/content{fileName}", filePath);
+                        string relativeFilePath = fileName.Substring(1);
+
+                        string filePath = Path.Combine(kContentFolder, relativeFilePath);
+                        await DownloadFile(client, $"{kCrowdinHost}/{kDistributionKey}/content/{relativeFilePath}", filePath);
                     }
 
                     using (var writer = new StreamWriter(kManifestFilePath))
@@ -109,7 +121,10 @@ namespace SiraLocalizer.Crowdin
 
             foreach (string fileName in remoteManifest.Files)
             {
-                if (!File.Exists(Path.Combine(kContentFolder, fileName.Substring(1)))) return true;
+                if (LocalizedPluginFeature.IsLocalizedPluginLoaded(Path.GetFileNameWithoutExtension(fileName)) && !File.Exists(Path.Combine(kContentFolder, fileName.Substring(1))))
+                {
+                    return true;
+                }
             }
 
             CrowdinDistributionManifest localManifest = null;
@@ -176,7 +191,9 @@ namespace SiraLocalizer.Crowdin
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    await AddLocalizationSheetFromFile(filePath, Path.GetFileName(filePath) == "sira-locale.csv"); // TODO this is dumb
+                    string relativePath = filePath.Substring(kContentFolder.Length + 1);
+
+                    await AddLocalizationSheetFromFile(filePath, kBuiltInFiles.Contains(relativePath));
                 }
             }
 
@@ -190,7 +207,7 @@ namespace SiraLocalizer.Crowdin
 
         private async Task AddLocalizationSheetFromFile(string filePath, bool builtin)
         {
-            Plugin.Log.Info($"Adding '{filePath}'");
+            Plugin.Log.Info($"Adding '{filePath}' (built-in: {builtin})");
 
             using (StreamReader reader = new StreamReader(filePath))
             {
