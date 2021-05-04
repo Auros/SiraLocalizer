@@ -8,6 +8,7 @@ using IPA.Config.Stores;
 using SiraLocalizer.Installers;
 using Conf = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
+using Polyglot;
 
 namespace SiraLocalizer
 {
@@ -25,9 +26,11 @@ namespace SiraLocalizer
         {
             Log = logger;
 
+            if (Environment.GetCommandLineArgs().Contains("--dump-localization")) LocalizationExporter.DumpBaseGameLocalization();
+
             _harmony = new Harmony(kHarmonyId);
 
-            if (Environment.GetCommandLineArgs().Contains("--dump-localization")) LocalizationExporter.DumpBaseGameLocalization();
+            LocalizationDefinition.Add(new LocalizationDefinition("beat-saber", "Beat Saber", PolyglotUtil.GetKeysFromLocalizationAsset(Localization.Instance.InputFiles[0])));
 
             zenjector.OnApp<SiraLocalizerCoreInstaller>().WithParameters(conf.Generated<Config>());
             zenjector.OnMenu<SiraLocalizerUIInstaller>();

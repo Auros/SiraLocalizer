@@ -1,23 +1,22 @@
-﻿using HMUI;
-using Zenject;
-using UnityEngine;
+﻿using Zenject;
 
 namespace SiraLocalizer.UI
 {
     internal class LanguageSettingCreator : IInitializable
     {
+        private readonly DiContainer _container;
         private readonly SettingsNavigationController _settingsNavigationController;
 
-        internal LanguageSettingCreator(SettingsNavigationController settingsNavigationController)
+        internal LanguageSettingCreator(DiContainer container, SettingsNavigationController settingsNavigationController)
         {
+            _container = container;
             _settingsNavigationController = settingsNavigationController;
         }
 
         public void Initialize()
         {
-            Transform otherSettingsContent = _settingsNavigationController.transform.Find("OtherSettings/Content");
-            LanguageSettingsController languageSettingController = otherSettingsContent.Find("LanguageDropdown").GetComponent<LanguageSettingsController>();
-            languageSettingController.gameObject.AddComponent<TranslationCreditsTextController>();
+            LanguageSettingsController languageSettingController = _settingsNavigationController.transform.Find("OtherSettings/Content/LanguageDropdown").GetComponent<LanguageSettingsController>();
+            _container.InstantiateComponent<TranslationDetailsTextController>(languageSettingController.gameObject);
         }
     }
 }

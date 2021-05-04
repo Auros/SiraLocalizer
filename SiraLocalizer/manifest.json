@@ -16,7 +16,8 @@
       "type": "SiraLocalizer.Features.LocalizedPluginFeature"
     },
     "SiraLocalizer.LocalizedPlugin": {
-      "id": "sira-locale"
+      "id": "sira-localizer",
+      "resourcePath": "SiraLocalizer.Resources.sira-localizer.csv"
     }
   }
 }

@@ -1,138 +1,129 @@
 ﻿using Polyglot;
 using System.Linq;
-using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Zenject;
 using System.Reflection;
+using SiraLocalizer.HarmonyPatches;
+using System.Threading.Tasks;
+using UnityEngine;
 
 namespace SiraLocalizer
 {
-    internal class Localizer
+    internal class Localizer : IInitializable, IDisposable
     {
-        private const float kMinimumTranslatedPercent = 0.90f;
+        internal const float kMinimumTranslatedPercent = 0.50f;
 
-        private static readonly Dictionary<LocalizationAsset, LocalizationData> _localizationAssets = new Dictionary<LocalizationAsset, LocalizationData>();
+        // Unicode white space characters + line breaks https://www.fileformat.info/info/unicode/category/Zs/list.htm
+        private static readonly char[] kWhiteSpaceCharacters = new[] { ' ', '\n', '\r', '\t', '\x00A0', '\x1680', '\x2000', '\x2001', '\x2002', '\x2003', '\x2004', '\x2005', '\x2006', '\x2007', '\x2008', '\x2009', '\x200A', '\x202F', '\x205F', '\x3000' };
+        private static readonly FieldInfo kLanguageStringsField = typeof(LocalizationImporter).GetField("languageStrings", BindingFlags.NonPublic | BindingFlags.Static);
 
-        public Localizer()
+        private readonly List<LocalizationAssetWithPriority> _assets = new List<LocalizationAssetWithPriority>();
+
+        public async void Initialize()
         {
-            // Add ours FIRST
-            AddLocalizationSheetFromAssembly("SiraLocalizer.Resources.sira-locale.csv", GoogleDriveDownloadFormat.CSV, true);
-            AddLocalizationSheetFromAssembly("SiraLocalizer.Resources.contributors.csv", GoogleDriveDownloadFormat.CSV, false);
+            LocalizationImporter_Initialize.PreInitialize += LocalizationImporter_PreInitialize;
+            LocalizationImporter_Initialize.PostInitialize += LocalizationImporter_PostInitialize;
+
+            await Task.WhenAll(PolyglotUtil.AddLocalizationFromResource("SiraLocalizer.Resources.sira-localizer.csv"), PolyglotUtil.AddLocalizationFromResource("SiraLocalizer.Resources.contributors.csv"));
+
+            LocalizationImporter.Refresh();
         }
 
-        public LocalizationAsset AddLocalizationSheet(LocalizationAsset localizationAsset)
+        public void Dispose()
         {
-            return AddLocalizationSheet(localizationAsset, false);
+            LocalizationImporter_Initialize.PreInitialize -= LocalizationImporter_PreInitialize;
+            LocalizationImporter_Initialize.PostInitialize -= LocalizationImporter_PostInitialize;
         }
 
-        public LocalizationAsset AddLocalizationSheet(string content, GoogleDriveDownloadFormat type)
+        public void RegisterTranslation(string content, GoogleDriveDownloadFormat format, int priority)
         {
-            return AddLocalizationSheet(content, type, false);
+            RegisterTranslation(new LocalizationAsset { TextAsset = new TextAsset(content), Format = format }, priority);
         }
 
-        public LocalizationAsset AddLocalizationSheetFromAssembly(string assemblyPath, GoogleDriveDownloadFormat type)
+        public void RegisterTranslation(LocalizationAsset localizationAsset, int priority = 0)
         {
-            return AddLocalizationSheetFromAssembly(assemblyPath, type, false);
+            if (localizationAsset == null) throw new InvalidOperationException();
+
+            _assets.Add(new LocalizationAssetWithPriority(localizationAsset, priority));
         }
 
-        public void UpdateSupportedLanguages()
+        public void DeregisterTranslation(LocalizationAsset localizationAsset)
         {
-            IEnumerable<Locale> languages = GetLanguagesInSheets(_localizationAssets.Where(x => x.Value.builtin).Select(x => x.Key));
+            _assets.RemoveAll(a => a.localizationAsset == localizationAsset);
+        }
+
+        public List<TranslationStatus> GetTranslationStatuses(Locale language)
+        {
+            var languageStrings = (Dictionary<string, List<string>>)kLanguageStringsField.GetValue(null);
+            var statuses = new List<TranslationStatus>();
+
+            foreach (LocalizationDefinition def in LocalizationDefinition.loadedDefinitions)
+            {
+                int total = 0;
+                int translated = 0;
+
+                foreach (string key in def.keys)
+                {
+                    if (!languageStrings.ContainsKey(key))
+                    {
+                        Plugin.Log.Warn($"Key '{key}' does not exist");
+                        continue;
+                    }
+
+                    List<string> strings = languageStrings[key];
+
+                    if (strings.Count == 0) continue;
+
+                    string english = strings[(int)Language.English];
+                    int words = english.Split(kWhiteSpaceCharacters, StringSplitOptions.RemoveEmptyEntries).Length;
+                    total += words;
+
+                    if (strings.Count >= (int)language - 1 && !string.IsNullOrWhiteSpace(strings[(int)language]))
+                    {
+                        translated += words;
+                    }
+                }
+
+                statuses.Add(new TranslationStatus(def.name, total, translated));
+            }
+
+            return statuses;
+        }
+
+        private void LocalizationImporter_PreInitialize()
+        {
+            // make sure localizations are always loaded after whatever already existed in InputFiles
+            Localization.Instance.InputFiles.RemoveAll(f => _assets.Any(l => l.localizationAsset == f));
+            Localization.Instance.InputFiles.AddRange(_assets.OrderBy(l => l.priority).Select(l => l.localizationAsset));
+        }
+
+        private void LocalizationImporter_PostInitialize()
+        {
+            UpdateSupportedLanguages();
+        }
+
+        private void UpdateSupportedLanguages()
+        {
+            IEnumerable<Locale> languages = GetSupportedLanguages();
 
             Localization.Instance.SupportedLanguages.Clear();
             Localization.Instance.SupportedLanguages.AddRange(languages.Select(lang => (Language)lang));
-
-            Localization.Instance.InvokeOnLocalize();
         }
 
-        public void RemoveLocalizationSheet(LocalizationAsset localizationAsset)
+        private List<Locale> GetSupportedLanguages()
         {
-            _localizationAssets.Remove(localizationAsset);
-
-            Localization.Instance.InputFiles.RemoveAll(la => la == localizationAsset);
-            LocalizationImporter.Refresh();
-
-            UpdateSupportedLanguages();
-        }
-
-        internal LocalizationAsset AddLocalizationSheet(LocalizationAsset localizationAsset, bool builtin)
-        {
-            _localizationAssets.Add(localizationAsset, new LocalizationData(builtin));
-
-            Localization.Instance.InputFiles.Add(localizationAsset);
-            LocalizationImporter.Refresh();
-
-            UpdateSupportedLanguages();
-
-            return localizationAsset;
-        }
-
-        internal LocalizationAsset AddLocalizationSheet(string content, GoogleDriveDownloadFormat type, bool builtin)
-        {
-            var asset = new LocalizationAsset
-            {
-                Format = type,
-                TextAsset = new TextAsset(content)
-            };
-
-            return AddLocalizationSheet(asset, builtin);
-        }
-
-        internal LocalizationAsset AddLocalizationSheetFromAssembly(string assemblyPath, GoogleDriveDownloadFormat type, bool builtin)
-        {
-            SiraUtil.Utilities.AssemblyFromPath(assemblyPath, out Assembly assembly, out string path);
-            string content = SiraUtil.Utilities.GetResourceContent(assembly, path);
-            return AddLocalizationSheet(content, type, builtin);
-        }
-
-        private List<Locale> GetLanguagesInSheets(IEnumerable<LocalizationAsset> assets)
-        {
-            var localizationsTable = new Dictionary<string, List<string>>();
-
-            foreach (LocalizationAsset asset in assets)
-            {
-                List<List<string>> lines;
-                string text = asset.TextAsset.text.Replace("\r\n", "\n");
-
-                if (asset.Format == GoogleDriveDownloadFormat.CSV)
-                {
-                    lines = CsvReader.Parse(text);
-                }
-                else
-                {
-                    lines = TsvReader.Parse(text);
-                }
-
-                foreach (List<string> line in lines.SkipWhile(l => l[0] != "Polyglot").Skip(1))
-                {
-                    string keyName = line[0];
-
-                    if (!string.IsNullOrWhiteSpace(keyName) && line.Count > 1)
-                    {
-                        List<string> localizations = line.Skip(2).ToList();
-
-                        if (localizationsTable.ContainsKey(keyName))
-                        {
-                            localizationsTable[keyName] = localizations;
-                        }
-                        else
-                        {
-                            localizationsTable.Add(keyName, localizations);
-                        }
-                    }
-                }
-            }
-
+            var languageStrings = (Dictionary<string, List<string>>)kLanguageStringsField.GetValue(null);
             var presentLanguages = new List<Locale>();
-            List<string> languageNames = localizationsTable["LANGUAGE_THIS"];
-            
+            List<string> languageNames = languageStrings["LANGUAGE_THIS"];
+
             foreach (int lang in Enum.GetValues(typeof(Locale)))
             {
                 if (string.IsNullOrWhiteSpace(languageNames.ElementAtOrDefault(lang))) continue;
 
                 int count = 0;
 
-                foreach (List<string> localizations in localizationsTable.Values)
+                foreach (List<string> localizations in languageStrings.Values)
                 {
                     if (!string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
                     {
@@ -140,7 +131,7 @@ namespace SiraLocalizer
                     }
                 }
 
-                float percentTranslated = (float)count / localizationsTable.Count;
+                float percentTranslated = (float)count / languageStrings.Count;
 
                 if (percentTranslated > kMinimumTranslatedPercent)
                 {
@@ -151,13 +142,31 @@ namespace SiraLocalizer
             return presentLanguages;
         }
 
-        private struct LocalizationData
+        public readonly struct TranslationStatus
         {
-            public bool builtin;
+            public string name { get; }
+            public int totalStrings { get; }
+            public int translatedStrings { get; }
+            public float percentTranslated { get; }
 
-            public LocalizationData(bool builtin)
+            public TranslationStatus(string name, int totalStrings, int translatedStrings)
             {
-                this.builtin = builtin;
+                this.name = name;
+                this.totalStrings = totalStrings;
+                this.translatedStrings = translatedStrings;
+                this.percentTranslated = totalStrings > 0 ? 100f * translatedStrings / totalStrings : 0;
+            }
+        }
+
+        private readonly struct LocalizationAssetWithPriority
+        {
+            public LocalizationAsset localizationAsset { get; }
+            public int priority { get; }
+
+            public LocalizationAssetWithPriority(LocalizationAsset localizationAsset, int priority)
+            {
+                this.localizationAsset = localizationAsset;
+                this.priority = priority;
             }
         }
     }

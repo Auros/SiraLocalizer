@@ -4,26 +4,36 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace SiraLocalizer
 {
     internal class LocalizationExporter
     {
         // languages supported by the base game
-        private static readonly Language[] kSupportedLanguages = new[] { Language.English, Language.French, Language.Spanish, Language.German, Language.Japanese, Language.Korean };
+        private static readonly Language[] kSupportedLanguages = new[] { Language.French, Language.Spanish, Language.German, Language.Japanese, Language.Korean };
 
-        // keys added by SiraLocalizer
-        private static readonly (string, string)[] kAdditionalKeys = new (string, string)[]
+        // keys that aren't actually used
+        private static readonly string[] kLocalizationKeyIgnoreList =
         {
-            ("MENU_TRANSLATED_BY", "Translated by"),
-            ("FLYING_TEXT_MISS", "Miss")
+            "PSVR_SAFE_AREA_CONFIRMATION_TEXT"
+        };
+
+        // because there's typos and weirdness
+        private static readonly Dictionary<string, (Regex find, string replace)> kCorrections = new Dictionary<string, (Regex, string)>
+        {
+            { "MISSION_HELP_MIN_HANDS_MOVEMENT_TITLE", (new Regex(@"\.</color>"), "</color>.") },
+            { "MISSION_HELP_MAX_HANDS_MOVEMENT", (new Regex(@"\.</color>"), "</color>.") },
+            { "LABEL_MULTIPLAYER_MAINTENANCE_UPCOMING", (new Regex(@"maintatance"), "maintenance") },
+            { "HINT_OPTIONS_BUTTON", (new Regex(@"Settings"), "Options") },
+            { "TEXT_INVALID_PASSWORD", (new Regex(@"You"), "Your") },
+            { "LEVEL_FAILED_TEXT_EFFECT", (new Regex(@"^Level"), " Level") }
         };
 
         public static void DumpBaseGameLocalization()
         {
-            string filePath = Path.Combine(UnityGame.InstallPath, "localization.csv");
-            int numberOfLanguages = Enum.GetNames(typeof(Locale)).Length - 2; // don't include Locale.None and Locale.English
-            string commas = new string(',', numberOfLanguages);
+            string filePath = Path.Combine(UnityGame.InstallPath, "beat-saber.csv");
+            int numberOfLanguages = Enum.GetNames(typeof(Locale)).Length - 1; // don't include Locale.English
 
             Plugin.Log.Info($"Dumping base game localization to '{filePath}'");
 
@@ -34,26 +44,39 @@ namespace SiraLocalizer
                     LocalizationAsset baseGameAsset = Localization.Instance.InputFiles.First();
                     List<List<string>> rows = CsvReader.Parse(baseGameAsset.TextAsset.text);
 
-                    writer.WriteLine("Polyglot,100," + commas);
-
-                    string[] languages = new string[28]; // there are 28 actual languages in the Polyglot.Language enum
+                    writer.WriteLine("Polyglot,100," + new string(',', numberOfLanguages));
 
                     foreach (List<string> row in rows.SkipWhile(r => r[0] != "Polyglot").Skip(1))
                     {
-                        string key     = row.ElementAtOrDefault(0);
+                        string key = row.ElementAtOrDefault(0);
+
+                        if (kLocalizationKeyIgnoreList.Contains(key)) continue;
+
                         string context = row.ElementAtOrDefault(1);
+                        string english = row.ElementAtOrDefault(2);
+                        string[] languages = new string[numberOfLanguages];
 
                         foreach (int supportedLanguage in kSupportedLanguages)
                         {
-                            languages[supportedLanguage] = EscapeCsvValue(row.ElementAtOrDefault(supportedLanguage + 2));
+                            languages[supportedLanguage - 1] = EscapeCsvValue(row.ElementAtOrDefault(supportedLanguage + 2));
                         }
 
-                        writer.WriteLine($"{EscapeCsvValue(key)},{EscapeCsvValue(context)},{string.Join(",", languages)}" + commas);
-                    }
+                        if (kCorrections.TryGetValue(key, out var rule))
+                        {
+                            string result = rule.find.Replace(english, rule.replace);
 
-                    foreach ((string key, string value) in kAdditionalKeys)
-                    {
-                        writer.WriteLine($"{EscapeCsvValue(key)},,{EscapeCsvValue(value)}" + commas);
+                            if (result == english)
+                            {
+                                Plugin.Log.Warn($"Rule for '{key}' ('{rule.find}' -> '{rule.replace}') did nothing on '{english}'");
+                            }
+                            else
+                            {
+                                english = result;
+                            }
+
+                        }
+
+                        writer.WriteLine($"{EscapeCsvValue(key)},{EscapeCsvValue(context)},{EscapeCsvValue(english)},{string.Join(",", languages)}");
                     }
                 }
             }

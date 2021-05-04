@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-
-namespace SiraLocalizer.Features
+﻿namespace SiraLocalizer.Features
 {
-    internal class LocalizedPlugin
+    class LocalizedPlugin
     {
-        [JsonProperty(Required = Required.Always)] public string id;
+        public string id { get; set; }
+        public string name { get; set; }
+        public string resourcePath { get; set; }
     }
 }

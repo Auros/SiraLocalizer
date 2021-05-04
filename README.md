@@ -1,60 +1,74 @@
 # SiraLocalizer
-Community localization support in Beat Saber. Created by nicoco007 and Auros.
+Community localization support for Beat Saber and its mods. Created by nicoco007 and Auros.
 
 Requires [SiraUtil](https://github.com/Auros/SiraUtil/releases/latest) 2.1.0 or greater.
 
 ## Supported Languages for the Base Game
 The community has unofficially translated the base game into the following languages:
 * Chinese (Simplified)
+* Chinese (Traditional)
+* Dutch
 * French
 * German
+* Hebrew
+* Hungarian
 * Italian
+* Japanese
 * Korean
 * Portuguese (Brazilian)
 * Russian
+* Swedish
 
 See [CONTRIBUTORS](CONTRIBUTORS.md) for a list of everyone who has helped make SiraLocalizer possible!
 
-You can change the language in-game by going to *Options* > *Settings* > *Others*.
-![Localization Location](https://i.imgur.com/vAZwUkU.png)
+Since SiraLocalizer is built on top of the game's regular localization system, you can change the language in-game normally by going to *Options* > *Settings* > *Others*. Translation contributors and information regarding which mods are supported is given under the language selection dropdown. The example below shows information for the French translation:
+![Localization Location](https://i.imgur.com/hXhGZYi.png)
 
 ## Becoming a Translator
 See [CONTRIBUTING](CONTRIBUTING.md).
 
-## Using SiraLocalizer in Your Mod
-Modders can implement localizations into their own mods as well. Requires SiraUtil and some very basic knowledge of Zenject. Check out [SiraUtil's README](https://github.com/Auros/SiraUtil#zenject) for more information.
+## Getting SiraLocalizer to Translate Your Mod
+*This section is under construction!*
+### Preparing a Mod for Translation
+Beat Saber uses the [Polyglot](https://github.com/agens-no/PolyglotUnity) Unity package for translations. It uses translation keys as unique identifiers for translated text across the game. Therefore, wherever there is text in your mod, it should be replaced with something that can convert a translation key into localized text.
 
-### Creating a Localization Sheet
-Create a copy of [the Polyglot Template Google Sheet](https://docs.google.com/spreadsheets/d/17f0dQawb-s_Fd7DHgmVvJoEGDMH_yoSd8EYigrb0zmM/edit), erase all the keys that are there (starting at line 7 then all the way down), and add your own instead. **Do not delete any of the columns even if you don't plan on supporting that language** because Polyglot expects the specific order of languages used in the sheet.
+[BeatSaberMarkupLanguage](https://github.com/monkeymanboy/BeatSaberMarkupLanguage) now supports translating various text elements with the `-key` suffix (e.g. `text-key` for text, `tab-name-key` for tabs, etc.). More documentation regarding this is coming soon. If you are displaying text through other means, you can use the `Polyglot.Localization.Get(string)` and `Polyglot.Localization.GetFormat(string, params object[])` methods to get localized strings in the current language.
 
-### Retrieving and Using an `ILocalizer` Instance
-You can get access to an `ILocalizer` instance by injecting it into a class. The example below uses constructor injection and [Zenject's IInitializable interface](https://github.com/svermeulen/Extenject#iinitializable). Note that you **must** use the `[InjectOptional]` attribute.
+### Creating a Polyglot Translation File
+Polyglot stores translations in CSV or TSV files. We *highly* recommend using a CSV file since it supports line breaks inside values and empty columns are easier to format. Polyglot's file format is very straightforward: the first column is the translation key, the second column is context to help translators, and the rest of the columns are translations following [the order in the Locale enum](SiraLocalizer/Locale.cs).
+
+If you plan on using SiraLocalizer for translations, this is what your mod's CSV file should look like:
+```text
+Polyglot,100,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"KEY_NAME_1","Context for 1 if necessary","English String 1",,,,,,,,,,,,,,,,,,,,,,,,,,,
+"KEY_NAME_2","Context for 2 if necessary","English String 2",,,,,,,,,,,,,,,,,,,,,,,,,,,
+```
+
+The first line is required for Polyglot to properly identify the file. Also, note the trailing commas &ndash; these are important since Polyglot will show the translation key instead of the fallback (English) text if a column doesn't exist for the selected language. Since Polyglot supports 28 languages out-of-the-box, there should be at least 27 commas after the English text.
+
+Once you've added all the translation keys for your mod in a CSV file following the format above, it needs to be loaded when the game starts. We recommend doing this by adding your CSV file as an embedded resource within your mod, and then loading it using the following snippet:
 
 ```cs
-internal class MyLocalizationHandler : IInitializable
+private void AddLocalizationFromResource()
 {
-    private readonly ILocalizer _localizer;
-
-    internal MyLocalizationHandler([InjectOptional(Id = "SIRA.Localizer")] ILocalizer localizer)
+    using (StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Assembly.Path.To.Your.translations.csv")))
     {
-        _localizer = localizer;
-    }
-
-    public void Initialize()
-    {
-        _localizer?.AddLocalizationSheetFromAssembly("YourAssemblyPath.ToThe.Localization.sheet.csv", GoogleDriveDownloadFormat.CSV);
+        string content = reader.ReadToEnd();
+        Localization.Instance.InputFiles.Add(new LocalizationAsset { Format = GoogleDriveDownloadFormat.CSV, TextAsset = new TextAsset(content) });
     }
 }
 ```
 
-The `ILocalizer` interface is located in SiraUtil. This means you can add full localization support to your mod without having to depend on the `SiraLocalizer` mod.
+You should call this method in your plugin's `[OnEnable]` or `[OnStart]` method. If everything works properly, translations keys should now show up as the English text you wrote in the CSV file.
 
-### Other Goodies
-A useful extension method for strings exists in SiraUtil...
-```cs
-myLocalizedText = "MY_MOD_LOCALIZATION_KEY".LocalizationGetOr("My Localized Text");
+### Registering a Mod for Translation
+Registering your mod to be translated by the SiraLocalizer team is simple. First, fill out this request form (coming soon). If it the first time you request translations, you will be given an ID for your mod. Once you have this ID, simply add this JSON object to your manifest's `features` object:
+
+```json
+"SiraLocalizer.LocalizedPlugin": {
+    "id": "your-mod-id",
+    "resourcePath": "Assembly.Path.To.Your.translations.csv"
+}
 ```
-This will run the key through Polyglot, and if it does not exist for the current language, return the string in the parameter.
 
-### Shadow Localizations
-When calling `.AddLocalizationSheet` methods you can specify a parameter called `shadow`. Setting this to true will make that sheet a shadow sheet, and your localizations for a specific language will not show unless another sheet exists that has localizations for that same specific language is NOT marked as a shadow sheet. This is to prevent one mod having a large number of localizations for different languages "bloating" the language selection list.
+Once translations are available, they will automatically be downloaded by SiraLocalizer.

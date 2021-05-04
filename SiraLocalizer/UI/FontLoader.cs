@@ -1,11 +1,11 @@
 ﻿using TMPro;
-using System;
 using Zenject;
 using UnityEngine;
-using System.Linq;
-using System.Reflection;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Object = UnityEngine.Object;
 using UnityEngine.SceneManagement;
 
@@ -16,12 +16,12 @@ namespace SiraLocalizer.UI
         private readonly string[] kFontNamesToRemove = { "NotoSansJP-Medium SDF", "NotoSansKR-Medium SDF", "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)" };
         private readonly FontReplacementStrategy[] kFontReplacementStrategies = new[]
         {
-            new FontReplacementStrategy()
+            new FontReplacementStrategy
             {
-                targetFontNames = new[] { "Teko-Medium SDF", "Teko-Medium SDF No Glow", "Teko-Medium SDF No Glow Billboard" },
+                targetFontNames = new[] { "Teko-Medium SDF" },
                 fontNamesToAdd = new[] { "Teko-Medium SDF Latin-1 Supplement", "Oswald-Medium SDF Cyrillic", "SourceHanSans-Medium SDF" }
             },
-            new FontReplacementStrategy()
+            new FontReplacementStrategy
             {
                 targetFontNames = new[] { "Teko-Bold SDF" },
                 fontNamesToAdd = new[] { "Teko-Bold SDF Latin-1 Supplement", "Oswald-Bold SDF Cyrillic", "SourceHanSans-Medium SDF" }
@@ -103,7 +103,7 @@ namespace SiraLocalizer.UI
 
             foreach (FontReplacementStrategy strategy in kFontReplacementStrategies)
             {
-                IEnumerable<TMP_FontAsset> originalFontAssets = fontAssets.Where(f => !_processedFontAssets.Contains(f) && strategy.targetFontNames.Contains(f.name)); ;
+                IEnumerable<TMP_FontAsset> originalFontAssets = fontAssets.Where(f => !_processedFontAssets.Contains(f) && strategy.targetFontNames.Contains(f.name));
 
                 foreach (TMP_FontAsset fontAsset in originalFontAssets)
                 {
