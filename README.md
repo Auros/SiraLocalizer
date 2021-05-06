@@ -34,6 +34,13 @@ Beat Saber uses the [Polyglot](https://github.com/agens-no/PolyglotUnity) Unity 
 
 [BeatSaberMarkupLanguage](https://github.com/monkeymanboy/BeatSaberMarkupLanguage) now supports translating various text elements with the `-key` suffix (e.g. `text-key` for text, `tab-name-key` for tabs, etc.). More documentation regarding this is coming soon. If you are displaying text through other means, you can use the `Polyglot.Localization.Get(string)` and `Polyglot.Localization.GetFormat(string, params object[])` methods to get localized strings in the current language.
 
+### Choosing Good Translation Keys
+Here are some guidelines for creating good translation keys:
+- A translation key should succinctly describe the text it represents. There is no hard limit on length, but it shouldn't just be the whole sentence.
+- By convention, translation keys should be in SCREAMING_SNAKE_CASE (uppercase letters, words separated by underscores).
+- Context is very important when translating. Avoid re-using the same key at multiple places even if the English text is the same unless the context is identical.
+- To avoid collisions with base game keys and other mods' keys, all the keys you add should have a prefix that uniquely identifies your mod.
+
 ### Creating a Polyglot Translation File
 Polyglot stores translations in CSV or TSV files. We *highly* recommend using a CSV file since it supports line breaks inside values and empty columns are easier to format. Polyglot's file format is very straightforward: the first column is the translation key, the second column is context to help translators, and the rest of the columns are translations following [the order in the Locale enum](SiraLocalizer/Locale.cs).
 
