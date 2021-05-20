@@ -23,8 +23,8 @@ namespace SiraLocalizer
 
         public async void Initialize()
         {
-            LocalizationImporter_Initialize.PreInitialize += LocalizationImporter_PreInitialize;
-            LocalizationImporter_Initialize.PostInitialize += LocalizationImporter_PostInitialize;
+            LocalizationImporter_Initialize.preInitialize += LocalizationImporter_PreInitialize;
+            LocalizationImporter_Initialize.postInitialize += LocalizationImporter_PostInitialize;
 
             await Task.WhenAll(
                 AddLocalizationAssetFromAssembly("SiraLocalizer.Resources.sira-localizer.csv", GoogleDriveDownloadFormat.CSV),
@@ -33,8 +33,8 @@ namespace SiraLocalizer
 
         public void Dispose()
         {
-            LocalizationImporter_Initialize.PreInitialize -= LocalizationImporter_PreInitialize;
-            LocalizationImporter_Initialize.PostInitialize -= LocalizationImporter_PostInitialize;
+            LocalizationImporter_Initialize.preInitialize -= LocalizationImporter_PreInitialize;
+            LocalizationImporter_Initialize.postInitialize -= LocalizationImporter_PostInitialize;
         }
 
         public LocalizationAsset AddLocalizationAsset(LocalizationAsset localizationAsset)
@@ -89,7 +89,7 @@ namespace SiraLocalizer
                 {
                     if (!languageStrings.ContainsKey(key))
                     {
-                        Plugin.Log.Warn($"Key '{key}' does not exist");
+                        Plugin.log.Warn($"Key '{key}' does not exist");
                         continue;
                     }
 

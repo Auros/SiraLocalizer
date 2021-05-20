@@ -11,57 +11,57 @@ namespace SiraLocalizer.Features
     {
         private static readonly Regex kValidIdRegex = new Regex(@"^[a-z_-]+$");
 
-        private LocalizedPlugin localizedPlugin;
+        private LocalizedPlugin _localizedPlugin;
 
         protected override bool Initialize(PluginMetadata pluginMetadata, JObject featureData)
         {
-            localizedPlugin = featureData.ToObject<LocalizedPlugin>();
+            _localizedPlugin = featureData.ToObject<LocalizedPlugin>();
 
-            if (!kValidIdRegex.IsMatch(localizedPlugin.id))
+            if (!kValidIdRegex.IsMatch(_localizedPlugin.id))
             {
-                Plugin.Log.Error($"Invalid localized plugin ID for plugin '{pluginMetadata.Name}': '{localizedPlugin.id}'");
+                Plugin.log.Error($"Invalid localized plugin ID for plugin '{pluginMetadata.Name}': '{_localizedPlugin.id}'");
                 return false;
             }
 
-            if (LocalizationDefinition.IsDefinitionLoaded(localizedPlugin.id))
+            if (LocalizationDefinition.IsDefinitionLoaded(_localizedPlugin.id))
             {
-                Plugin.Log.Error($"Plugin '{pluginMetadata.Name}' attempted to register duplicate localized plugin ID '{localizedPlugin.id}'");
+                Plugin.log.Error($"Plugin '{pluginMetadata.Name}' attempted to register duplicate localized plugin ID '{_localizedPlugin.id}'");
                 return false;
             }
-            
-            if (string.IsNullOrWhiteSpace(localizedPlugin.name))
+
+            if (string.IsNullOrWhiteSpace(_localizedPlugin.name))
             {
-                localizedPlugin.name = pluginMetadata.Name;
+                _localizedPlugin.name = pluginMetadata.Name;
             }
 
-            string resourcePath = localizedPlugin.resourcePath;
+            string resourcePath = _localizedPlugin.resourcePath;
 
             if (string.IsNullOrWhiteSpace(resourcePath))
             {
-                Plugin.Log.Error($"Missing resource path for '{localizedPlugin.id}'");
+                Plugin.log.Error($"Missing resource path for '{_localizedPlugin.id}'");
                 return false;
             }
 
-            Plugin.Log.Info($"Localized plugin registered: '{localizedPlugin.name}' ({localizedPlugin.id})");
+            Plugin.log.Info($"Localized plugin registered: '{_localizedPlugin.name}' ({_localizedPlugin.id})");
 
             return true;
         }
 
         public override void AfterInit(PluginMetadata pluginMetadata)
         {
-            string resourcePath = localizedPlugin.resourcePath;
+            string resourcePath = _localizedPlugin.resourcePath;
             Stream resourceStream = pluginMetadata.Assembly.GetManifestResourceStream(resourcePath);
 
             if (resourceStream == null)
             {
-                Plugin.Log.Error($"Resource '{localizedPlugin.resourcePath}' does not exist in assembly '{pluginMetadata.Assembly.FullName}'");
+                Plugin.log.Error($"Resource '{_localizedPlugin.resourcePath}' does not exist in assembly '{pluginMetadata.Assembly.FullName}'");
                 return;
             }
 
-            using (StreamReader reader = new StreamReader(resourceStream))
+            using (var reader = new StreamReader(resourceStream))
             {
                 string extension = resourcePath.Substring(resourcePath.LastIndexOf('.'));
-                LocalizationDefinition.Add(new LocalizationDefinition("plugins/" + localizedPlugin.id, localizedPlugin.name, PolyglotUtil.GetKeysFromLocalizationAsset(reader.ReadToEnd(), extension == ".tsv" ? GoogleDriveDownloadFormat.TSV : GoogleDriveDownloadFormat.CSV)));
+                LocalizationDefinition.Add(new LocalizationDefinition("plugins/" + _localizedPlugin.id, _localizedPlugin.name, PolyglotUtil.GetKeysFromLocalizationAsset(reader.ReadToEnd(), extension == ".tsv" ? GoogleDriveDownloadFormat.TSV : GoogleDriveDownloadFormat.CSV)));
             }
         }
     }

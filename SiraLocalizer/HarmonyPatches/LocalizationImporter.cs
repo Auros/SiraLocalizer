@@ -14,7 +14,7 @@ namespace SiraLocalizer.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            List<CodeInstruction> instructionsList = instructions.ToList();
+            var instructionsList = instructions.ToList();
             instructionsList.RemoveRange(48, 56);
             return instructionsList.AsEnumerable();
         }
@@ -26,17 +26,17 @@ namespace SiraLocalizer.HarmonyPatches
     [HarmonyPatch(typeof(LocalizationImporter), "Initialize")]
     internal static class LocalizationImporter_Initialize
     {
-        public static event Action PreInitialize;
-        public static event Action PostInitialize;
+        public static event Action preInitialize;
+        public static event Action postInitialize;
 
         public static void Prefix()
         {
-            PreInitialize?.Invoke();
+            preInitialize?.Invoke();
         }
 
         public static void Postfix()
         {
-            PostInitialize?.Invoke();
+            postInitialize?.Invoke();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace SiraLocalizer.HarmonyPatches
             __instance.alignment = TextAlignmentOptions.Baseline;
 
             // this value is eyeballed
-            Vector2 offset = new Vector2(0, 0.31f * __instance.fontSize);
+            var offset = new Vector2(0, 0.31f * __instance.fontSize);
 
             __instance.rectTransform.offsetMin -= offset;
             __instance.rectTransform.offsetMax -= offset;

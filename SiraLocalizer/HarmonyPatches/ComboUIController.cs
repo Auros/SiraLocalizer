@@ -10,7 +10,7 @@ namespace SiraLocalizer.HarmonyPatches
     {
         public static void Postfix(ComboUIController __instance)
         {
-            RectTransform textTransform = (RectTransform)__instance.transform.Find("ComboText");
+            var textTransform = (RectTransform)__instance.transform.Find("ComboText");
             GameObject textObject = textTransform.gameObject;
 
             TextMeshProUGUI text = textObject.GetComponent<CurvedTextMeshPro>();

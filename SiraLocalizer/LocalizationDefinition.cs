@@ -4,9 +4,9 @@ namespace SiraLocalizer
 {
     internal class LocalizationDefinition
     {
-        public static IReadOnlyCollection<LocalizationDefinition> loadedDefinitions => _loadedDefinitions.Values;
+        public static IReadOnlyCollection<LocalizationDefinition> loadedDefinitions => kLoadedDefinitions.Values;
 
-        private static readonly Dictionary<string, LocalizationDefinition> _loadedDefinitions = new Dictionary<string, LocalizationDefinition>();
+        private static readonly Dictionary<string, LocalizationDefinition> kLoadedDefinitions = new Dictionary<string, LocalizationDefinition>();
 
         public string id { get; }
         public string name { get; }
@@ -21,17 +21,17 @@ namespace SiraLocalizer
 
         public static void Add(LocalizationDefinition definition)
         {
-            _loadedDefinitions.Add(definition.id, definition);
+            kLoadedDefinitions.Add(definition.id, definition);
         }
 
         public static bool IsDefinitionLoaded(string id)
         {
-            return _loadedDefinitions.ContainsKey(id);
+            return kLoadedDefinitions.ContainsKey(id);
         }
 
         public static bool TryGetLoadedDefinition(string id, out LocalizationDefinition localizedPlugin)
         {
-            return _loadedDefinitions.TryGetValue(id, out localizedPlugin);
+            return kLoadedDefinitions.TryGetValue(id, out localizedPlugin);
         }
     }
 }

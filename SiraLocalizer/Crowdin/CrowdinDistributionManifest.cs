@@ -2,10 +2,10 @@
 {
     internal class CrowdinDistributionManifest
     {
-        public string[] Files { get; set; }
+        public string[] files { get; set; }
 
-        public string[] Languages { get; set; }
+        public string[] languages { get; set; }
 
-        public long Timestamp { get; set; }
+        public long timestamp { get; set; }
     }
 }

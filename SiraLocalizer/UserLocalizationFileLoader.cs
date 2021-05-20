@@ -23,7 +23,7 @@ namespace SiraLocalizer
 
         public async Task LoadLocales()
         {
-            var folder = Path.GetFullPath(Path.Combine(UnityGame.UserDataPath, "SIRA", "Localizations"));
+            string folder = Path.GetFullPath(Path.Combine(UnityGame.UserDataPath, "SIRA", "Localizations"));
 
             if (!Directory.Exists(folder))
             {
@@ -32,9 +32,9 @@ namespace SiraLocalizer
 
             foreach (FileInfo file in new DirectoryInfo(folder).EnumerateFiles().Where(x => x.Extension == ".csv" || x.Extension == ".tsv"))
             {
-                using (var reader = File.OpenText(file.FullName))
+                using (var reader = new StreamReader(file.FullName))
                 {
-                    var fileText = await reader.ReadToEndAsync();
+                    string fileText = await reader.ReadToEndAsync();
                     _localizer.RegisterTranslation(fileText, file.Extension.EndsWith("csv") ? GoogleDriveDownloadFormat.CSV : GoogleDriveDownloadFormat.TSV, 100);
                 }
             }

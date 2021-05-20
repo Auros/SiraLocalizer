@@ -1,6 +1,6 @@
 ﻿namespace SiraLocalizer.Features
 {
-    class LocalizedPlugin
+    internal class LocalizedPlugin
     {
         public string id { get; set; }
         public string name { get; set; }

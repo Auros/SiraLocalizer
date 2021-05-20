@@ -92,9 +92,9 @@ namespace SiraLocalizer.UI
                 _credits.text = string.Format(Localization.Get("TRANSLATED_BY", language), !string.IsNullOrWhiteSpace(contributors) ? contributors : "—");
 
                 List<Localizer.TranslationStatus> statuses = _localizer.GetTranslationStatuses((Locale)language);
-                List<string> fullyTranslated = statuses.Where(s => s.percentTranslated == 100).Select(s => s.name).ToList();
-                List<string> partiallyTranslated = statuses.Where(s => s.percentTranslated < 100 && s.percentTranslated > 0).Select(s => $"{s.name} ({Mathf.Clamp(s.percentTranslated, 1, 99):0}%)").ToList();
-                List<string> notSupported = statuses.Where(s => s.percentTranslated == 0).Select(s => s.name).ToList();
+                var fullyTranslated = statuses.Where(s => s.percentTranslated == 100).Select(s => s.name).ToList();
+                var partiallyTranslated = statuses.Where(s => s.percentTranslated < 100 && s.percentTranslated > 0).Select(s => $"{s.name} ({Mathf.Clamp(s.percentTranslated, 1, 99):0}%)").ToList();
+                var notSupported = statuses.Where(s => s.percentTranslated == 0).Select(s => s.name).ToList();
 
                 _translationStatus.text = string.Empty;
 

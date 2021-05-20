@@ -39,8 +39,8 @@ namespace SiraLocalizer.Crowdin
             }
             catch (Exception ex)
             {
-                Plugin.Log.Error("Failed to load Crowdin translations");
-                Plugin.Log.Error(ex);
+                Plugin.log.Error("Failed to load Crowdin translations");
+                Plugin.log.Error(ex);
             }
         }
 
@@ -51,7 +51,7 @@ namespace SiraLocalizer.Crowdin
                 var cancellationTokenSource = new CancellationTokenSource();
 
                 string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
-                Plugin.Log.Info($"Fetching Crowdin data at '{url}'");
+                Plugin.log.Info($"Fetching Crowdin data at '{url}'");
                 HttpResponseMessage response = await client.GetAsync(url);
 
                 string manifestContent = await response.Content.ReadAsStringAsync();
@@ -72,7 +72,7 @@ namespace SiraLocalizer.Crowdin
 
                     Directory.CreateDirectory(kContentFolder);
 
-                    foreach (var fileName in manifest.Files)
+                    foreach (string fileName in manifest.files)
                     {
                         // file name has a leading slash so we have to remove that
                         string relativeFilePath = fileName.Substring(1);
@@ -81,7 +81,7 @@ namespace SiraLocalizer.Crowdin
 
                         if (!LocalizationDefinition.IsDefinitionLoaded(id))
                         {
-                            Plugin.Log.Trace($"'{id}' does not belong to a loaded LocalizedPlugin; ignored");
+                            Plugin.log.Trace($"'{id}' does not belong to a loaded LocalizedPlugin; ignored");
                             continue;
                         }
 
@@ -97,7 +97,7 @@ namespace SiraLocalizer.Crowdin
                 }
                 else
                 {
-                    Plugin.Log.Info("Translations are up-to-date");
+                    Plugin.log.Info("Translations are up-to-date");
                 }
             }
         }
@@ -106,7 +106,7 @@ namespace SiraLocalizer.Crowdin
         {
             if (!File.Exists(kManifestFilePath) || !Directory.Exists(kContentFolder)) return true;
 
-            foreach (string fileName in remoteManifest.Files)
+            foreach (string fileName in remoteManifest.files)
             {
                 string id = fileName.Substring(1, fileName.Length - 5);
                 string fullPath = Path.Combine(kContentFolder, fileName.Substring(1));
@@ -125,18 +125,18 @@ namespace SiraLocalizer.Crowdin
                 localManifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(await reader.ReadToEndAsync());
             }
 
-            return localManifest.Timestamp != remoteManifest.Timestamp;
+            return localManifest.timestamp != remoteManifest.timestamp;
         }
 
         private async Task DownloadFile(HttpClient client, string url, string filePath)
         {
-            Plugin.Log.Info($"Downloading '{url}'");
+            Plugin.log.Info($"Downloading '{url}'");
 
             HttpResponseMessage response = await client.GetAsync(url);
 
             if (!response.IsSuccessStatusCode)
             {
-                Plugin.Log.Error($"'{url}' responded with {(int)response.StatusCode} {response.StatusCode} ({response.ReasonPhrase})");
+                Plugin.log.Error($"'{url}' responded with {(int)response.StatusCode} {response.StatusCode} ({response.ReasonPhrase})");
                 return;
             }
 
@@ -144,7 +144,7 @@ namespace SiraLocalizer.Crowdin
 
             Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
-            using (FileStream file = new FileStream(filePath, FileMode.Create))
+            using (var file = new FileStream(filePath, FileMode.Create))
             {
                 if (response.Content.Headers.ContentEncoding.Contains("gzip"))
                 {
@@ -173,14 +173,14 @@ namespace SiraLocalizer.Crowdin
 
             if (Directory.Exists(kContentFolder))
             {
-                foreach (string fileName in manifest.Files)
+                foreach (string fileName in manifest.files)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
                     string id = fileName.Substring(1, fileName.Length - 5);
                     string fullPath = Path.Combine(kContentFolder, fileName.Substring(1));
 
-                    if (LocalizationDefinition.TryGetLoadedDefinition(id, out LocalizationDefinition def))
+                    if (LocalizationDefinition.IsDefinitionLoaded(id))
                     {
                         if (File.Exists(fullPath))
                         {
@@ -188,12 +188,12 @@ namespace SiraLocalizer.Crowdin
                         }
                         else
                         {
-                            Plugin.Log.Error($"File '{fullPath}' not found");
+                            Plugin.log.Error($"File '{fullPath}' not found");
                         }
                     }
                     else
                     {
-                        Plugin.Log.Warn($"No localized plugin registered for '{id}'");
+                        Plugin.log.Warn($"No localized plugin registered for '{id}'");
                     }
                 }
             }
@@ -205,9 +205,9 @@ namespace SiraLocalizer.Crowdin
 
         private async Task AddLocalizationSheetFromFile(string filePath)
         {
-            Plugin.Log.Info($"Adding '{filePath}'");
+            Plugin.log.Info($"Adding '{filePath}'");
 
-            using (StreamReader reader = new StreamReader(filePath))
+            using (var reader = new StreamReader(filePath))
             {
                 string text = await reader.ReadToEndAsync();
 

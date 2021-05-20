@@ -14,7 +14,7 @@ namespace SiraLocalizer
         public static IEnumerable<string> GetKeysFromLocalizationAsset(string content, GoogleDriveDownloadFormat format)
         {
             List<List<string>> rows;
-            
+
             if (format == GoogleDriveDownloadFormat.TSV)
             {
                 rows = TsvReader.Parse(content);

@@ -35,11 +35,11 @@ namespace SiraLocalizer
             string filePath = Path.Combine(UnityGame.InstallPath, "beat-saber.csv");
             int numberOfLanguages = Enum.GetNames(typeof(Locale)).Length - 1; // don't include Locale.English
 
-            Plugin.Log.Info($"Dumping base game localization to '{filePath}'");
+            Plugin.log.Info($"Dumping base game localization to '{filePath}'");
 
             try
             {
-                using (StreamWriter writer = new StreamWriter(filePath))
+                using (var writer = new StreamWriter(filePath))
                 {
                     LocalizationAsset baseGameAsset = Localization.Instance.InputFiles.First();
                     List<List<string>> rows = CsvReader.Parse(baseGameAsset.TextAsset.text);
@@ -67,7 +67,7 @@ namespace SiraLocalizer
 
                             if (result == english)
                             {
-                                Plugin.Log.Warn($"Rule for '{key}' ('{rule.find}' -> '{rule.replace}') did nothing on '{english}'");
+                                Plugin.log.Warn($"Rule for '{key}' ('{rule.find}' -> '{rule.replace}') did nothing on '{english}'");
                             }
                             else
                             {
@@ -82,8 +82,8 @@ namespace SiraLocalizer
             }
             catch (Exception ex)
             {
-                Plugin.Log.Error("Could not dump base game localization");
-                Plugin.Log.Error(ex.ToString());
+                Plugin.log.Error("Could not dump base game localization");
+                Plugin.log.Error(ex.ToString());
             }
         }
 

@@ -42,7 +42,7 @@ namespace SiraLocalizer.HarmonyPatches
             foreach (CodeInstruction codeInstruction in instructions)
             {
                 yield return codeInstruction;
-                
+
                 if (codeInstruction.operand != null && codeInstruction.Calls(kBindMissedNoteEffectSpawnerMethod))
                 {
                     yield return new CodeInstruction(OpCodes.Callvirt, kBindToTextBasedEffectSpawnerMethod);

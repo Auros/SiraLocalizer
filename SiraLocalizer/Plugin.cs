@@ -17,14 +17,14 @@ namespace SiraLocalizer
     {
         private const string kHarmonyId = "pro.sira.siralocalizer";
 
-        internal static IPALogger Log { get; private set; }
+        internal static IPALogger log { get; private set; }
 
         private readonly Harmony _harmony;
 
         [Init]
         public Plugin(Conf conf, IPALogger logger, Zenjector zenjector)
         {
-            Log = logger;
+            log = logger;
 
             if (Environment.GetCommandLineArgs().Contains("--dump-localization")) LocalizationExporter.DumpBaseGameLocalization();
 

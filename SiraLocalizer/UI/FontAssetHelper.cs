@@ -14,10 +14,10 @@ namespace SiraLocalizer.UI
 
             // Unity doesn't copy textures when using Object.Instantiate so we have to do it manually
             Texture2D texture = original.atlasTexture;
-            Texture2D newTexture = new Texture2D(texture.width, texture.height, texture.format, texture.mipmapCount, true);
+            var newTexture = new Texture2D(texture.width, texture.height, texture.format, texture.mipmapCount, true);
             Graphics.CopyTexture(texture, newTexture);
 
-            Material material = new Material(referenceMaterial);
+            var material = new Material(referenceMaterial);
             material.SetTexture("_MainTex", newTexture);
 
             kAtlasTextureAccessor(ref copy) = newTexture;

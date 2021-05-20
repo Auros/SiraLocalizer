@@ -3,7 +3,7 @@ using Polyglot;
 
 namespace SiraLocalizer
 {
-    interface ILocalizer
+    public interface ILocalizer
     {
         LocalizationAsset AddLocalizationAsset(LocalizationAsset localizationAsset);
 
