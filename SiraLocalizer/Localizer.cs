@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -73,6 +73,7 @@ namespace SiraLocalizer
         internal void DeregisterTranslation(LocalizationAsset localizationAsset)
         {
             _assets.RemoveAll(a => a.localizationAsset == localizationAsset);
+            Localization.Instance.InputFiles.RemoveAll(f => f == localizationAsset);
         }
 
         internal List<TranslationStatus> GetTranslationStatuses(Locale language)
