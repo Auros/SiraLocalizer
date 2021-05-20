@@ -1,16 +1,17 @@
-﻿using Polyglot;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
-using System;
-using Zenject;
+using System.IO;
+using System.Linq;
 using System.Reflection;
-using SiraLocalizer.HarmonyPatches;
 using System.Threading.Tasks;
+using Polyglot;
+using SiraLocalizer.HarmonyPatches;
 using UnityEngine;
+using Zenject;
 
 namespace SiraLocalizer
 {
-    internal class Localizer : IInitializable, IDisposable
+    internal class Localizer : ILocalizer, IInitializable, IDisposable
     {
         internal const float kMinimumTranslatedPercent = 0.50f;
 
@@ -25,9 +26,9 @@ namespace SiraLocalizer
             LocalizationImporter_Initialize.PreInitialize += LocalizationImporter_PreInitialize;
             LocalizationImporter_Initialize.PostInitialize += LocalizationImporter_PostInitialize;
 
-            await Task.WhenAll(PolyglotUtil.AddLocalizationFromResource("SiraLocalizer.Resources.sira-localizer.csv"), PolyglotUtil.AddLocalizationFromResource("SiraLocalizer.Resources.contributors.csv"));
-
-            LocalizationImporter.Refresh();
+            await Task.WhenAll(
+                AddLocalizationAssetFromAssembly("SiraLocalizer.Resources.sira-localizer.csv", GoogleDriveDownloadFormat.CSV),
+                AddLocalizationAssetFromAssembly("SiraLocalizer.Resources.contributors.csv", GoogleDriveDownloadFormat.CSV));
         }
 
         public void Dispose()
@@ -36,24 +37,45 @@ namespace SiraLocalizer
             LocalizationImporter_Initialize.PostInitialize -= LocalizationImporter_PostInitialize;
         }
 
-        public void RegisterTranslation(string content, GoogleDriveDownloadFormat format, int priority)
+        public LocalizationAsset AddLocalizationAsset(LocalizationAsset localizationAsset)
+        {
+            Localization.Instance.InputFiles.Add(localizationAsset);
+            LocalizationImporter.Refresh();
+            return localizationAsset;
+        }
+
+        public LocalizationAsset AddLocalizationAsset(string content, GoogleDriveDownloadFormat format)
+        {
+            return AddLocalizationAsset(new LocalizationAsset() { Format = GoogleDriveDownloadFormat.CSV, TextAsset = new TextAsset(content) });
+        }
+
+        public async Task<LocalizationAsset> AddLocalizationAssetFromAssembly(string resourceName, GoogleDriveDownloadFormat format)
+        {
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)))
+            {
+                string content = await reader.ReadToEndAsync();
+                return AddLocalizationAsset(content, format);
+            }
+        }
+
+        internal void RegisterTranslation(string content, GoogleDriveDownloadFormat format, int priority)
         {
             RegisterTranslation(new LocalizationAsset { TextAsset = new TextAsset(content), Format = format }, priority);
         }
 
-        public void RegisterTranslation(LocalizationAsset localizationAsset, int priority = 0)
+        internal void RegisterTranslation(LocalizationAsset localizationAsset, int priority = 0)
         {
             if (localizationAsset == null) throw new InvalidOperationException();
 
             _assets.Add(new LocalizationAssetWithPriority(localizationAsset, priority));
         }
 
-        public void DeregisterTranslation(LocalizationAsset localizationAsset)
+        internal void DeregisterTranslation(LocalizationAsset localizationAsset)
         {
             _assets.RemoveAll(a => a.localizationAsset == localizationAsset);
         }
 
-        public List<TranslationStatus> GetTranslationStatuses(Locale language)
+        internal List<TranslationStatus> GetTranslationStatuses(Locale language)
         {
             var languageStrings = (Dictionary<string, List<string>>)kLanguageStringsField.GetValue(null);
             var statuses = new List<TranslationStatus>();

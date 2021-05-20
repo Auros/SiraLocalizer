@@ -1,7 +1,7 @@
-﻿using SiraLocalizer.UI;
-using SiraUtil.Interfaces;
+﻿using SiraLocalizer.Crowdin;
 using SiraLocalizer.Providers;
-using SiraLocalizer.Crowdin;
+using SiraLocalizer.UI;
+using SiraUtil.Interfaces;
 using Zenject;
 
 namespace SiraLocalizer.Installers
@@ -19,10 +19,9 @@ namespace SiraLocalizer.Installers
         {
             Container.BindInstance(_config).AsSingle();
 
-            Container.Bind(typeof(Localizer), typeof(IInitializable)).To<Localizer>().AsSingle();
-            Container.Bind<IInitializable>().To<UserLocalizationFileLoader>().AsSingle();
-
+            Container.BindInterfacesAndSelfTo<Localizer>().AsSingle();
             Container.BindInterfacesAndSelfTo<FontLoader>().AsSingle();
+            Container.Bind<IInitializable>().To<UserLocalizationFileLoader>().AsSingle();
 
             Container.Bind(typeof(IModelProvider), typeof(ItalicizedFlyingTextEffectModelProvider)).To<ItalicizedFlyingTextEffectModelProvider>().AsSingle();
 
