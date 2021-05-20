@@ -1,4 +1,5 @@
-﻿using SiraLocalizer.Crowdin;
+using System;
+using SiraLocalizer.Crowdin;
 using SiraLocalizer.Providers;
 using SiraLocalizer.UI;
 using SiraUtil.Interfaces;
@@ -29,7 +30,7 @@ namespace SiraLocalizer.Installers
 
             if (_config.automaticallyDownloadLocalizations)
             {
-                Container.Bind<IInitializable>().To<CrowdinDownloader>().AsSingle();
+                Container.Bind(typeof(IInitializable), typeof(IDisposable)).To<CrowdinDownloader>().AsSingle();
             }
         }
     }

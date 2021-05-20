@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Polyglot;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using Zenject;
 
 namespace SiraLocalizer.Crowdin
 {
-    public class CrowdinDownloader : IInitializable
+    public class CrowdinDownloader : IInitializable, IDisposable
     {
         private const string kCrowdinHost = "https://distributions.crowdin.net";
         private const string kDistributionKey = "b8d0ace786d64ba14775878o9lk";
@@ -42,6 +42,11 @@ namespace SiraLocalizer.Crowdin
                 Plugin.log.Error("Failed to load Crowdin translations");
                 Plugin.log.Error(ex);
             }
+        }
+
+        public void Dispose()
+        {
+            ClearLoadedAssets();
         }
 
         public async Task DownloadLocalizations()
@@ -164,12 +169,7 @@ namespace SiraLocalizer.Crowdin
 
         private async Task LoadLocalizationSheets(CrowdinDistributionManifest manifest, CancellationToken cancellationToken)
         {
-            foreach (LocalizationAsset asset in _loadedAssets)
-            {
-                _localizer.DeregisterTranslation(asset);
-            }
-
-            _loadedAssets.Clear();
+            ClearLoadedAssets();
 
             if (Directory.Exists(kContentFolder))
             {
@@ -201,6 +201,16 @@ namespace SiraLocalizer.Crowdin
             cancellationToken.ThrowIfCancellationRequested();
 
             LocalizationImporter.Refresh();
+        }
+
+        private void ClearLoadedAssets()
+        {
+            foreach (LocalizationAsset asset in _loadedAssets)
+            {
+                _localizer.DeregisterTranslation(asset);
+            }
+
+            _loadedAssets.Clear();
         }
 
         private async Task AddLocalizationSheetFromFile(string filePath)
