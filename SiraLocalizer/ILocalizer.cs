@@ -12,5 +12,7 @@ namespace SiraLocalizer
         LocalizationAsset AddLocalizationAssetFromAssembly(string resourceName, GoogleDriveDownloadFormat format);
 
         Task<LocalizationAsset> AddLocalizationAssetFromAssemblyAsync(string resourceName, GoogleDriveDownloadFormat format);
+
+        void RemoveLocalizationAsset(LocalizationAsset localizationAsset);
     }
 }

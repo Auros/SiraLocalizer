@@ -61,6 +61,11 @@ namespace SiraLocalizer
             }
         }
 
+        public void RemoveLocalizationAsset(LocalizationAsset localizationAsset)
+        {
+            Localization.Instance.InputFiles.RemoveAll(f => f == localizationAsset);
+        }
+
         public async Task<LocalizationAsset> AddLocalizationAssetFromAssemblyAsync(string resourceName, GoogleDriveDownloadFormat format)
         {
             using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)))
