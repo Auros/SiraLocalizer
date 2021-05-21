@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Polyglot;
 
 namespace SiraLocalizer
@@ -9,6 +9,8 @@ namespace SiraLocalizer
 
         LocalizationAsset AddLocalizationAsset(string content, GoogleDriveDownloadFormat format);
 
-        Task<LocalizationAsset> AddLocalizationAssetFromAssembly(string resourceName, GoogleDriveDownloadFormat format);
+        LocalizationAsset AddLocalizationAssetFromAssembly(string resourceName, GoogleDriveDownloadFormat format);
+
+        Task<LocalizationAsset> AddLocalizationAssetFromAssemblyAsync(string resourceName, GoogleDriveDownloadFormat format);
     }
 }

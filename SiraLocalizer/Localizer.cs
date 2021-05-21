@@ -27,8 +27,8 @@ namespace SiraLocalizer
             LocalizationImporter_Initialize.postInitialize += LocalizationImporter_PostInitialize;
 
             await Task.WhenAll(
-                AddLocalizationAssetFromAssembly("SiraLocalizer.Resources.sira-localizer.csv", GoogleDriveDownloadFormat.CSV),
-                AddLocalizationAssetFromAssembly("SiraLocalizer.Resources.contributors.csv", GoogleDriveDownloadFormat.CSV));
+                AddLocalizationAssetFromAssemblyAsync("SiraLocalizer.Resources.sira-localizer.csv", GoogleDriveDownloadFormat.CSV),
+                AddLocalizationAssetFromAssemblyAsync("SiraLocalizer.Resources.contributors.csv", GoogleDriveDownloadFormat.CSV));
         }
 
         public void Dispose()
@@ -49,7 +49,16 @@ namespace SiraLocalizer
             return AddLocalizationAsset(new LocalizationAsset() { Format = GoogleDriveDownloadFormat.CSV, TextAsset = new TextAsset(content) });
         }
 
-        public async Task<LocalizationAsset> AddLocalizationAssetFromAssembly(string resourceName, GoogleDriveDownloadFormat format)
+        public LocalizationAsset AddLocalizationAssetFromAssembly(string resourceName, GoogleDriveDownloadFormat format)
+        {
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)))
+            {
+                string content = reader.ReadToEnd();
+                return AddLocalizationAsset(content, format);
+            }
+        }
+
+        public async Task<LocalizationAsset> AddLocalizationAssetFromAssemblyAsync(string resourceName, GoogleDriveDownloadFormat format)
         {
             using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)))
             {
