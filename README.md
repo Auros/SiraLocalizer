@@ -53,12 +53,42 @@ Polyglot,100,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 The first line is required for Polyglot to properly identify the file. Also, note the trailing commas &ndash; these are important since Polyglot will show the translation key instead of the fallback (English) text if a column doesn't exist for the selected language. Since Polyglot supports 28 languages out-of-the-box, there should be at least 27 commas after the English text.
 
-Once you've added all the translation keys for your mod in a CSV file following the format above, it needs to be loaded when the game starts. We recommend doing this by adding your CSV file as an embedded resource within your mod, and then loading it using the following snippet:
+Once you've added all the translation keys for your mod in a CSV file following the format above, it needs to be loaded when the game starts. We recommend doing this by adding your CSV file as an embedded resource within your mod. It can then be loaded at runtime in two different ways.
+
+#### Through SiraLocalizer
+This is the recommended way to add your file since if anything changes within the game itself, you don't have to worry about it. You must however add SiraLocalizer as a dependency to your mod. Below is an example of how to do this. Note that this requires use of Zenject (via SiraUtil, for example).
+
+```cs
+using SiraLocalizer;
+
+namespace YourMod
+{
+    class YourLocalizationRegistrar : IInitializable
+    {
+        private ILocalizer _localizer;
+
+        internal YourLocalizationRegistrar(ILocalizer localizer)
+        {
+            _localizer = localizer;
+        }
+
+        public void Initialize()
+        {
+            _localizer.AddLocalizationAssetFromAssembly("Assembly.Path.To.Your.translations.csv", GoogleDriveDownloadFormat.CSV);
+        }
+    }
+}
+```
+
+The `YourLocalizationRegistrar` class should be bound to an installer that runs on the main Beat Saber context (e.g. a `YourAppInstaller` installer registered via `Zenjector.OnApp<YourAppInstaller>()`).
+
+#### Manually
+This method should only be used if you don't want to add SiraLocalizer as a dependency to your mod. Since this is prone to change, we don't officially endorse or support this method. We will try our best to keep it working in the future but we can't guarantee this will be possible, so if you decide to use it, you're on your own. Below is an example of how to add your CSV file. You should call this method in your plugin's [OnStart] method.
 
 ```cs
 private void AddLocalizationFromResource()
 {
-    using (StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Assembly.Path.To.Your.translations.csv")))
+    using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Assembly.Path.To.Your.translations.csv")))
     {
         string content = reader.ReadToEnd();
         Localization.Instance.InputFiles.Add(new LocalizationAsset { Format = GoogleDriveDownloadFormat.CSV, TextAsset = new TextAsset(content) });
