@@ -35,6 +35,9 @@ namespace SiraLocalizer
         {
             LocalizationImporter_Initialize.preInitialize -= LocalizationImporter_PreInitialize;
             LocalizationImporter_Initialize.postInitialize -= LocalizationImporter_PostInitialize;
+
+            Localization.Instance.InputFiles.RemoveAll(f => _assets.Any(l => l.localizationAsset == f));
+            LocalizationImporter.Refresh();
         }
 
         public LocalizationAsset AddLocalizationAsset(LocalizationAsset localizationAsset)
