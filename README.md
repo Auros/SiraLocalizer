@@ -83,16 +83,13 @@ namespace YourMod
 The `YourLocalizationRegistrar` class should be bound to an installer that runs on the main Beat Saber context (e.g. a `YourAppInstaller` installer registered via `Zenjector.OnApp<YourAppInstaller>()`).
 
 #### Manually
-This method should only be used if you don't want to add SiraLocalizer as a dependency to your mod. Since this is prone to change, we don't officially endorse or support this method. We will try our best to keep it working in the future but we can't guarantee this will be possible, so if you decide to use it, you're on your own. Below is an example of how to add your CSV file. You should call this method in your plugin's [OnStart] method.
+This method should only be used if you don't want to add SiraLocalizer as a dependency to your mod. Since this is prone to change, we don't officially endorse or support this method. We will try our best to keep it working in the future but we can't guarantee this will be possible, so if you decide to use it, you're on your own. Below is an example of how to add your CSV file. You should call this in your plugin's [OnStart] method.
 
 ```cs
-private void AddLocalizationFromResource()
+using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Assembly.Path.To.Your.translations.csv")))
 {
-    using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Assembly.Path.To.Your.translations.csv")))
-    {
-        string content = reader.ReadToEnd();
-        Localization.Instance.InputFiles.Add(new LocalizationAsset { Format = GoogleDriveDownloadFormat.CSV, TextAsset = new TextAsset(content) });
-    }
+    string content = reader.ReadToEnd();
+    Localization.Instance.InputFiles.Add(new LocalizationAsset { Format = GoogleDriveDownloadFormat.CSV, TextAsset = new TextAsset(content) });
 }
 ```
 
