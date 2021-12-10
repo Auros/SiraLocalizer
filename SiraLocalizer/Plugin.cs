@@ -1,14 +1,14 @@
-﻿using IPA;
 using System;
-using HarmonyLib;
 using System.Linq;
-using SiraUtil.Zenject;
 using System.Reflection;
+using HarmonyLib;
+using IPA;
 using IPA.Config.Stores;
+using Polyglot;
 using SiraLocalizer.Installers;
+using SiraUtil.Zenject;
 using Conf = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
-using Polyglot;
 
 namespace SiraLocalizer
 {
@@ -32,8 +32,8 @@ namespace SiraLocalizer
 
             LocalizationDefinition.Add(new LocalizationDefinition("beat-saber", "Beat Saber", PolyglotUtil.GetKeysFromLocalizationAsset(Localization.Instance.InputFiles[0])));
 
-            zenjector.OnApp<SiraLocalizerCoreInstaller>().WithParameters(conf.Generated<Config>());
-            zenjector.OnMenu<SiraLocalizerUIInstaller>();
+            zenjector.Install<SiraLocalizerCoreInstaller>(Location.App, conf.Generated<Config>());
+            zenjector.Install<SiraLocalizerUIInstaller>(Location.Menu);
         }
 
         [OnEnable]
