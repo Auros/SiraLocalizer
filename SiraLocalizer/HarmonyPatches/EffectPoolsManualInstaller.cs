@@ -1,6 +1,7 @@
 using HarmonyLib;
 using SiraLocalizer.UI;
 using TMPro;
+using UnityEngine;
 using Zenject;
 using Object = UnityEngine.Object;
 
@@ -16,14 +17,16 @@ namespace SiraLocalizer.HarmonyPatches
 
         private static FlyingTextEffect CreateFlyingTextEffectPrefab(FlyingTextEffect original)
         {
-            FlyingTextEffect flyingTextEffect = Object.Instantiate(original.gameObject).GetComponent<FlyingTextEffect>();
+            GameObject gameObject = Object.Instantiate(original.gameObject);
+            gameObject.SetActive(false);
+            gameObject.name = "ItalicizedFlyingTextEffect";
 
-            TextMeshPro text = flyingTextEffect.GetComponentInChildren<TextMeshPro>();
+            TextMeshPro text = gameObject.GetComponentInChildren<TextMeshPro>();
             text.fontStyle = FontStyles.Bold | FontStyles.Italic | FontStyles.UpperCase;
             text.alignment = TextAlignmentOptions.Center;
             text.fontSize = 3;
 
-            return flyingTextEffect;
+            return gameObject.GetComponent<FlyingTextEffect>();
         }
     }
 }
