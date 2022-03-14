@@ -22,7 +22,7 @@ namespace SiraLocalizer.UI
 
         public override void HandleNoteWasMissed(NoteController noteController)
         {
-            if (noteController.hide) return;
+            if (noteController.hidden) return;
             if (noteController.noteData.time + 0.5f < _audioTimeSyncController.songTime) return;
             if (noteController.noteData.colorType == ColorType.None) return;
 
