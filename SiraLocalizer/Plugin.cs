@@ -45,7 +45,7 @@ namespace SiraLocalizer
         [OnDisable]
         public void OnDisable()
         {
-            _harmony.UnpatchAll(kHarmonyId);
+            _harmony.UnpatchSelf();
         }
     }
 }
