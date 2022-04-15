@@ -1,13 +1,14 @@
-﻿using TMPro;
-using Zenject;
-using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Object = UnityEngine.Object;
+using System.Threading.Tasks;
+using SiraLocalizer.Utilities;
+using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
+using Object = UnityEngine.Object;
 
 namespace SiraLocalizer.UI
 {
@@ -38,11 +39,11 @@ namespace SiraLocalizer.UI
             _fontAssetHelper = fontAssetHelper;
         }
 
-        public void Initialize()
+        public async void Initialize()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
 
-            SharedCoroutineStarter.instance.StartCoroutine(LoadFontAssets());
+            await LoadFontAssets();
         }
 
         public void Dispose()
@@ -55,19 +56,18 @@ namespace SiraLocalizer.UI
             ApplyFallbackFonts();
         }
 
-        private IEnumerator LoadFontAssets()
+        private async Task LoadFontAssets()
         {
             Plugin.log.Info($"Loading fonts");
 
-            AssetBundleCreateRequest assetBundleCreateRequest = AssetBundle.LoadFromStreamAsync(Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.fonts.assets"));
-            yield return assetBundleCreateRequest;
+            AssetBundleCreateRequest assetBundleCreateRequest = await AssetBundle.LoadFromStreamAsync(Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.fonts.assets"));
 
             AssetBundle assetBundle = assetBundleCreateRequest.assetBundle;
 
             if (!assetBundleCreateRequest.isDone || !assetBundle)
             {
                 Plugin.log.Error("Failed to load fonts asset bundle; some characters may not display as expected");
-                yield break;
+                return;
             }
 
             foreach (string fontName in kFontReplacementStrategies.SelectMany(s => s.fontNamesToAdd).Distinct())
