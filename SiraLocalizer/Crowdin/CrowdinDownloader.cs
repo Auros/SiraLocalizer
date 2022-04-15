@@ -2,6 +2,7 @@ using IPA.Utilities;
 using Newtonsoft.Json;
 using Polyglot;
 using SiraLocalizer.Utilities;
+using SiraUtil.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,11 +25,13 @@ namespace SiraLocalizer.Crowdin
         private static readonly string kDownloadedFolder = Path.Combine(kLocalizationsFolder, "Content");
         private static readonly string kManifestFilePath = Path.Combine(kLocalizationsFolder, "manifest.json");
 
+        private readonly SiraLog _logger;
         private readonly Localizer _localizer;
         private readonly List<LocalizationAsset> _loadedAssets;
 
-        internal CrowdinDownloader(Localizer localizer)
+        internal CrowdinDownloader(SiraLog logger, Localizer localizer)
         {
+            _logger = logger;
             _localizer = localizer;
             _loadedAssets = new List<LocalizationAsset>();
         }
@@ -41,8 +44,8 @@ namespace SiraLocalizer.Crowdin
             }
             catch (Exception ex)
             {
-                Plugin.log.Error("Failed to load Crowdin translations");
-                Plugin.log.Error(ex);
+                _logger.Error("Failed to load Crowdin translations");
+                _logger.Error(ex);
             }
         }
 
@@ -56,7 +59,7 @@ namespace SiraLocalizer.Crowdin
             string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
             string manifestContent;
 
-            Plugin.log.Info($"Fetching Crowdin data at '{url}'");
+            _logger.Info($"Fetching Crowdin data at '{url}'");
 
             using (var request = UnityWebRequest.Get(url))
             {
@@ -64,13 +67,13 @@ namespace SiraLocalizer.Crowdin
 
                 if (!asyncOperation.isDone)
                 {
-                    Plugin.log.Error($"UnityWebRequest for '{url}' failed");
+                    _logger.Error($"UnityWebRequest for '{url}' failed");
                     return;
                 }
 
                 if (!request.IsSuccessResponseCode())
                 {
-                    Plugin.log.Error($"'{url}' responded with {request.responseCode} ({request.error})");
+                    _logger.Error($"'{url}' responded with {request.responseCode} ({request.error})");
                     return;
                 }
 
@@ -84,7 +87,7 @@ namespace SiraLocalizer.Crowdin
 
             if (!await ShouldDownloadContent(manifest))
             {
-                Plugin.log.Info("Translations are up-to-date");
+                _logger.Info("Translations are up-to-date");
                 return;
             }
 
@@ -109,7 +112,7 @@ namespace SiraLocalizer.Crowdin
 
                 if (!LocalizationDefinition.IsDefinitionLoaded(id))
                 {
-                    Plugin.log.Trace($"'{id}' does not belong to a loaded LocalizedPlugin; ignored");
+                    _logger.Trace($"'{id}' does not belong to a loaded LocalizedPlugin; ignored");
                     continue;
                 }
 
@@ -152,7 +155,7 @@ namespace SiraLocalizer.Crowdin
 
         private async Task DownloadFile(string url, string filePath)
         {
-            Plugin.log.Info($"Downloading '{url}'");
+            _logger.Info($"Downloading '{url}'");
 
             using (var request = UnityWebRequest.Get(url))
             {
@@ -162,13 +165,13 @@ namespace SiraLocalizer.Crowdin
 
                 if (!asyncOperation.isDone)
                 {
-                    Plugin.log.Error($"UnityWebRequest for '{url}' failed");
+                    _logger.Error($"UnityWebRequest for '{url}' failed");
                     return;
                 }
 
                 if (!request.IsSuccessResponseCode())
                 {
-                    Plugin.log.Error($"'{url}' responded with {request.responseCode} ({request.error})");
+                    _logger.Error($"'{url}' responded with {request.responseCode} ({request.error})");
                     return;
                 }
 
@@ -215,12 +218,12 @@ namespace SiraLocalizer.Crowdin
                         }
                         else
                         {
-                            Plugin.log.Error($"File '{fullPath}' not found");
+                            _logger.Error($"File '{fullPath}' not found");
                         }
                     }
                     else
                     {
-                        Plugin.log.Warn($"No localized plugin registered for '{id}'");
+                        _logger.Warn($"No localized plugin registered for '{id}'");
                     }
                 }
             }
@@ -242,7 +245,7 @@ namespace SiraLocalizer.Crowdin
 
         private async Task AddLocalizationSheetFromFile(string filePath)
         {
-            Plugin.log.Info($"Adding '{filePath}'");
+            _logger.Info($"Adding '{filePath}'");
 
             using (var reader = new StreamReader(filePath))
             {

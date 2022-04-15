@@ -1,7 +1,8 @@
-﻿using IPA.Loader;
+using IPA.Loader;
 using IPA.Loader.Features;
 using Newtonsoft.Json.Linq;
 using Polyglot;
+using SiraUtil.Logging;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -9,6 +10,8 @@ namespace SiraLocalizer.Features
 {
     public class LocalizedPluginFeature : Feature
     {
+        internal static SiraLog logger;
+
         private static readonly Regex kValidIdRegex = new Regex(@"^[a-z_-]+$");
 
         private LocalizedPlugin _localizedPlugin;
@@ -19,13 +22,13 @@ namespace SiraLocalizer.Features
 
             if (!kValidIdRegex.IsMatch(_localizedPlugin.id))
             {
-                Plugin.log.Error($"Invalid localized plugin ID for plugin '{pluginMetadata.Name}': '{_localizedPlugin.id}'");
+                logger.Error($"Invalid localized plugin ID for plugin '{pluginMetadata.Name}': '{_localizedPlugin.id}'");
                 return false;
             }
 
             if (LocalizationDefinition.IsDefinitionLoaded(_localizedPlugin.id))
             {
-                Plugin.log.Error($"Plugin '{pluginMetadata.Name}' attempted to register duplicate localized plugin ID '{_localizedPlugin.id}'");
+                logger.Error($"Plugin '{pluginMetadata.Name}' attempted to register duplicate localized plugin ID '{_localizedPlugin.id}'");
                 return false;
             }
 
@@ -38,11 +41,11 @@ namespace SiraLocalizer.Features
 
             if (string.IsNullOrWhiteSpace(resourcePath))
             {
-                Plugin.log.Error($"Missing resource path for '{_localizedPlugin.id}'");
+                logger.Error($"Missing resource path for '{_localizedPlugin.id}'");
                 return false;
             }
 
-            Plugin.log.Info($"Localized plugin registered: '{_localizedPlugin.name}' ({_localizedPlugin.id})");
+            logger.Info($"Localized plugin registered: '{_localizedPlugin.name}' ({_localizedPlugin.id})");
 
             return true;
         }
@@ -54,7 +57,7 @@ namespace SiraLocalizer.Features
 
             if (resourceStream == null)
             {
-                Plugin.log.Error($"Resource '{_localizedPlugin.resourcePath}' does not exist in assembly '{pluginMetadata.Assembly.FullName}'");
+                logger.Error($"Resource '{_localizedPlugin.resourcePath}' does not exist in assembly '{pluginMetadata.Assembly.FullName}'");
                 return;
             }
 

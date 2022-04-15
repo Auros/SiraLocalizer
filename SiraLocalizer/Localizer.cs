@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Polyglot;
 using SiraLocalizer.HarmonyPatches;
+using SiraUtil.Logging;
 using UnityEngine;
 using Zenject;
 
@@ -19,7 +20,14 @@ namespace SiraLocalizer
         private static readonly char[] kWhiteSpaceCharacters = new[] { ' ', '\n', '\r', '\t', '\x00A0', '\x1680', '\x2000', '\x2001', '\x2002', '\x2003', '\x2004', '\x2005', '\x2006', '\x2007', '\x2008', '\x2009', '\x200A', '\x202F', '\x205F', '\x3000' };
         private static readonly FieldInfo kLanguageStringsField = typeof(LocalizationImporter).GetField("languageStrings", BindingFlags.NonPublic | BindingFlags.Static);
 
+        private readonly SiraLog _logger;
+
         private readonly List<LocalizationAssetWithPriority> _assets = new List<LocalizationAssetWithPriority>();
+
+        public Localizer(SiraLog logger)
+        {
+            _logger = logger;
+        }
 
         public async void Initialize()
         {
@@ -107,7 +115,7 @@ namespace SiraLocalizer
                 {
                     if (!languageStrings.ContainsKey(key))
                     {
-                        Plugin.log.Warn($"Key '{key}' does not exist");
+                        _logger.Warn($"Key '{key}' does not exist");
                         continue;
                     }
 

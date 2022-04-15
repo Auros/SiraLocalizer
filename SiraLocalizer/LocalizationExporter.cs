@@ -1,4 +1,5 @@
-﻿using IPA.Utilities;
+using IPA.Logging;
+using IPA.Utilities;
 using Polyglot;
 using System;
 using System.Collections.Generic;
@@ -30,12 +31,19 @@ namespace SiraLocalizer
             { "LEVEL_FAILED_TEXT_EFFECT", (new Regex(@"^Level"), " Level") }
         };
 
-        public static void DumpBaseGameLocalization()
+        private readonly Logger _logger;
+
+        public LocalizationExporter(Logger logger)
+        {
+            _logger = logger;
+        }
+
+        public void DumpBaseGameLocalization()
         {
             string filePath = Path.Combine(UnityGame.InstallPath, "beat-saber.csv");
             int numberOfLanguages = Enum.GetNames(typeof(Locale)).Length - 1; // don't include Locale.English
 
-            Plugin.log.Info($"Dumping base game localization to '{filePath}'");
+            _logger.Info($"Dumping base game localization to '{filePath}'");
 
             try
             {
@@ -67,7 +75,7 @@ namespace SiraLocalizer
 
                             if (result == english)
                             {
-                                Plugin.log.Warn($"Rule for '{key}' ('{rule.find}' -> '{rule.replace}') did nothing on '{english}'");
+                                _logger.Warn($"Rule for '{key}' ('{rule.find}' -> '{rule.replace}') did nothing on '{english}'");
                             }
                             else
                             {
@@ -82,8 +90,8 @@ namespace SiraLocalizer
             }
             catch (Exception ex)
             {
-                Plugin.log.Error("Could not dump base game localization");
-                Plugin.log.Error(ex.ToString());
+                _logger.Error("Could not dump base game localization");
+                _logger.Error(ex.ToString());
             }
         }
 

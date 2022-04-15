@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using SiraLocalizer.Utilities;
+using SiraUtil.Logging;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -29,13 +30,15 @@ namespace SiraLocalizer.UI
             },
         };
 
+        private readonly SiraLog _logger;
         private readonly FontAssetHelper _fontAssetHelper;
 
         private readonly List<TMP_FontAsset> _fallbackFontAssets = new List<TMP_FontAsset>();
         private readonly List<TMP_FontAsset> _processedFontAssets = new List<TMP_FontAsset>();
 
-        public FontLoader(FontAssetHelper fontAssetHelper)
+        public FontLoader(SiraLog logger, FontAssetHelper fontAssetHelper)
         {
+            _logger = logger;
             _fontAssetHelper = fontAssetHelper;
         }
 
@@ -58,7 +61,7 @@ namespace SiraLocalizer.UI
 
         private async Task LoadFontAssets()
         {
-            Plugin.log.Info($"Loading fonts");
+            _logger.Info($"Loading fonts");
 
             AssetBundleCreateRequest assetBundleCreateRequest = await AssetBundle.LoadFromStreamAsync(Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.fonts.assets"));
 
@@ -66,7 +69,7 @@ namespace SiraLocalizer.UI
 
             if (!assetBundleCreateRequest.isDone || !assetBundle)
             {
-                Plugin.log.Error("Failed to load fonts asset bundle; some characters may not display as expected");
+                _logger.Error("Failed to load fonts asset bundle; some characters may not display as expected");
                 return;
             }
 
@@ -86,11 +89,11 @@ namespace SiraLocalizer.UI
 
             if (fontAsset == null)
             {
-                Plugin.log.Error($"Font '{name}' could not be loaded; some characters may not display as expected");
+                _logger.Error($"Font '{name}' could not be loaded; some characters may not display as expected");
                 return;
             }
 
-            Plugin.log.Info($"Font '{name}' loaded successfully");
+            _logger.Info($"Font '{name}' loaded successfully");
 
             _fallbackFontAssets.Add(fontAsset);
         }
@@ -120,7 +123,7 @@ namespace SiraLocalizer.UI
 
         private void AddFallbacksToFont(TMP_FontAsset fontAsset, IEnumerable<TMP_FontAsset> fallbacks)
         {
-            Plugin.log.Info($"Adding fallbacks to '{fontAsset.name}' ({(uint)fontAsset.GetHashCode()})");
+            _logger.Info($"Adding fallbacks to '{fontAsset.name}' ({(uint)fontAsset.GetHashCode()})");
 
             fontAsset.fallbackFontAssetTable.RemoveAll(f => kFontNamesToRemove.Contains(f.name));
 
