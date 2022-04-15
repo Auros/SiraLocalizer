@@ -1,13 +1,15 @@
+using IPA.Utilities;
 using Newtonsoft.Json;
 using Polyglot;
+using SiraLocalizer.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 using Zenject;
 
 namespace SiraLocalizer.Crowdin
@@ -17,9 +19,9 @@ namespace SiraLocalizer.Crowdin
         private const string kCrowdinHost = "https://distributions.crowdin.net";
         private const string kDistributionKey = "b8d0ace786d64ba14775878o9lk";
 
-        private static readonly string kDataFolder = Path.Combine(Application.persistentDataPath, "SiraLocalizer");
-        private static readonly string kLocalizationsFolder = Path.Combine(kDataFolder, "Localizations");
-        private static readonly string kContentFolder = Path.Combine(kLocalizationsFolder, "Content");
+        private static readonly string kDataFolder = Path.Combine(UnityGame.UserDataPath, "SiraLocalizer");
+        private static readonly string kLocalizationsFolder = Path.Combine(kDataFolder, "Localizations", "Downloaded");
+        private static readonly string kDownloadedFolder = Path.Combine(kLocalizationsFolder, "Content");
         private static readonly string kManifestFilePath = Path.Combine(kLocalizationsFolder, "manifest.json");
 
         private readonly Localizer _localizer;
@@ -51,70 +53,85 @@ namespace SiraLocalizer.Crowdin
 
         public async Task DownloadLocalizations()
         {
-            using (var client = new HttpClient())
+            string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
+            string manifestContent;
+
+            Plugin.log.Info($"Fetching Crowdin data at '{url}'");
+
+            using (var request = UnityWebRequest.Get(url))
             {
-                var cancellationTokenSource = new CancellationTokenSource();
+                UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
 
-                string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
-                Plugin.log.Info($"Fetching Crowdin data at '{url}'");
-                HttpResponseMessage response = await client.GetAsync(url);
-
-                string manifestContent = await response.Content.ReadAsStringAsync();
-                CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
-
-                Task loadTask = LoadLocalizationSheets(manifest, cancellationTokenSource.Token);
-
-                if (await ShouldDownloadContent(manifest))
+                if (!asyncOperation.isDone)
                 {
-                    // cancel and wait for completion (and ignore result)
-                    cancellationTokenSource.Cancel();
-                    await loadTask.ContinueWith(t => { });
-
-                    if (Directory.Exists(kContentFolder))
-                    {
-                        Directory.Delete(kContentFolder, true);
-                    }
-
-                    Directory.CreateDirectory(kContentFolder);
-
-                    foreach (string fileName in manifest.files)
-                    {
-                        // file name has a leading slash so we have to remove that
-                        string relativeFilePath = fileName.Substring(1);
-                        string fullPath = Path.Combine(kContentFolder, relativeFilePath);
-                        string id = fileName.Substring(1, fileName.Length - 5);
-
-                        if (!LocalizationDefinition.IsDefinitionLoaded(id))
-                        {
-                            Plugin.log.Trace($"'{id}' does not belong to a loaded LocalizedPlugin; ignored");
-                            continue;
-                        }
-
-                        await DownloadFile(client, $"{kCrowdinHost}/{kDistributionKey}/content/{relativeFilePath}", fullPath);
-                    }
-
-                    using (var writer = new StreamWriter(kManifestFilePath))
-                    {
-                        await writer.WriteAsync(manifestContent);
-                    }
-
-                    loadTask = LoadLocalizationSheets(manifest, CancellationToken.None);
+                    Plugin.log.Error($"UnityWebRequest for '{url}' failed");
+                    return;
                 }
-                else
+
+                if (!request.IsSuccessResponseCode())
                 {
-                    Plugin.log.Info("Translations are up-to-date");
+                    Plugin.log.Error($"'{url}' responded with {request.responseCode} ({request.error})");
+                    return;
                 }
+
+                manifestContent = request.downloadHandler.text;
             }
+
+            var cancellationTokenSource = new CancellationTokenSource();
+            CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
+
+            Task loadTask = LoadLocalizationSheets(manifest, cancellationTokenSource.Token);
+
+            if (!await ShouldDownloadContent(manifest))
+            {
+                Plugin.log.Info("Translations are up-to-date");
+                return;
+            }
+
+            // cancel and wait for completion (and ignore result)
+            cancellationTokenSource.Cancel();
+            await loadTask.ContinueWith(t => { });
+
+            // wipe existing files to avoid conflicts if names changed
+            if (Directory.Exists(kDownloadedFolder))
+            {
+                Directory.Delete(kDownloadedFolder, true);
+            }
+
+            Directory.CreateDirectory(kDownloadedFolder);
+
+            foreach (string fileName in manifest.files)
+            {
+                // file name has a leading slash so we have to remove that
+                string relativeFilePath = fileName.Substring(1);
+                string fullPath = Path.Combine(kDownloadedFolder, relativeFilePath);
+                string id = fileName.Substring(1, fileName.Length - 5);
+
+                if (!LocalizationDefinition.IsDefinitionLoaded(id))
+                {
+                    Plugin.log.Trace($"'{id}' does not belong to a loaded LocalizedPlugin; ignored");
+                    continue;
+                }
+
+                await DownloadFile($"{kCrowdinHost}/{kDistributionKey}/content/{relativeFilePath}", fullPath);
+            }
+
+            using (var writer = new StreamWriter(kManifestFilePath))
+            {
+                await writer.WriteAsync(manifestContent);
+            }
+
+            await LoadLocalizationSheets(manifest, CancellationToken.None);
         }
 
         private async Task<bool> ShouldDownloadContent(CrowdinDistributionManifest remoteManifest)
         {
-            if (!File.Exists(kManifestFilePath) || !Directory.Exists(kContentFolder)) return true;
+            if (!File.Exists(kManifestFilePath) || !Directory.Exists(kDownloadedFolder)) return true;
 
             foreach (string fileName in remoteManifest.files)
             {
                 string id = fileName.Substring(1, fileName.Length - 5);
-                string fullPath = Path.Combine(kContentFolder, fileName.Substring(1));
+                string fullPath = Path.Combine(kDownloadedFolder, fileName.Substring(1));
 
                 if (LocalizationDefinition.IsDefinitionLoaded(id) && !File.Exists(fullPath))
                 {
@@ -133,37 +150,47 @@ namespace SiraLocalizer.Crowdin
             return localManifest.timestamp != remoteManifest.timestamp;
         }
 
-        private async Task DownloadFile(HttpClient client, string url, string filePath)
+        private async Task DownloadFile(string url, string filePath)
         {
             Plugin.log.Info($"Downloading '{url}'");
 
-            HttpResponseMessage response = await client.GetAsync(url);
-
-            if (!response.IsSuccessStatusCode)
+            using (var request = UnityWebRequest.Get(url))
             {
-                Plugin.log.Error($"'{url}' responded with {(int)response.StatusCode} {response.StatusCode} ({response.ReasonPhrase})");
-                return;
-            }
+                request.SetRequestHeader("Accept-Encoding", "gzip");
 
-            Stream contentStream = await response.Content.ReadAsStreamAsync();
+                UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
 
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-
-            using (var file = new FileStream(filePath, FileMode.Create))
-            {
-                if (response.Content.Headers.ContentEncoding.Contains("gzip"))
+                if (!asyncOperation.isDone)
                 {
-                    using (var gzipStream = new GZipStream(contentStream, CompressionMode.Decompress))
+                    Plugin.log.Error($"UnityWebRequest for '{url}' failed");
+                    return;
+                }
+
+                if (!request.IsSuccessResponseCode())
+                {
+                    Plugin.log.Error($"'{url}' responded with {request.responseCode} ({request.error})");
+                    return;
+                }
+
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                using (var contentStream = new MemoryStream(request.downloadHandler.data))
+                using (var file = new FileStream(filePath, FileMode.Create))
+                {
+                    if (request.GetResponseHeader("Content-Encoding") == "gzip")
                     {
-                        await gzipStream.CopyToAsync(file);
+                        using (var gzipStream = new GZipStream(contentStream, CompressionMode.Decompress))
+                        {
+                            await gzipStream.CopyToAsync(file);
+                        }
                     }
-                }
-                else
-                {
-                    await contentStream.CopyToAsync(file);
-                }
+                    else
+                    {
+                        await contentStream.CopyToAsync(file);
+                    }
 
-                await file.FlushAsync();
+                    await file.FlushAsync();
+                }
             }
         }
 
@@ -171,14 +198,14 @@ namespace SiraLocalizer.Crowdin
         {
             ClearLoadedAssets();
 
-            if (Directory.Exists(kContentFolder))
+            if (Directory.Exists(kDownloadedFolder))
             {
                 foreach (string fileName in manifest.files)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
                     string id = fileName.Substring(1, fileName.Length - 5);
-                    string fullPath = Path.Combine(kContentFolder, fileName.Substring(1));
+                    string fullPath = Path.Combine(kDownloadedFolder, fileName.Substring(1));
 
                     if (LocalizationDefinition.IsDefinitionLoaded(id))
                     {
