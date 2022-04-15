@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.unity.textmeshpro": "2.1.1",
+    "com.unity.textmeshpro": "2.1.4",
     "com.unity.modules.assetbundle": "1.0.0",
     "com.unity.modules.imageconversion": "1.0.0",
     "com.unity.modules.imgui": "1.0.0",
