@@ -27,17 +27,24 @@ namespace SiraLocalizer.Crowdin
 
         private readonly SiraLog _logger;
         private readonly Localizer _localizer;
-        private readonly List<LocalizationAsset> _loadedAssets;
+        private readonly Config _config;
 
-        internal CrowdinDownloader(SiraLog logger, Localizer localizer)
+        private readonly List<LocalizationAsset> _loadedAssets = new List<LocalizationAsset>();
+
+        internal CrowdinDownloader(SiraLog logger, Localizer localizer, Config config)
         {
             _logger = logger;
             _localizer = localizer;
-            _loadedAssets = new List<LocalizationAsset>();
+            _config = config;
         }
 
         public async void Initialize()
         {
+            if (!_config.automaticallyDownloadLocalizations)
+            {
+                return;
+            }
+
             try
             {
                 await DownloadLocalizations();
@@ -56,44 +63,20 @@ namespace SiraLocalizer.Crowdin
 
         public async Task DownloadLocalizations()
         {
-            string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
-            string manifestContent;
+            string manifestContent = await GetManifestContent();
 
-            _logger.Info($"Fetching Crowdin data at '{url}'");
-
-            using (var request = UnityWebRequest.Get(url))
+            if (manifestContent == null)
             {
-                UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
-
-                if (!asyncOperation.isDone)
-                {
-                    _logger.Error($"UnityWebRequest for '{url}' failed");
-                    return;
-                }
-
-                if (!request.IsSuccessResponseCode())
-                {
-                    _logger.Error($"'{url}' responded with {request.responseCode} ({request.error})");
-                    return;
-                }
-
-                manifestContent = request.downloadHandler.text;
+                return;
             }
 
-            var cancellationTokenSource = new CancellationTokenSource();
             CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
-
-            Task loadTask = LoadLocalizationSheets(manifest, cancellationTokenSource.Token);
 
             if (!await ShouldDownloadContent(manifest))
             {
                 _logger.Info("Translations are up-to-date");
                 return;
             }
-
-            // cancel and wait for completion (and ignore result)
-            cancellationTokenSource.Cancel();
-            await loadTask.ContinueWith(t => { });
 
             // wipe existing files to avoid conflicts if names changed
             if (Directory.Exists(kDownloadedFolder))
@@ -125,6 +108,49 @@ namespace SiraLocalizer.Crowdin
             }
 
             await LoadLocalizationSheets(manifest, CancellationToken.None);
+        }
+
+        public async Task<bool> CheckForUpdates()
+        {
+            string manifestContent = await GetManifestContent();
+
+            if (manifestContent == null)
+            {
+                return false;
+            }
+
+            CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
+
+            return await ShouldDownloadContent(manifest);
+        }
+
+        private async Task<string> GetManifestContent()
+        {
+            string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
+            string manifestContent;
+
+            _logger.Info($"Fetching Crowdin data at '{url}'");
+
+            using (var request = UnityWebRequest.Get(url))
+            {
+                UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
+
+                if (!asyncOperation.isDone)
+                {
+                    _logger.Error($"UnityWebRequest for '{url}' failed");
+                    return null;
+                }
+
+                if (!request.IsSuccessResponseCode())
+                {
+                    _logger.Error($"'{url}' responded with {request.responseCode} ({request.error})");
+                    return null;
+                }
+
+                manifestContent = request.downloadHandler.text;
+            }
+
+            return manifestContent;
         }
 
         private async Task<bool> ShouldDownloadContent(CrowdinDistributionManifest remoteManifest)

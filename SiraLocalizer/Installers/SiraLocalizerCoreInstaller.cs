@@ -1,4 +1,3 @@
-using System;
 using SiraLocalizer.Crowdin;
 using SiraLocalizer.UI;
 using Zenject;
@@ -22,11 +21,7 @@ namespace SiraLocalizer.Installers
             Container.BindInterfacesAndSelfTo<FontLoader>().AsSingle();
             Container.Bind<IInitializable>().To<UserLocalizationFileLoader>().AsSingle();
             Container.Bind<FontAssetHelper>().AsTransient();
-
-            if (_config.automaticallyDownloadLocalizations)
-            {
-                Container.Bind(typeof(IInitializable), typeof(IDisposable)).To<CrowdinDownloader>().AsSingle();
-            }
+            Container.BindInterfacesAndSelfTo<CrowdinDownloader>().AsSingle();
         }
     }
 }

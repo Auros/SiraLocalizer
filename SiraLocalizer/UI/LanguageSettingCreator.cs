@@ -1,3 +1,5 @@
+using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace SiraLocalizer.UI
@@ -15,8 +17,19 @@ namespace SiraLocalizer.UI
 
         public void Initialize()
         {
+            var otherSettings = (RectTransform)_settingsNavigationController.transform.Find("OtherSettings/Content");
+
+            VerticalLayoutGroup layoutGroup = otherSettings.GetComponent<VerticalLayoutGroup>();
+            layoutGroup.childControlHeight = false;
+            layoutGroup.enabled = true;
+
+            ContentSizeFitter modalSizeFitter = otherSettings.GetComponent<ContentSizeFitter>();
+            modalSizeFitter.enabled = true;
+
             LanguageSettingsController languageSettingController = _settingsNavigationController.transform.Find("OtherSettings/Content/LanguageDropdown").GetComponent<LanguageSettingsController>();
-            _container.InstantiateComponent<TranslationDetailsTextController>(languageSettingController.gameObject);
+
+            TranslationDetailsTextController.Create(_container, otherSettings, languageSettingController);
+            CheckForUpdatesController.Create(_container, otherSettings);
 
             Config config = _container.Resolve<Config>();
 
