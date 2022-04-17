@@ -4,3 +4,4 @@
 "TRANSLATION_STATUS_FULL",,"<color=#cfc>Fully Translated</color> {0}",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 "TRANSLATION_STATUS_PARTIAL",,"<color=#ffc>Partially Translated</color> {0}",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 "TRANSLATION_STATUS_NONE",,"<color=#fcc>Not Supported</color> {0}",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"DOWNLOAD_TRANSLATIONS_MODAL_TEXT",,"Allow SiraLocalizer to automatically download translation updates?",,,,,,,,,,,,,,,,,,,,,,,,,,,,,

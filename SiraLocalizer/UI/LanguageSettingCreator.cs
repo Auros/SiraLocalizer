@@ -1,4 +1,4 @@
-﻿using Zenject;
+using Zenject;
 
 namespace SiraLocalizer.UI
 {
@@ -17,6 +17,19 @@ namespace SiraLocalizer.UI
         {
             LanguageSettingsController languageSettingController = _settingsNavigationController.transform.Find("OtherSettings/Content/LanguageDropdown").GetComponent<LanguageSettingsController>();
             _container.InstantiateComponent<TranslationDetailsTextController>(languageSettingController.gameObject);
+
+            Config config = _container.Resolve<Config>();
+
+            if (!config.startupModalDismissed)
+            {
+                var modal = SimpleStartupModal.Create(_container, "DOWNLOAD_TRANSLATIONS_MODAL_TEXT");
+
+                modal.closed += (result) =>
+                {
+                    config.automaticallyDownloadLocalizations = result;
+                    config.startupModalDismissed = true;
+                };
+            }
         }
     }
 }
