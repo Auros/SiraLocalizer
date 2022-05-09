@@ -1,8 +1,8 @@
 using IPA.Loader;
 using IPA.Loader.Features;
+using IPA.Logging;
 using Newtonsoft.Json.Linq;
 using Polyglot;
-using SiraUtil.Logging;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -10,7 +10,7 @@ namespace SiraLocalizer.Features
 {
     public class LocalizedPluginFeature : Feature
     {
-        internal static SiraLog logger;
+        internal static Logger logger;
 
         private static readonly Regex kValidIdRegex = new Regex(@"^[a-z_-]+$");
 

@@ -6,6 +6,7 @@ using IPA;
 using IPA.Config.Stores;
 using IPA.Logging;
 using Polyglot;
+using SiraLocalizer.Features;
 using SiraLocalizer.Installers;
 using SiraUtil.Zenject;
 using Conf = IPA.Config.Config;
@@ -28,7 +29,8 @@ namespace SiraLocalizer
 
             LocalizationDefinition.Add(new LocalizationDefinition("beat-saber", "Beat Saber", PolyglotUtil.GetKeysFromLocalizationAsset(Localization.Instance.InputFiles[0])));
 
-            zenjector.Expose<RoomAdjustSettingsViewController>("");
+            LocalizedPluginFeature.logger = logger;
+
             zenjector.UseLogger(logger);
             zenjector.Install<SiraLocalizerCoreInstaller>(Location.App, conf.Generated<Config>());
             zenjector.Install<SiraLocalizerUIInstaller>(Location.Menu);
