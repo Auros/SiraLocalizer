@@ -75,6 +75,7 @@ namespace SiraLocalizer.Crowdin
             if (!await ShouldDownloadContent(manifest))
             {
                 _logger.Info("Translations are up-to-date");
+                await LoadLocalizationSheets(manifest, CancellationToken.None);
                 return;
             }
 
