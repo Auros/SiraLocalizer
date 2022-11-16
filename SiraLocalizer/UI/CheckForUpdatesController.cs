@@ -68,19 +68,19 @@ namespace SiraLocalizer.UI
             var contentTransform = (RectTransform)contentObject.transform;
             contentTransform.SetParent(buttonTransform, false);
 
-            VerticalLayoutGroup layoutGroup = contentObject.AddComponent<VerticalLayoutGroup>();
-            layoutGroup.childControlWidth = false;
-            layoutGroup.childControlHeight = false;
+            StackLayoutGroup layoutGroup = contentObject.AddComponent<StackLayoutGroup>();
             layoutGroup.padding = new RectOffset(3, 3, 0, 0);
 
             var buttonTextObject = new GameObject("Text", typeof(RectTransform));
             buttonTextObject.transform.SetParent(contentTransform, false);
+            ((RectTransform)buttonTextObject.transform).anchoredPosition = Vector2.zero;
 
             CurvedTextMeshPro checkButtonText = buttonTextObject.AddComponent<CurvedTextMeshPro>();
             checkButtonText.font = templateText.font;
             checkButtonText.fontMaterial = templateText.fontMaterial;
             checkButtonText.fontSize = 4;
             checkButtonText.fontStyle = FontStyles.Italic;
+            checkButtonText.alignment = TextAlignmentOptions.Midline;
 
             LocalizedTextMeshProUGUI localizedText = buttonTextObject.AddComponent<LocalizedTextMeshProUGUI>();
             localizedText.SetField<LocalizedTextComponent<TextMeshProUGUI>, TextMeshProUGUI>("localizedComponent", checkButtonText);
