@@ -102,6 +102,8 @@ namespace SiraLocalizer.UI
             _button.interactable = true;
             _text.Key = "CHECK_FOR_UPDATES_BUTTON";
             _updateFound = false;
+
+            ForceRebuildTextLayout();
         }
 
         [Inject]
@@ -131,7 +133,7 @@ namespace SiraLocalizer.UI
 
         private async void DownloadUpdates()
         {
-            Debug.Log("Downloading updates");
+            _logger.Info("Downloading updates");
 
             _button.interactable = false;
             _text.Key = "DOWNLOADING_UPDATES";
@@ -146,11 +148,13 @@ namespace SiraLocalizer.UI
                 _logger.Error(ex);
                 _text.Key = "FAILED_TO_UPDATE";
             }
+
+            ForceRebuildTextLayout();
         }
 
         private async void CheckForUpdates()
         {
-            Debug.Log("Checking for updates");
+            _logger.Info("Checking for updates");
 
             _button.interactable = false;
             _text.Key = "CHECKING_FOR_UPDATES";
@@ -174,6 +178,13 @@ namespace SiraLocalizer.UI
             {
                 _text.Key = "NO_UPDATE_FOUND";
             }
+
+            ForceRebuildTextLayout();
+        }
+
+        private void ForceRebuildTextLayout()
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)_text.transform);
         }
     }
 }
