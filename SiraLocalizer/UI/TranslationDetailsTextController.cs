@@ -69,9 +69,6 @@ namespace SiraLocalizer.UI
             var textRectTransform = (RectTransform)textGameObject.transform;
             textRectTransform.SetParent(parent, false);
 
-            Debug.Log("Transform parent " + parent);
-            Debug.Log("textRectTransform parent " + textRectTransform.parent);
-
             translationStatus.alignment = TextAlignmentOptions.TopLeft;
             translationStatus.lineSpacing = -35f;
             translationStatus.fontSize = 3f;
