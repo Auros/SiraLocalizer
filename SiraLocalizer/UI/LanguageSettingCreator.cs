@@ -55,7 +55,7 @@ namespace SiraLocalizer.UI
                     {
                         try
                         {
-                            await _crowdinDownloader.DownloadLocalizations(CancellationToken.None);
+                            await _crowdinDownloader.DownloadLocalizationsAsync(CancellationToken.None);
                         }
                         catch (Exception ex)
                         {

@@ -46,7 +46,14 @@ namespace SiraLocalizer.UI
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
 
-            await LoadFontAssets();
+            try
+            {
+                await LoadFontAssetsAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
 
         public void Dispose()
@@ -59,7 +66,7 @@ namespace SiraLocalizer.UI
             ApplyFallbackFonts();
         }
 
-        private async Task LoadFontAssets()
+        private async Task LoadFontAssetsAsync()
         {
             _logger.Info($"Loading fonts");
 

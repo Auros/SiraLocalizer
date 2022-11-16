@@ -44,11 +44,11 @@ namespace SiraLocalizer.Crowdin
             {
                 if (_config.automaticallyDownloadLocalizations)
                 {
-                    await DownloadLocalizations(CancellationToken.None);
+                    await DownloadLocalizationsAsync(CancellationToken.None);
                 }
                 else
                 {
-                    await LoadLocalizationSheets(CancellationToken.None);
+                    await LoadLocalizationSheetsAsync(CancellationToken.None);
                 }
             }
             catch (Exception ex)
@@ -63,9 +63,9 @@ namespace SiraLocalizer.Crowdin
             ClearLoadedAssets();
         }
 
-        public async Task LoadLocalizationSheets(CancellationToken cancellationToken)
+        public async Task LoadLocalizationSheetsAsync(CancellationToken cancellationToken)
         {
-            string manifestContent = await GetManifestContent();
+            string manifestContent = await GetManifestContentAsync();
 
             if (manifestContent == null)
             {
@@ -74,12 +74,12 @@ namespace SiraLocalizer.Crowdin
 
             CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
 
-            await LoadLocalizationSheets(manifest, cancellationToken);
+            await LoadLocalizationSheetsAsync(manifest, cancellationToken);
         }
 
-        public async Task DownloadLocalizations(CancellationToken cancellationToken)
+        public async Task DownloadLocalizationsAsync(CancellationToken cancellationToken)
         {
-            string manifestContent = await GetManifestContent();
+            string manifestContent = await GetManifestContentAsync();
 
             if (manifestContent == null)
             {
@@ -88,10 +88,10 @@ namespace SiraLocalizer.Crowdin
 
             CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
 
-            if (!await ShouldDownloadContent(manifest))
+            if (!await CheckIfUpdateAvailableAsync(manifest))
             {
                 _logger.Info("Translations are up-to-date");
-                await LoadLocalizationSheets(manifest, cancellationToken);
+                await LoadLocalizationSheetsAsync(manifest, cancellationToken);
                 return;
             }
 
@@ -116,7 +116,7 @@ namespace SiraLocalizer.Crowdin
                     continue;
                 }
 
-                await DownloadFile($"{kCrowdinHost}/{kDistributionKey}/content/{relativeFilePath}?timestamp={manifest.timestamp}", fullPath);
+                await DownloadFileAsync($"{kCrowdinHost}/{kDistributionKey}/content/{relativeFilePath}?timestamp={manifest.timestamp}", fullPath);
             }
 
             using (var writer = new StreamWriter(kManifestFilePath))
@@ -124,12 +124,12 @@ namespace SiraLocalizer.Crowdin
                 await writer.WriteAsync(manifestContent);
             }
 
-            await LoadLocalizationSheets(manifest, cancellationToken);
+            await LoadLocalizationSheetsAsync(manifest, cancellationToken);
         }
 
-        public async Task<bool> CheckForUpdates()
+        public async Task<bool> CheckForUpdatesAsync()
         {
-            string manifestContent = await GetManifestContent();
+            string manifestContent = await GetManifestContentAsync();
 
             if (manifestContent == null)
             {
@@ -138,10 +138,10 @@ namespace SiraLocalizer.Crowdin
 
             CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
 
-            return await ShouldDownloadContent(manifest);
+            return await CheckIfUpdateAvailableAsync(manifest);
         }
 
-        private async Task<string> GetManifestContent()
+        private async Task<string> GetManifestContentAsync()
         {
             string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
             string manifestContent;
@@ -170,7 +170,7 @@ namespace SiraLocalizer.Crowdin
             return manifestContent;
         }
 
-        private async Task<bool> ShouldDownloadContent(CrowdinDistributionManifest remoteManifest)
+        private async Task<bool> CheckIfUpdateAvailableAsync(CrowdinDistributionManifest remoteManifest)
         {
             if (!File.Exists(kManifestFilePath) || !Directory.Exists(kDownloadedFolder)) return true;
 
@@ -185,12 +185,12 @@ namespace SiraLocalizer.Crowdin
                 }
             }
 
-            CrowdinDistributionManifest localManifest = await ReadLocalManifest();
+            CrowdinDistributionManifest localManifest = await ReadLocalManifestAsync();
 
             return localManifest.timestamp != remoteManifest.timestamp;
         }
 
-        private async Task<CrowdinDistributionManifest> ReadLocalManifest()
+        private async Task<CrowdinDistributionManifest> ReadLocalManifestAsync()
         {
             using FileStream file = File.OpenRead(kManifestFilePath);
             using StreamReader reader = new(file);
@@ -198,7 +198,7 @@ namespace SiraLocalizer.Crowdin
             return JsonConvert.DeserializeObject<CrowdinDistributionManifest>(await reader.ReadToEndAsync());
         }
 
-        private async Task DownloadFile(string url, string filePath)
+        private async Task DownloadFileAsync(string url, string filePath)
         {
             _logger.Info($"Downloading '{url}'");
 
@@ -242,7 +242,7 @@ namespace SiraLocalizer.Crowdin
             }
         }
 
-        private async Task LoadLocalizationSheets(CrowdinDistributionManifest manifest, CancellationToken cancellationToken)
+        private async Task LoadLocalizationSheetsAsync(CrowdinDistributionManifest manifest, CancellationToken cancellationToken)
         {
             ClearLoadedAssets();
 
@@ -262,7 +262,7 @@ namespace SiraLocalizer.Crowdin
                 {
                     if (File.Exists(fullPath))
                     {
-                        await AddLocalizationSheetFromFile(fullPath);
+                        await AddLocalizationSheetFromFileAsync(fullPath);
                     }
                     else
                     {
@@ -290,7 +290,7 @@ namespace SiraLocalizer.Crowdin
             _loadedAssets.Clear();
         }
 
-        private async Task AddLocalizationSheetFromFile(string filePath)
+        private async Task AddLocalizationSheetFromFileAsync(string filePath)
         {
             _logger.Info($"Adding '{filePath}'");
 

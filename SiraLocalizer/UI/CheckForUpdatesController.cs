@@ -141,7 +141,7 @@ namespace SiraLocalizer.UI
 
             try
             {
-                await _downloader.DownloadLocalizations(CancellationToken.None);
+                await _downloader.DownloadLocalizationsAsync(CancellationToken.None);
                 _text.Key = "UPDATED_SUCCESSFULLY";
             }
             catch (Exception ex)
@@ -162,7 +162,7 @@ namespace SiraLocalizer.UI
 
             try
             {
-                _updateFound = await _downloader.CheckForUpdates();
+                _updateFound = await _downloader.CheckForUpdatesAsync();
             }
             catch (Exception ex)
             {

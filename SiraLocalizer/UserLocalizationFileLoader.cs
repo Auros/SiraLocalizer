@@ -1,29 +1,40 @@
-using Zenject;
-using Polyglot;
+using System;
 using System.IO;
 using System.Linq;
-using IPA.Utilities;
 using System.Threading.Tasks;
+using IPA.Utilities;
+using Polyglot;
+using SiraUtil.Logging;
+using Zenject;
 
 namespace SiraLocalizer
 {
     internal class UserLocalizationFileLoader : IInitializable
     {
+        private readonly SiraLog _logger;
         private readonly Localizer _localizer;
 
-        public UserLocalizationFileLoader(Localizer localizer)
+        public UserLocalizationFileLoader(SiraLog logger, Localizer localizer)
         {
+            _logger = logger;
             _localizer = localizer;
         }
 
-        public void Initialize()
+        public async void Initialize()
         {
-            _ = LoadLocales();
+            try
+            {
+                await LoadLocalesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
 
-        public async Task LoadLocales()
+        public async Task LoadLocalesAsync()
         {
-            string folder = Path.GetFullPath(Path.Combine(UnityGame.UserDataPath, "SIRA", "Localizations"));
+            string folder = Path.GetFullPath(Path.Combine(UnityGame.UserDataPath, "SIRA", "Localizations", "User"));
 
             if (!Directory.Exists(folder))
             {
