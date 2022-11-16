@@ -100,7 +100,7 @@ namespace SiraLocalizer.Crowdin
                     continue;
                 }
 
-                await DownloadFile($"{kCrowdinHost}/{kDistributionKey}/content/{relativeFilePath}", fullPath);
+                await DownloadFile($"{kCrowdinHost}/{kDistributionKey}/content/{relativeFilePath}?timestamp={manifest.timestamp}", fullPath);
             }
 
             using (var writer = new StreamWriter(kManifestFilePath))
