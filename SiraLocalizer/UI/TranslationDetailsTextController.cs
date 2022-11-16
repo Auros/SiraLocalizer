@@ -1,8 +1,9 @@
-using HMUI;
-using IPA.Utilities;
-using Polyglot;
 using System.Collections.Generic;
 using System.Linq;
+using HMUI;
+using IPA.Utilities;
+using JetBrains.Annotations;
+using Polyglot;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -81,23 +82,24 @@ namespace SiraLocalizer.UI
         }
 
         [Inject]
-        internal void Construct(Localizer localizer)
+        [UsedImplicitly]
+        private void Construct(Localizer localizer)
         {
             _localizer = localizer;
         }
 
-        internal void OnEnable()
+        private void OnEnable()
         {
             _languageSettingsController.dropDownValueDidChangeEvent += OnSelectedLanguageChanged;
             OnSelectedLanguageChanged();
         }
 
-        internal void Start()
+        private void Start()
         {
             OnSelectedLanguageChanged();
         }
 
-        internal void OnDisable()
+        private void OnDisable()
         {
             _languageSettingsController.dropDownValueDidChangeEvent -= OnSelectedLanguageChanged;
         }
