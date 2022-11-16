@@ -23,13 +23,14 @@ namespace SiraLocalizer.UI
             layoutGroup.childControlHeight = false;
             layoutGroup.enabled = true;
 
-            ContentSizeFitter modalSizeFitter = otherSettings.GetComponent<ContentSizeFitter>();
-            modalSizeFitter.enabled = true;
+            ContentSizeFitter contentSizeFitter = otherSettings.GetComponent<ContentSizeFitter>();
+            contentSizeFitter.enabled = true;
 
             LanguageSettingsController languageSettingController = _settingsNavigationController.transform.Find("OtherSettings/Content/LanguageDropdown").GetComponent<LanguageSettingsController>();
 
             TranslationDetailsTextController.Create(_container, otherSettings, languageSettingController);
             CheckForUpdatesController.Create(_container, otherSettings);
+            AutoCheckForUpdatesToggleController.Create(_container, otherSettings);
 
             Config config = _container.Resolve<Config>();
 
