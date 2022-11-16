@@ -147,6 +147,9 @@ namespace SiraLocalizer.UI
                 _credits.gameObject.SetActive(false);
                 _translationStatus.gameObject.SetActive(false);
             }
+
+            // I don't know why this is necessary but without it the text objects don't resize properly
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
         }
     }
 }
