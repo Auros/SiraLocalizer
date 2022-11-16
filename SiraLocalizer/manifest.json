@@ -3,7 +3,7 @@
   "id": "SiraLocalizer",
   "name": "SiraLocalizer",
   "author": "SIRA",
-  "version": "2.0.0",
+  "version": "2.0.0-rc.1",
   "description": "Community localization support in Beat Saber.",
   "gameVersion": "1.26.0",
   "dependsOn": {
