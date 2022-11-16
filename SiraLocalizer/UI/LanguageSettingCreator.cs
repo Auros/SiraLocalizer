@@ -1,3 +1,7 @@
+using System;
+using System.Threading;
+using SiraLocalizer.Crowdin;
+using SiraUtil.Logging;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -7,12 +11,16 @@ namespace SiraLocalizer.UI
     internal class LanguageSettingCreator : IInitializable
     {
         private readonly DiContainer _container;
+        private readonly SiraLog _logger;
         private readonly SettingsNavigationController _settingsNavigationController;
+        private readonly CrowdinDownloader _crowdinDownloader;
 
-        internal LanguageSettingCreator(DiContainer container, SettingsNavigationController settingsNavigationController)
+        internal LanguageSettingCreator(DiContainer container, SiraLog logger, SettingsNavigationController settingsNavigationController, CrowdinDownloader crowdinDownloader)
         {
             _container = container;
+            _logger = logger;
             _settingsNavigationController = settingsNavigationController;
+            _crowdinDownloader = crowdinDownloader;
         }
 
         public void Initialize()
@@ -38,10 +46,22 @@ namespace SiraLocalizer.UI
             {
                 var modal = SimpleStartupModal.Create(_container, "DOWNLOAD_TRANSLATIONS_MODAL_TEXT");
 
-                modal.closed += (result) =>
+                modal.closed += async (result) =>
                 {
                     config.automaticallyDownloadLocalizations = result;
                     config.startupModalDismissed = true;
+
+                    if (result)
+                    {
+                        try
+                        {
+                            await _crowdinDownloader.DownloadLocalizations(CancellationToken.None);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(ex);
+                        }
+                    }
                 };
             }
         }
