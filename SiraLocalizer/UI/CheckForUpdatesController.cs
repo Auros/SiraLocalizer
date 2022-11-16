@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using HMUI;
 using IPA.Utilities;
 using JetBrains.Annotations;
@@ -140,7 +141,7 @@ namespace SiraLocalizer.UI
 
             try
             {
-                await _downloader.DownloadLocalizations();
+                await _downloader.DownloadLocalizations(CancellationToken.None);
                 _text.Key = "UPDATED_SUCCESSFULLY";
             }
             catch (Exception ex)

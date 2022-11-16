@@ -40,14 +40,16 @@ namespace SiraLocalizer.Crowdin
 
         public async void Initialize()
         {
-            if (!_config.automaticallyDownloadLocalizations)
-            {
-                return;
-            }
-
             try
             {
-                await DownloadLocalizations();
+                if (_config.automaticallyDownloadLocalizations)
+                {
+                    await DownloadLocalizations(CancellationToken.None);
+                }
+                else
+                {
+                    await LoadLocalizationSheets(CancellationToken.None);
+                }
             }
             catch (Exception ex)
             {
@@ -61,7 +63,21 @@ namespace SiraLocalizer.Crowdin
             ClearLoadedAssets();
         }
 
-        public async Task DownloadLocalizations()
+        public async Task LoadLocalizationSheets(CancellationToken cancellationToken)
+        {
+            string manifestContent = await GetManifestContent();
+
+            if (manifestContent == null)
+            {
+                return;
+            }
+
+            CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
+
+            await LoadLocalizationSheets(manifest, cancellationToken);
+        }
+
+        public async Task DownloadLocalizations(CancellationToken cancellationToken)
         {
             string manifestContent = await GetManifestContent();
 
@@ -75,7 +91,7 @@ namespace SiraLocalizer.Crowdin
             if (!await ShouldDownloadContent(manifest))
             {
                 _logger.Info("Translations are up-to-date");
-                await LoadLocalizationSheets(manifest, CancellationToken.None);
+                await LoadLocalizationSheets(manifest, cancellationToken);
                 return;
             }
 
@@ -108,7 +124,7 @@ namespace SiraLocalizer.Crowdin
                 await writer.WriteAsync(manifestContent);
             }
 
-            await LoadLocalizationSheets(manifest, CancellationToken.None);
+            await LoadLocalizationSheets(manifest, cancellationToken);
         }
 
         public async Task<bool> CheckForUpdates()
@@ -169,15 +185,17 @@ namespace SiraLocalizer.Crowdin
                 }
             }
 
-            CrowdinDistributionManifest localManifest = null;
-
-            using (FileStream file = File.OpenRead(kManifestFilePath))
-            using (var reader = new StreamReader(file))
-            {
-                localManifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(await reader.ReadToEndAsync());
-            }
+            CrowdinDistributionManifest localManifest = await ReadLocalManifest();
 
             return localManifest.timestamp != remoteManifest.timestamp;
+        }
+
+        private async Task<CrowdinDistributionManifest> ReadLocalManifest()
+        {
+            using FileStream file = File.OpenRead(kManifestFilePath);
+            using StreamReader reader = new(file);
+
+            return JsonConvert.DeserializeObject<CrowdinDistributionManifest>(await reader.ReadToEndAsync());
         }
 
         private async Task DownloadFile(string url, string filePath)
@@ -228,30 +246,32 @@ namespace SiraLocalizer.Crowdin
         {
             ClearLoadedAssets();
 
-            if (Directory.Exists(kDownloadedFolder))
+            if (!Directory.Exists(kDownloadedFolder))
             {
-                foreach (string fileName in manifest.files)
+                return;
+            }
+
+            foreach (string fileName in manifest.files)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                string id = fileName.Substring(1, fileName.Length - 5);
+                string fullPath = Path.Combine(kDownloadedFolder, fileName.Substring(1));
+
+                if (LocalizationDefinition.IsDefinitionLoaded(id))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    string id = fileName.Substring(1, fileName.Length - 5);
-                    string fullPath = Path.Combine(kDownloadedFolder, fileName.Substring(1));
-
-                    if (LocalizationDefinition.IsDefinitionLoaded(id))
+                    if (File.Exists(fullPath))
                     {
-                        if (File.Exists(fullPath))
-                        {
-                            await AddLocalizationSheetFromFile(fullPath);
-                        }
-                        else
-                        {
-                            _logger.Error($"File '{fullPath}' not found");
-                        }
+                        await AddLocalizationSheetFromFile(fullPath);
                     }
                     else
                     {
-                        _logger.Warn($"No localized plugin registered for '{id}'");
+                        _logger.Error($"File '{fullPath}' not found");
                     }
+                }
+                else
+                {
+                    _logger.Warn($"No localized plugin registered for '{id}'");
                 }
             }
 
