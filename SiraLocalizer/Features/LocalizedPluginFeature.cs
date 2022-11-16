@@ -12,7 +12,7 @@ namespace SiraLocalizer.Features
     {
         internal static Logger logger;
 
-        private static readonly Regex kValidIdRegex = new Regex(@"^[a-z_-]+$");
+        private static readonly Regex kValidIdRegex = new(@"^[a-z_-]+$");
 
         private LocalizedPlugin _localizedPlugin;
 

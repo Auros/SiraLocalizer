@@ -119,7 +119,7 @@ namespace SiraLocalizer.UI
 
                 List<Localizer.TranslationStatus> statuses = _localizer.GetTranslationStatuses((Locale)language);
                 var fullyTranslated = statuses.Where(s => s.percentTranslated == 100).Select(s => s.name).ToList();
-                var partiallyTranslated = statuses.Where(s => s.percentTranslated < 100 && s.percentTranslated > 0).Select(s => $"{s.name} ({Mathf.Clamp(s.percentTranslated, 1, 99):0}%)").ToList();
+                var partiallyTranslated = statuses.Where(s => s.percentTranslated is < 100 and > 0).Select(s => $"{s.name} ({Mathf.Clamp(s.percentTranslated, 1, 99):0}%)").ToList();
                 var notSupported = statuses.Where(s => s.percentTranslated == 0).Select(s => s.name).ToList();
 
                 _translationStatus.text = string.Empty;

@@ -21,7 +21,7 @@ namespace SiraLocalizer
         };
 
         // because there's typos and weirdness
-        private static readonly Dictionary<string, (Regex find, string replace)> kCorrections = new Dictionary<string, (Regex, string)>
+        private static readonly Dictionary<string, (Regex find, string replace)> kCorrections = new()
         {
             { "MISSION_HELP_MIN_HANDS_MOVEMENT_TITLE", (new Regex(@"\.</color>"), "</color>.") },
             { "MISSION_HELP_MAX_HANDS_MOVEMENT", (new Regex(@"\.</color>"), "</color>.") },

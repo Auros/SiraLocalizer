@@ -1,6 +1,7 @@
 using System;
 using HMUI;
 using IPA.Utilities;
+using JetBrains.Annotations;
 using Polyglot;
 using SiraLocalizer.Crowdin;
 using SiraUtil.Logging;
@@ -104,6 +105,7 @@ namespace SiraLocalizer.UI
         }
 
         [Inject]
+        [UsedImplicitly]
         private void Construct(SiraLog logger, CrowdinDownloader downloader)
         {
             _logger = logger;

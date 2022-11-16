@@ -6,7 +6,7 @@ namespace SiraLocalizer.Utilities
     {
         public static bool IsSuccessResponseCode(this UnityWebRequest webRequest)
         {
-            return webRequest.responseCode >= 200 && webRequest.responseCode < 300;
+            return webRequest.responseCode is >= 200 and < 300;
         }
     }
 }

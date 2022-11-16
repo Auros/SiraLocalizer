@@ -1,4 +1,4 @@
-﻿using Zenject;
+using Zenject;
 using Polyglot;
 using System.IO;
 using System.Linq;
@@ -30,7 +30,7 @@ namespace SiraLocalizer
                 Directory.CreateDirectory(folder);
             }
 
-            foreach (FileInfo file in new DirectoryInfo(folder).EnumerateFiles().Where(x => x.Extension == ".csv" || x.Extension == ".tsv"))
+            foreach (FileInfo file in new DirectoryInfo(folder).EnumerateFiles().Where(x => x.Extension is ".csv" or ".tsv"))
             {
                 using (var reader = new StreamReader(file.FullName))
                 {

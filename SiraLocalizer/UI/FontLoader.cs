@@ -33,8 +33,8 @@ namespace SiraLocalizer.UI
         private readonly SiraLog _logger;
         private readonly FontAssetHelper _fontAssetHelper;
 
-        private readonly List<TMP_FontAsset> _fallbackFontAssets = new List<TMP_FontAsset>();
-        private readonly List<TMP_FontAsset> _processedFontAssets = new List<TMP_FontAsset>();
+        private readonly List<TMP_FontAsset> _fallbackFontAssets = new();
+        private readonly List<TMP_FontAsset> _processedFontAssets = new();
 
         public FontLoader(SiraLog logger, FontAssetHelper fontAssetHelper)
         {

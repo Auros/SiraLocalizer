@@ -22,7 +22,7 @@ namespace SiraLocalizer
 
         private readonly SiraLog _logger;
 
-        private readonly List<LocalizationAssetWithPriority> _assets = new List<LocalizationAssetWithPriority>();
+        private readonly List<LocalizationAssetWithPriority> _assets = new();
 
         public Localizer(SiraLog logger)
         {

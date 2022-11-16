@@ -29,7 +29,7 @@ namespace SiraLocalizer.Crowdin
         private readonly Localizer _localizer;
         private readonly Config _config;
 
-        private readonly List<LocalizationAsset> _loadedAssets = new List<LocalizationAsset>();
+        private readonly List<LocalizationAsset> _loadedAssets = new();
 
         internal CrowdinDownloader(SiraLog logger, Localizer localizer, Config config)
         {

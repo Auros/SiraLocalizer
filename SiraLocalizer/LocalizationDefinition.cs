@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace SiraLocalizer
 {
@@ -6,7 +6,7 @@ namespace SiraLocalizer
     {
         public static IReadOnlyCollection<LocalizationDefinition> loadedDefinitions => kLoadedDefinitions.Values;
 
-        private static readonly Dictionary<string, LocalizationDefinition> kLoadedDefinitions = new Dictionary<string, LocalizationDefinition>();
+        private static readonly Dictionary<string, LocalizationDefinition> kLoadedDefinitions = new();
 
         public string id { get; }
         public string name { get; }
