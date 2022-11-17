@@ -1,7 +1,7 @@
 # SiraLocalizer
 Community localization support for Beat Saber and its mods. Created by nicoco007 and Auros.
 
-Requires [SiraUtil](https://github.com/Auros/SiraUtil/releases/latest) 2.1.0 or greater.
+Requires [SiraUtil](https://github.com/Auros/SiraUtil/releases/latest) 3.0.0 or greater.
 
 ## Supported Languages for the Base Game
 The community has unofficially translated the base game into the following languages:
@@ -21,8 +21,11 @@ The community has unofficially translated the base game into the following langu
 
 See [CONTRIBUTORS](CONTRIBUTORS.md) for a list of everyone who has helped make SiraLocalizer possible!
 
-Since SiraLocalizer is built on top of the game's regular localization system, you can change the language in-game normally by going to *Options* > *Settings* > *Others*. Translation contributors and information regarding which mods are supported is given under the language selection dropdown. The example below shows information for the French translation:
-![Localization Location](https://i.imgur.com/hXhGZYi.png)
+Since SiraLocalizer is built on top of the game's regular localization system, you can change the language in-game normally by going to *Options* > *Settings* > *Others*. There are additional settings made available to manage translation updates.
+![Localization Settings](Documentation/Images/menu_en.png)
+
+Translation contributors and information regarding which mods are supported is given under the language selection dropdown. The example below shows information for the French translation:
+![Localization Credits](Documentation/Images/menu_fr.png)
 
 ## Becoming a Translator
 See [CONTRIBUTING](CONTRIBUTING.md).
