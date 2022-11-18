@@ -54,7 +54,7 @@ Polyglot,100,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 "KEY_NAME_2","Context for 2 if necessary","English String 2",,,,,,,,,,,,,,,,,,,,,,,,,,,
 ```
 
-The first line is required for Polyglot to properly identify the file. Also, note the trailing commas &ndash; these are important since Polyglot will show the translation key instead of the fallback (English) text if a column doesn't exist for the selected language. Since Polyglot supports 28 languages out-of-the-box, there should be at least 27 commas after the English text.
+The first line is required for Polyglot to properly identify the file. Also, note the trailing commas &ndash; these are important since Polyglot expects exactly 28 languages and tends to do strange things if there aren't enough columns. Therefore, there should be at least 27 commas after the English text.
 
 Once you've added all the translation keys for your mod in a CSV file following the format above, it needs to be loaded when the game starts. We recommend doing this by adding your CSV file as an embedded resource within your mod. It can then be loaded at runtime in two different ways.
 
