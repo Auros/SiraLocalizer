@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Polyglot;
 using SiraUtil.Affinity;
 using SiraUtil.Logging;
-using UnityEngine;
 using Zenject;
 
 namespace SiraLocalizer
@@ -22,78 +21,105 @@ namespace SiraLocalizer
         private static readonly FieldInfo kLanguageStringsField = typeof(LocalizationImporter).GetField("languageStrings", BindingFlags.NonPublic | BindingFlags.Static);
 
         private readonly SiraLog _logger;
+        private readonly Config _config;
+        private readonly List<ILocalizationProvider> _localizationProviders;
+        private readonly List<ILocalizationDownloader> _localizationDownloaders;
 
-        private readonly List<LocalizationAssetWithPriority> _assets = new();
+        private readonly List<LocalizationFile> _localizationFiles = new();
 
-        public LocalizationManager(SiraLog logger)
+        public LocalizationManager(SiraLog logger, Config config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders)
         {
             _logger = logger;
+            _config = config;
+            _localizationProviders = localizationProviders;
+            _localizationDownloaders = localizationDownloaders;
         }
 
         public async void Initialize()
         {
-            await Task.WhenAll(
-                AddLocalizationAssetFromAssemblyAsync("SiraLocalizer.Resources.sira-localizer.csv", GoogleDriveDownloadFormat.CSV),
-                AddLocalizationAssetFromAssemblyAsync("SiraLocalizer.Resources.contributors.csv", GoogleDriveDownloadFormat.CSV));
+            try
+            {
+                if (_config.automaticallyDownloadLocalizations)
+                {
+                    await CheckForUpdatesAndDownloadIfAvailable(CancellationToken.None);
+                }
+
+                await RegisterLocalizationsAsync(CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
 
         public void Dispose()
         {
-            Localization.Instance.InputFiles.RemoveAll(f => _assets.Any(l => l.localizationAsset == f));
-            LocalizationImporter.Refresh();
+            DeregisterLocalizations();
         }
 
-        public LocalizationAsset AddLocalizationAsset(LocalizationAsset localizationAsset)
+        internal async Task CheckForUpdatesAndDownloadIfAvailable(CancellationToken cancellationToken)
         {
-            Localization.Instance.InputFiles.Add(localizationAsset);
-            LocalizationImporter.Refresh();
-            return localizationAsset;
-        }
+            List<ILocalizationDownloader> list = await CheckForUpdatesAsync(cancellationToken);
 
-        public LocalizationAsset AddLocalizationAsset(string content, GoogleDriveDownloadFormat format)
-        {
-            return AddLocalizationAsset(new LocalizationAsset() { Format = GoogleDriveDownloadFormat.CSV, TextAsset = new TextAsset(content) });
-        }
-
-        public LocalizationAsset AddLocalizationAssetFromAssembly(string resourceName, GoogleDriveDownloadFormat format)
-        {
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)))
+            if (list == null)
             {
-                string content = reader.ReadToEnd();
-                return AddLocalizationAsset(content, format);
+                return;
+            }
+
+            await DownloadLocalizationsAsync(list, cancellationToken);
+        }
+
+        internal async Task<List<ILocalizationDownloader>> CheckForUpdatesAsync(CancellationToken cancellationToken)
+        {
+            _logger.Info("Checking for updates");
+
+            List<ILocalizationDownloader> list = null;
+
+            foreach (ILocalizationDownloader localizationDownloader in _localizationDownloaders)
+            {
+                if (await localizationDownloader.CheckForUpdatesAsync(cancellationToken))
+                {
+                    _logger.Info($"Updates available from {localizationDownloader.name}");
+
+                    list ??= new();
+                    list.Add(localizationDownloader);
+                }
+            }
+
+            return list;
+        }
+
+        internal async Task DownloadLocalizationsAsync(List<ILocalizationDownloader> localizationDownloaders, CancellationToken cancellationToken)
+        {
+            foreach (ILocalizationDownloader localizationDownloader in localizationDownloaders)
+            {
+                _logger.Info($"Downloading updates from {localizationDownloader.name}");
+                await localizationDownloader.DownloadLocalizationsAsync(cancellationToken);
             }
         }
 
-        public void RemoveLocalizationAsset(LocalizationAsset localizationAsset)
+        private async Task RegisterLocalizationsAsync(CancellationToken cancellationToken)
         {
-            Localization.Instance.InputFiles.RemoveAll(f => f == localizationAsset);
-        }
-
-        public async Task<LocalizationAsset> AddLocalizationAssetFromAssemblyAsync(string resourceName, GoogleDriveDownloadFormat format)
-        {
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)))
+            foreach (ILocalizationProvider localizationProvider in _localizationProviders)
             {
-                string content = await reader.ReadToEndAsync();
-                return AddLocalizationAsset(content, format);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await foreach (LocalizationFile file in localizationProvider.GetLocalizationAssetsAsync(cancellationToken))
+                {
+                    _localizationFiles.Add(file);
+                }
             }
+
+            LocalizationImporter.Refresh();
         }
 
-        internal void RegisterTranslation(string content, GoogleDriveDownloadFormat format, int priority)
+        private void DeregisterLocalizations()
         {
-            RegisterTranslation(new LocalizationAsset { TextAsset = new TextAsset(content), Format = format }, priority);
-        }
+            RemoveLocalizationFilesFromPolyglot();
 
-        internal void RegisterTranslation(LocalizationAsset localizationAsset, int priority = 0)
-        {
-            if (localizationAsset == null) throw new InvalidOperationException();
+            _localizationFiles.Clear();
 
-            _assets.Add(new LocalizationAssetWithPriority(localizationAsset, priority));
-        }
-
-        internal void DeregisterTranslation(LocalizationAsset localizationAsset)
-        {
-            _assets.RemoveAll(a => a.localizationAsset == localizationAsset);
-            Localization.Instance.InputFiles.RemoveAll(f => f == localizationAsset);
+            LocalizationImporter.Refresh();
         }
 
         internal List<TranslationStatus> GetTranslationStatuses(Locale language)
@@ -134,22 +160,34 @@ namespace SiraLocalizer
             return statuses;
         }
 
-        [AffinityPatch(typeof(LocalizationImporter), "Initialize")]
+        [AffinityPatch(typeof(LocalizationImporter), "ImportFromFiles")]
         [AffinityPrefix]
         [UsedImplicitly]
         private void LocalizationImporter_PreInitialize()
         {
+            _logger.Info("LocalizationImporter_PreInitialize");
             // make sure localizations are always loaded after whatever already existed in InputFiles
-            Localization.Instance.InputFiles.RemoveAll(f => _assets.Any(l => l.localizationAsset == f));
-            Localization.Instance.InputFiles.AddRange(_assets.OrderBy(l => l.priority).Select(l => l.localizationAsset));
+            RemoveLocalizationFilesFromPolyglot();
+            AddLocalizationFilesToPolyglot();
         }
 
-        [AffinityPatch(typeof(LocalizationImporter), "Initialize")]
+        [AffinityPatch(typeof(LocalizationImporter), "ImportFromFiles")]
         [AffinityPostfix]
         [UsedImplicitly]
         private void LocalizationImporter_PostInitialize()
         {
+            _logger.Info("LocalizationImporter_PostInitialize");
             UpdateSupportedLanguages();
+        }
+
+        private void RemoveLocalizationFilesFromPolyglot()
+        {
+            Localization.Instance.InputFiles.RemoveAll(f => _localizationFiles.Any(l => l.localizationAsset == f));
+        }
+
+        private void AddLocalizationFilesToPolyglot()
+        {
+            Localization.Instance.InputFiles.AddRange(_localizationFiles.OrderBy(l => l.priority).Select(l => l.localizationAsset));
         }
 
         private void UpdateSupportedLanguages()
@@ -160,10 +198,9 @@ namespace SiraLocalizer
             Localization.Instance.SupportedLanguages.AddRange(languages.Select(lang => (Language)lang));
         }
 
-        private List<Locale> GetSupportedLanguages()
+        private IEnumerable<Locale> GetSupportedLanguages()
         {
             var languageStrings = (Dictionary<string, List<string>>)kLanguageStringsField.GetValue(null);
-            var presentLanguages = new List<Locale>();
             List<string> languageNames = languageStrings["LANGUAGE_THIS"];
 
             foreach (int lang in Enum.GetValues(typeof(Locale)))
@@ -176,7 +213,7 @@ namespace SiraLocalizer
                 {
                     if (!string.IsNullOrWhiteSpace(localizations.ElementAtOrDefault(lang)))
                     {
-                        count++;
+                        ++count;
                     }
                 }
 
@@ -184,32 +221,9 @@ namespace SiraLocalizer
 
                 if (percentTranslated > kMinimumTranslatedPercent)
                 {
-                    presentLanguages.Add((Locale)lang);
+                    yield return (Locale)lang;
                 }
             }
-
-            return presentLanguages;
         }
-
-        public record TranslationStatus
-        {
-            public string name { get; }
-
-            public int totalStrings { get; }
-
-            public int translatedStrings { get; }
-
-            public float percentTranslated { get; }
-
-            public TranslationStatus(string name, int totalStrings, int translatedStrings)
-            {
-                this.name = name;
-                this.totalStrings = totalStrings;
-                this.translatedStrings = translatedStrings;
-                this.percentTranslated = totalStrings > 0 ? 100f * translatedStrings / totalStrings : 0;
-            }
-        }
-
-        private record LocalizationAssetWithPriority(LocalizationAsset localizationAsset, int priority);
     }
 }

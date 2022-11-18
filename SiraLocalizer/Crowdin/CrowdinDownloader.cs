@@ -1,21 +1,18 @@
-using IPA.Utilities;
-using Newtonsoft.Json;
-using Polyglot;
-using SiraLocalizer.Utilities;
-using SiraUtil.Logging;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine;
+using IPA.Utilities;
+using Newtonsoft.Json;
+using SiraLocalizer.Utilities;
+using SiraUtil.Logging;
 using UnityEngine.Networking;
-using Zenject;
 
 namespace SiraLocalizer.Crowdin
 {
-    public class CrowdinDownloader : IInitializable, IDisposable
+    internal class CrowdinDownloader : ILocalizationProvider, ILocalizationDownloader
     {
         private const string kCrowdinHost = "https://distributions.crowdin.net";
         private const string kDistributionKey = "b8d0ace786d64ba14775878o9lk";
@@ -26,56 +23,13 @@ namespace SiraLocalizer.Crowdin
         private static readonly string kManifestFilePath = Path.Combine(kLocalizationsFolder, "manifest.json");
 
         private readonly SiraLog _logger;
-        private readonly LocalizationManager _localizationManager;
-        private readonly Config _config;
 
-        private readonly List<LocalizationAsset> _loadedAssets = new();
-
-        internal CrowdinDownloader(SiraLog logger, LocalizationManager localizationManager, Config config)
+        internal CrowdinDownloader(SiraLog logger)
         {
             _logger = logger;
-            _localizationManager = localizationManager;
-            _config = config;
         }
 
-        public async void Initialize()
-        {
-            try
-            {
-                if (_config.automaticallyDownloadLocalizations)
-                {
-                    await DownloadLocalizationsAsync(CancellationToken.None);
-                }
-                else
-                {
-                    await LoadLocalizationSheetsAsync(CancellationToken.None);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Failed to load Crowdin translations");
-                _logger.Error(ex);
-            }
-        }
-
-        public void Dispose()
-        {
-            ClearLoadedAssets();
-        }
-
-        public async Task LoadLocalizationSheetsAsync(CancellationToken cancellationToken)
-        {
-            string manifestContent = await GetManifestContentAsync();
-
-            if (manifestContent == null)
-            {
-                return;
-            }
-
-            CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
-
-            await LoadLocalizationSheetsAsync(manifest, cancellationToken);
-        }
+        public string name => "Crowdin";
 
         public async Task DownloadLocalizationsAsync(CancellationToken cancellationToken)
         {
@@ -91,7 +45,6 @@ namespace SiraLocalizer.Crowdin
             if (!await CheckIfUpdateAvailableAsync(manifest))
             {
                 _logger.Info("Translations are up-to-date");
-                await LoadLocalizationSheetsAsync(manifest, cancellationToken);
                 return;
             }
 
@@ -123,11 +76,9 @@ namespace SiraLocalizer.Crowdin
             {
                 await writer.WriteAsync(manifestContent);
             }
-
-            await LoadLocalizationSheetsAsync(manifest, cancellationToken);
         }
 
-        public async Task<bool> CheckForUpdatesAsync()
+        public async Task<bool> CheckForUpdatesAsync(CancellationToken cancellationToken)
         {
             string manifestContent = await GetManifestContentAsync();
 
@@ -146,7 +97,7 @@ namespace SiraLocalizer.Crowdin
             string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
             string manifestContent;
 
-            _logger.Info($"Fetching Crowdin data at '{url}'");
+            _logger.Info($"Fetching Crowdin manifest");
 
             using (var request = UnityWebRequest.Get(url))
             {
@@ -242,14 +193,14 @@ namespace SiraLocalizer.Crowdin
             }
         }
 
-        private async Task LoadLocalizationSheetsAsync(CrowdinDistributionManifest manifest, CancellationToken cancellationToken)
+        public async IAsyncEnumerable<LocalizationFile> GetLocalizationAssetsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            ClearLoadedAssets();
-
             if (!Directory.Exists(kDownloadedFolder))
             {
-                return;
+                yield break;
             }
+
+            CrowdinDistributionManifest manifest = await ReadLocalManifestAsync();
 
             foreach (string fileName in manifest.files)
             {
@@ -258,49 +209,21 @@ namespace SiraLocalizer.Crowdin
                 string id = fileName.Substring(1, fileName.Length - 5);
                 string fullPath = Path.Combine(kDownloadedFolder, fileName.Substring(1));
 
-                if (LocalizationDefinition.IsDefinitionLoaded(id))
-                {
-                    if (File.Exists(fullPath))
-                    {
-                        await AddLocalizationSheetFromFileAsync(fullPath);
-                    }
-                    else
-                    {
-                        _logger.Error($"File '{fullPath}' not found");
-                    }
-                }
-                else
+                if (!LocalizationDefinition.IsDefinitionLoaded(id))
                 {
                     _logger.Warn($"No localized plugin registered for '{id}'");
+                    continue;
                 }
-            }
 
-            cancellationToken.ThrowIfCancellationRequested();
+                if (!File.Exists(fullPath))
+                {
+                    _logger.Error($"File '{fullPath}' not found");
+                    continue;
+                }
 
-            LocalizationImporter.Refresh();
-        }
-
-        private void ClearLoadedAssets()
-        {
-            foreach (LocalizationAsset asset in _loadedAssets)
-            {
-                _localizationManager.DeregisterTranslation(asset);
-            }
-
-            _loadedAssets.Clear();
-        }
-
-        private async Task AddLocalizationSheetFromFileAsync(string filePath)
-        {
-            _logger.Info($"Adding '{filePath}'");
-
-            using (var reader = new StreamReader(filePath))
-            {
-                string text = await reader.ReadToEndAsync();
-
-                var localizationAsset = new LocalizationAsset { TextAsset = new TextAsset(text), Format = GoogleDriveDownloadFormat.CSV };
-                _localizationManager.RegisterTranslation(localizationAsset);
-                _loadedAssets.Add(localizationAsset);
+                using StreamReader reader = new(fullPath);
+                string content = await reader.ReadToEndAsync();
+                yield return new LocalizationFile(content, 1000);
             }
         }
     }

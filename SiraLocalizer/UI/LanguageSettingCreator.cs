@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using SiraLocalizer.Crowdin;
 using SiraUtil.Logging;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,16 +10,18 @@ namespace SiraLocalizer.UI
     internal class LanguageSettingCreator : IInitializable
     {
         private readonly DiContainer _container;
+        private readonly Config _config;
         private readonly SiraLog _logger;
         private readonly SettingsNavigationController _settingsNavigationController;
-        private readonly CrowdinDownloader _crowdinDownloader;
+        private readonly LocalizationManager _localizationManager;
 
-        internal LanguageSettingCreator(DiContainer container, SiraLog logger, SettingsNavigationController settingsNavigationController, CrowdinDownloader crowdinDownloader)
+        internal LanguageSettingCreator(DiContainer container, Config config, SiraLog logger, SettingsNavigationController settingsNavigationController, LocalizationManager localizationManager)
         {
             _container = container;
+            _config = config;
             _logger = logger;
             _settingsNavigationController = settingsNavigationController;
-            _crowdinDownloader = crowdinDownloader;
+            _localizationManager = localizationManager;
         }
 
         public void Initialize()
@@ -40,30 +41,35 @@ namespace SiraLocalizer.UI
             CheckForUpdatesController.Create(_container, otherSettings);
             AutoCheckForUpdatesToggleController.Create(_container, otherSettings);
 
-            Config config = _container.Resolve<Config>();
-
-            if (!config.startupModalDismissed)
+            if (!_config.startupModalDismissed)
             {
-                var modal = SimpleStartupModal.Create(_container, "DOWNLOAD_TRANSLATIONS_MODAL_TEXT");
-
-                modal.closed += async (result) =>
-                {
-                    config.automaticallyDownloadLocalizations = result;
-                    config.startupModalDismissed = true;
-
-                    if (result)
-                    {
-                        try
-                        {
-                            await _crowdinDownloader.DownloadLocalizationsAsync(CancellationToken.None);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Error(ex);
-                        }
-                    }
-                };
+                ShowConfigStartupModal();
             }
+        }
+
+        private void ShowConfigStartupModal()
+        {
+            var modal = SimpleStartupModal.Create(_container, "DOWNLOAD_TRANSLATIONS_MODAL_TEXT");
+
+            modal.closed += async (result) =>
+            {
+                _config.automaticallyDownloadLocalizations = result;
+                _config.startupModalDismissed = true;
+
+                if (!result)
+                {
+                    return;
+                }
+
+                try
+                {
+                    await _localizationManager.CheckForUpdatesAndDownloadIfAvailable(CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
+            };
         }
     }
 }

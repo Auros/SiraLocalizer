@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using HMUI;
 using IPA.Utilities;
 using JetBrains.Annotations;
 using Polyglot;
-using SiraLocalizer.Crowdin;
 using SiraUtil.Logging;
 using TMPro;
 using UnityEngine;
@@ -17,10 +17,10 @@ namespace SiraLocalizer.UI
     {
         private Button _button;
         private LocalizedTextMeshProUGUI _text;
-        private bool _updateFound;
+        private List<ILocalizationDownloader> _localizationsToDownload;
 
         private SiraLog _logger;
-        private CrowdinDownloader _downloader;
+        private LocalizationManager _localizationManager;
 
         public static CheckForUpdatesController Create(DiContainer container, Transform parent)
         {
@@ -102,17 +102,17 @@ namespace SiraLocalizer.UI
             _button.onClick.AddListener(OnButtonClicked);
             _button.interactable = true;
             _text.Key = "CHECK_FOR_UPDATES_BUTTON";
-            _updateFound = false;
+            _localizationsToDownload = null;
 
             ForceRebuildTextLayout();
         }
 
         [Inject]
         [UsedImplicitly]
-        private void Construct(SiraLog logger, CrowdinDownloader downloader)
+        private void Construct(SiraLog logger, LocalizationManager localizationManager)
         {
             _logger = logger;
-            _downloader = downloader;
+            _localizationManager = localizationManager;
         }
 
         private void OnDisable()
@@ -122,7 +122,7 @@ namespace SiraLocalizer.UI
 
         private void OnButtonClicked()
         {
-            if (_updateFound)
+            if (_localizationsToDownload != null)
             {
                 DownloadUpdates();
             }
@@ -141,7 +141,7 @@ namespace SiraLocalizer.UI
 
             try
             {
-                await _downloader.DownloadLocalizationsAsync(CancellationToken.None);
+                await _localizationManager.DownloadLocalizationsAsync(_localizationsToDownload, CancellationToken.None);
                 _text.Key = "UPDATED_SUCCESSFULLY";
             }
             catch (Exception ex)
@@ -162,22 +162,22 @@ namespace SiraLocalizer.UI
 
             try
             {
-                _updateFound = await _downloader.CheckForUpdatesAsync();
+                _localizationsToDownload = await _localizationManager.CheckForUpdatesAsync(CancellationToken.None);
+
+                if (_localizationsToDownload != null)
+                {
+                    _button.interactable = true;
+                    _text.Key = "DOWNLOAD_UPDATES";
+                }
+                else
+                {
+                    _text.Key = "NO_UPDATE_FOUND";
+                }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
                 _text.Key = "FAILED_TO_UPDATE";
-            }
-
-            if (_updateFound)
-            {
-                _button.interactable = true;
-                _text.Key = "DOWNLOAD_UPDATES";
-            }
-            else
-            {
-                _text.Key = "NO_UPDATE_FOUND";
             }
 
             ForceRebuildTextLayout();

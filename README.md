@@ -45,7 +45,7 @@ Here are some guidelines for creating good translation keys:
 - To avoid collisions with base game keys and other mods' keys, all the keys you add should have a prefix that uniquely identifies your mod.
 
 ### Creating a Polyglot Translation File
-Polyglot stores translations in CSV or TSV files. We *highly* recommend using a CSV file since it supports line breaks inside values and empty columns are easier to format. Polyglot's file format is very straightforward: the first column is the translation key, the second column is context to help translators, and the rest of the columns are translations following [the order in the Locale enum](SiraLocalizer/Locale.cs).
+Polyglot's file format is very straightforward: the first column is the translation key, the second column is context to help translators, and the rest of the columns are translations following [the order in the Locale enum](SiraLocalizer/Locale.cs).
 
 If you plan on using SiraLocalizer for translations, this is what your mod's CSV file should look like:
 ```text
@@ -56,34 +56,17 @@ Polyglot,100,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 The first line is required for Polyglot to properly identify the file. Also, note the trailing commas &ndash; these are important since Polyglot expects exactly 28 languages and tends to do strange things if there aren't enough columns. Therefore, there should be at least 27 commas after the English text.
 
-Once you've added all the translation keys for your mod in a CSV file following the format above, it needs to be loaded when the game starts. We recommend doing this by adding your CSV file as an embedded resource within your mod. It can then be loaded at runtime in two different ways.
+### Registering the mod with SiraLocalizer
+Registering your mod to be translated by the SiraLocalizer team is simple. First, fill out this request form (coming soon). If it the first time you request translations, you will be given an ID for your mod. Once you have this ID, simply add this JSON object to your manifest's `features` object:
 
-#### Through SiraLocalizer
-This is the recommended way to add your file since if anything changes within the game itself, you don't have to worry about it. You must however add SiraLocalizer as a dependency to your mod. Below is an example of how to do this. Note that this requires use of Zenject (via SiraUtil, for example).
-
-```cs
-using SiraLocalizer;
-
-namespace YourMod
-{
-    class YourLocalizationRegistrar : IInitializable
-    {
-        private ILocalizer _localizer;
-
-        internal YourLocalizationRegistrar(ILocalizer localizer)
-        {
-            _localizer = localizer;
-        }
-
-        public void Initialize()
-        {
-            _localizer.AddLocalizationAssetFromAssembly("Assembly.Path.To.Your.translations.csv", GoogleDriveDownloadFormat.CSV);
-        }
-    }
+```json
+"SiraLocalizer.LocalizedPlugin": {
+    "id": "your-mod-id",
+    "resourcePath": "Assembly.Path.To.Your.translations.csv"
 }
 ```
 
-The `YourLocalizationRegistrar` class should be bound to an installer that runs on the main Beat Saber context (e.g. a `YourAppInstaller` installer registered via `Zenjector.OnApp<YourAppInstaller>()`).
+Once translations are available, they will automatically be downloaded by SiraLocalizer.
 
 #### Manually
 This method should only be used if you don't want to add SiraLocalizer as a dependency to your mod. Since this is prone to change, we don't officially endorse or support this method. We will try our best to keep it working in the future but we can't guarantee this will be possible, so if you decide to use it, you're on your own. Below is an example of how to add your CSV file. You should call this in your plugin's [OnStart] method.
@@ -98,14 +81,4 @@ using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifest
 
 You should call this method in your plugin's `[OnEnable]` or `[OnStart]` method. If everything works properly, translations keys should now show up as the English text you wrote in the CSV file.
 
-### Registering a Mod for Translation
-Registering your mod to be translated by the SiraLocalizer team is simple. First, fill out this request form (coming soon). If it the first time you request translations, you will be given an ID for your mod. Once you have this ID, simply add this JSON object to your manifest's `features` object:
 
-```json
-"SiraLocalizer.LocalizedPlugin": {
-    "id": "your-mod-id",
-    "resourcePath": "Assembly.Path.To.Your.translations.csv"
-}
-```
-
-Once translations are available, they will automatically be downloaded by SiraLocalizer.

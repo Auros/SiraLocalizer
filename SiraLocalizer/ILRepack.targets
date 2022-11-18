@@ -1,0 +1,19 @@
+﻿<Project>
+  <Target Name="PackAssemblies" AfterTargets="Build">
+    <ItemGroup>
+      <InputAssemblies Include="$(OutputPath)$(AssemblyName).dll" />
+      <InputAssemblies Include="$(OutputPath)Microsoft.Bcl.AsyncInterfaces.dll" />
+      <InputAssemblies Include="$(OutputPath)System.Threading.Tasks.Dataflow.dll" />
+      <InputAssemblies Include="$(OutputPath)System.Threading.Tasks.Extensions.dll" />
+      <InputAssemblies Include="$(OutputPath)System.Runtime.CompilerServices.Unsafe.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <LibraryPath Include="$(BeatSaberDir)\Beat Saber_Data\Managed" />
+      <LibraryPath Include="$(BeatSaberDir)\Libs" />
+      <LibraryPath Include="$(BeatSaberDir)\Plugins" />
+    </ItemGroup>
+	  
+    <ILRepack Parallel="true" Internalize="true" InputAssemblies="@(InputAssemblies)" TargetKind="Dll" OutputFile="$(OutputPath)$(AssemblyName).dll" LibraryPath="@(LibraryPath)" />
+  </Target>
+</Project>

@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 namespace SiraLocalizer.HarmonyPatches
 {
     [HarmonyPatch(typeof(EffectPoolsManualInstaller), nameof(EffectPoolsManualInstaller.ManualInstallBindings))]
-    public static class EffectPoolsManualInstaller_ManualInstallBindings
+    internal static class EffectPoolsManualInstaller_ManualInstallBindings
     {
         public static void Postfix(DiContainer container, bool shortBeatEffect, FlyingTextEffect ____flyingTextEffectPrefab)
         {

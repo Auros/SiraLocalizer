@@ -14,7 +14,7 @@ using Conf = IPA.Config.Config;
 namespace SiraLocalizer
 {
     [Plugin(RuntimeOptions.DynamicInit)]
-    public class Plugin
+    internal class Plugin
     {
         private const string kHarmonyId = "pro.sira.siralocalizer";
 

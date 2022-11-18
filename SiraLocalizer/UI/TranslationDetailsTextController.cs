@@ -116,7 +116,7 @@ namespace SiraLocalizer.UI
                 string contributors = Localization.Get("LANGUAGE_CONTRIBUTORS", language);
                 _credits.text = string.Format(Localization.Get("TRANSLATED_BY", language), !string.IsNullOrWhiteSpace(contributors) ? contributors : "—");
 
-                List<LocalizationManager.TranslationStatus> statuses = _localizationManager.GetTranslationStatuses((Locale)language);
+                List<TranslationStatus> statuses = _localizationManager.GetTranslationStatuses((Locale)language);
                 var fullyTranslated = statuses.Where(s => s.percentTranslated == 100).Select(s => s.name).ToList();
                 var partiallyTranslated = statuses.Where(s => s.percentTranslated is < 100 and > 0).Select(s => $"{s.name} ({Mathf.Clamp(s.percentTranslated, 1, 99):0}%)").ToList();
                 var notSupported = statuses.Where(s => s.percentTranslated == 0).Select(s => s.name).ToList();
