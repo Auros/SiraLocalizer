@@ -4,15 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Polyglot;
-using SiraLocalizer.HarmonyPatches;
+using SiraUtil.Affinity;
 using SiraUtil.Logging;
 using UnityEngine;
 using Zenject;
 
 namespace SiraLocalizer
 {
-    internal class Localizer : ILocalizer, IInitializable, IDisposable
+    internal class Localizer : IAffinity, ILocalizer, IInitializable, IDisposable
     {
         internal const float kMinimumTranslatedPercent = 0.50f;
 
@@ -31,9 +32,6 @@ namespace SiraLocalizer
 
         public async void Initialize()
         {
-            LocalizationImporter_Initialize.preInitialize += LocalizationImporter_PreInitialize;
-            LocalizationImporter_Initialize.postInitialize += LocalizationImporter_PostInitialize;
-
             await Task.WhenAll(
                 AddLocalizationAssetFromAssemblyAsync("SiraLocalizer.Resources.sira-localizer.csv", GoogleDriveDownloadFormat.CSV),
                 AddLocalizationAssetFromAssemblyAsync("SiraLocalizer.Resources.contributors.csv", GoogleDriveDownloadFormat.CSV));
@@ -41,9 +39,6 @@ namespace SiraLocalizer
 
         public void Dispose()
         {
-            LocalizationImporter_Initialize.preInitialize -= LocalizationImporter_PreInitialize;
-            LocalizationImporter_Initialize.postInitialize -= LocalizationImporter_PostInitialize;
-
             Localization.Instance.InputFiles.RemoveAll(f => _assets.Any(l => l.localizationAsset == f));
             LocalizationImporter.Refresh();
         }
@@ -139,6 +134,9 @@ namespace SiraLocalizer
             return statuses;
         }
 
+        [AffinityPatch(typeof(LocalizationImporter), "Initialize")]
+        [AffinityPrefix]
+        [UsedImplicitly]
         private void LocalizationImporter_PreInitialize()
         {
             // make sure localizations are always loaded after whatever already existed in InputFiles
@@ -146,6 +144,9 @@ namespace SiraLocalizer
             Localization.Instance.InputFiles.AddRange(_assets.OrderBy(l => l.priority).Select(l => l.localizationAsset));
         }
 
+        [AffinityPatch(typeof(LocalizationImporter), "Initialize")]
+        [AffinityPostfix]
+        [UsedImplicitly]
         private void LocalizationImporter_PostInitialize()
         {
             UpdateSupportedLanguages();

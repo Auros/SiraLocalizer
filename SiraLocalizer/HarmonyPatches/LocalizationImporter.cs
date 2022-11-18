@@ -1,8 +1,7 @@
-﻿using HarmonyLib;
-using Polyglot;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
+using Polyglot;
 
 namespace SiraLocalizer.HarmonyPatches
 {
@@ -17,26 +16,6 @@ namespace SiraLocalizer.HarmonyPatches
             var instructionsList = instructions.ToList();
             instructionsList.RemoveRange(48, 56);
             return instructionsList.AsEnumerable();
-        }
-    }
-
-    /// <summary>
-    /// This patch refreshes the supported languages via <see cref="Localizer.UpdateSupportedLanguages"/> after a call to <see cref="LocalizationImporter"/>'s Initialize.
-    /// </summary>
-    [HarmonyPatch(typeof(LocalizationImporter), "Initialize")]
-    internal static class LocalizationImporter_Initialize
-    {
-        public static event Action preInitialize;
-        public static event Action postInitialize;
-
-        public static void Prefix()
-        {
-            preInitialize?.Invoke();
-        }
-
-        public static void Postfix()
-        {
-            postInitialize?.Invoke();
         }
     }
 }
