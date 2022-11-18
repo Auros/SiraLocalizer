@@ -190,11 +190,14 @@ namespace SiraLocalizer
             return presentLanguages;
         }
 
-        public readonly struct TranslationStatus
+        public record TranslationStatus
         {
             public string name { get; }
+
             public int totalStrings { get; }
+
             public int translatedStrings { get; }
+
             public float percentTranslated { get; }
 
             public TranslationStatus(string name, int totalStrings, int translatedStrings)
@@ -206,16 +209,6 @@ namespace SiraLocalizer
             }
         }
 
-        private readonly struct LocalizationAssetWithPriority
-        {
-            public LocalizationAsset localizationAsset { get; }
-            public int priority { get; }
-
-            public LocalizationAssetWithPriority(LocalizationAsset localizationAsset, int priority)
-            {
-                this.localizationAsset = localizationAsset;
-                this.priority = priority;
-            }
-        }
+        private record LocalizationAssetWithPriority(LocalizationAsset localizationAsset, int priority);
     }
 }

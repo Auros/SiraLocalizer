@@ -18,16 +18,12 @@ namespace SiraLocalizer.UI
         private static readonly string[] kFontNamesToRemove = { "NotoSansJP-Medium SDF", "NotoSansKR-Medium SDF", "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)" };
         private static readonly FontReplacementStrategy[] kFontReplacementStrategies = new[]
         {
-            new FontReplacementStrategy
-            {
-                targetFontNames = new[] { "Teko-Medium SDF" },
-                fontNamesToAdd = new[] { "Teko-Medium SDF Latin-1 Supplement", "Oswald-Medium SDF Cyrillic", "SourceHanSans-Medium SDF" }
-            },
-            new FontReplacementStrategy
-            {
-                targetFontNames = new[] { "Teko-Bold SDF" },
-                fontNamesToAdd = new[] { "Teko-Bold SDF Latin-1 Supplement", "Oswald-Bold SDF Cyrillic", "SourceHanSans-Medium SDF" }
-            },
+            new FontReplacementStrategy(
+                new[] { "Teko-Medium SDF" },
+                new[] { "Teko-Medium SDF Latin-1 Supplement", "Oswald-Medium SDF Cyrillic", "SourceHanSans-Medium SDF" }),
+            new FontReplacementStrategy(
+                new[] { "Teko-Bold SDF" },
+                new[] { "Teko-Bold SDF Latin-1 Supplement", "Oswald-Bold SDF Cyrillic", "SourceHanSans-Medium SDF" }),
         };
 
         private readonly SiraLog _logger;
@@ -145,10 +141,6 @@ namespace SiraLocalizer.UI
             _processedFontAssets.Add(fontAsset);
         }
 
-        private struct FontReplacementStrategy
-        {
-            public string[] targetFontNames;
-            public string[] fontNamesToAdd;
-        }
+        private record FontReplacementStrategy(string[] targetFontNames, string[] fontNamesToAdd);
     }
 }

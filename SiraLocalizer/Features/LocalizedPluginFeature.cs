@@ -64,7 +64,7 @@ namespace SiraLocalizer.Features
             using (var reader = new StreamReader(resourceStream))
             {
                 string extension = resourcePath.Substring(resourcePath.LastIndexOf('.'));
-                LocalizationDefinition.Add(new LocalizationDefinition("plugins/" + _localizedPlugin.id, _localizedPlugin.name, PolyglotUtil.GetKeysFromLocalizationAsset(reader.ReadToEnd(), extension == ".tsv" ? GoogleDriveDownloadFormat.TSV : GoogleDriveDownloadFormat.CSV)));
+                LocalizationDefinition.Add("plugins/" + _localizedPlugin.id, _localizedPlugin.name, PolyglotUtil.GetKeysFromLocalizationAsset(reader.ReadToEnd(), extension == ".tsv" ? GoogleDriveDownloadFormat.TSV : GoogleDriveDownloadFormat.CSV));
             }
         }
     }

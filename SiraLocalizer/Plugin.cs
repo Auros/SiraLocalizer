@@ -27,7 +27,7 @@ namespace SiraLocalizer
 
             _harmony = new Harmony(kHarmonyId);
 
-            LocalizationDefinition.Add(new LocalizationDefinition("beat-saber", "Beat Saber", PolyglotUtil.GetKeysFromLocalizationAsset(Localization.Instance.InputFiles[0])));
+            LocalizationDefinition.Add("beat-saber", "Beat Saber", Localization.Instance.InputFiles[0]);
 
             LocalizedPluginFeature.logger = logger;
 
