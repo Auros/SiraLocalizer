@@ -13,7 +13,7 @@ using Zenject;
 
 namespace SiraLocalizer
 {
-    internal class Localizer : IAffinity, ILocalizer, IInitializable, IDisposable
+    internal class LocalizationManager : IAffinity, IInitializable, IDisposable
     {
         internal const float kMinimumTranslatedPercent = 0.50f;
 
@@ -25,7 +25,7 @@ namespace SiraLocalizer
 
         private readonly List<LocalizationAssetWithPriority> _assets = new();
 
-        public Localizer(SiraLog logger)
+        public LocalizationManager(SiraLog logger)
         {
             _logger = logger;
         }

@@ -16,7 +16,7 @@ namespace SiraLocalizer.UI
         private LanguageSettingsController _languageSettingsController;
         private TextMeshProUGUI _credits;
         private TextMeshProUGUI _translationStatus;
-        private Localizer _localizer;
+        private LocalizationManager _localizationManager;
 
         public static TranslationDetailsTextController Create(DiContainer container, Transform parent, LanguageSettingsController languageSettingsController)
         {
@@ -83,9 +83,9 @@ namespace SiraLocalizer.UI
 
         [Inject]
         [UsedImplicitly]
-        private void Construct(Localizer localizer)
+        private void Construct(LocalizationManager localizer)
         {
-            _localizer = localizer;
+            _localizationManager = localizer;
         }
 
         private void OnEnable()
@@ -116,7 +116,7 @@ namespace SiraLocalizer.UI
                 string contributors = Localization.Get("LANGUAGE_CONTRIBUTORS", language);
                 _credits.text = string.Format(Localization.Get("TRANSLATED_BY", language), !string.IsNullOrWhiteSpace(contributors) ? contributors : "—");
 
-                List<Localizer.TranslationStatus> statuses = _localizer.GetTranslationStatuses((Locale)language);
+                List<LocalizationManager.TranslationStatus> statuses = _localizationManager.GetTranslationStatuses((Locale)language);
                 var fullyTranslated = statuses.Where(s => s.percentTranslated == 100).Select(s => s.name).ToList();
                 var partiallyTranslated = statuses.Where(s => s.percentTranslated is < 100 and > 0).Select(s => $"{s.name} ({Mathf.Clamp(s.percentTranslated, 1, 99):0}%)").ToList();
                 var notSupported = statuses.Where(s => s.percentTranslated == 0).Select(s => s.name).ToList();

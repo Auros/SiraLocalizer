@@ -12,12 +12,12 @@ namespace SiraLocalizer
     internal class UserLocalizationFileLoader : IInitializable
     {
         private readonly SiraLog _logger;
-        private readonly Localizer _localizer;
+        private readonly LocalizationManager _localizationManager;
 
-        public UserLocalizationFileLoader(SiraLog logger, Localizer localizer)
+        public UserLocalizationFileLoader(SiraLog logger, LocalizationManager localizationManager)
         {
             _logger = logger;
-            _localizer = localizer;
+            _localizationManager = localizationManager;
         }
 
         public async void Initialize()
@@ -46,7 +46,7 @@ namespace SiraLocalizer
                 using (var reader = new StreamReader(file.FullName))
                 {
                     string fileText = await reader.ReadToEndAsync();
-                    _localizer.RegisterTranslation(fileText, file.Extension.EndsWith("csv") ? GoogleDriveDownloadFormat.CSV : GoogleDriveDownloadFormat.TSV, 100);
+                    _localizationManager.RegisterTranslation(fileText, file.Extension.EndsWith("csv") ? GoogleDriveDownloadFormat.CSV : GoogleDriveDownloadFormat.TSV, 100);
                 }
             }
 

@@ -26,15 +26,15 @@ namespace SiraLocalizer.Crowdin
         private static readonly string kManifestFilePath = Path.Combine(kLocalizationsFolder, "manifest.json");
 
         private readonly SiraLog _logger;
-        private readonly Localizer _localizer;
+        private readonly LocalizationManager _localizationManager;
         private readonly Config _config;
 
         private readonly List<LocalizationAsset> _loadedAssets = new();
 
-        internal CrowdinDownloader(SiraLog logger, Localizer localizer, Config config)
+        internal CrowdinDownloader(SiraLog logger, LocalizationManager localizationManager, Config config)
         {
             _logger = logger;
-            _localizer = localizer;
+            _localizationManager = localizationManager;
             _config = config;
         }
 
@@ -284,7 +284,7 @@ namespace SiraLocalizer.Crowdin
         {
             foreach (LocalizationAsset asset in _loadedAssets)
             {
-                _localizer.DeregisterTranslation(asset);
+                _localizationManager.DeregisterTranslation(asset);
             }
 
             _loadedAssets.Clear();
@@ -299,7 +299,7 @@ namespace SiraLocalizer.Crowdin
                 string text = await reader.ReadToEndAsync();
 
                 var localizationAsset = new LocalizationAsset { TextAsset = new TextAsset(text), Format = GoogleDriveDownloadFormat.CSV };
-                _localizer.RegisterTranslation(localizationAsset);
+                _localizationManager.RegisterTranslation(localizationAsset);
                 _loadedAssets.Add(localizationAsset);
             }
         }

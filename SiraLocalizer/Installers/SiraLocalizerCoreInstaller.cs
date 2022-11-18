@@ -19,7 +19,7 @@ namespace SiraLocalizer.Installers
         {
             Container.BindInstance(_config).AsSingle();
 
-            Container.Bind(typeof(Localizer), typeof(IAffinity), typeof(ILocalizer), typeof(IInitializable), typeof(IDisposable)).To<Localizer>().AsSingle();
+            Container.Bind(typeof(LocalizationManager), typeof(IAffinity), typeof(IInitializable), typeof(IDisposable)).To<LocalizationManager>().AsSingle();
             Container.Bind(typeof(IInitializable), typeof(IDisposable)).To<FontLoader>().AsSingle();
             Container.Bind<IInitializable>().To<UserLocalizationFileLoader>().AsSingle();
             Container.Bind<FontAssetHelper>().AsTransient();
