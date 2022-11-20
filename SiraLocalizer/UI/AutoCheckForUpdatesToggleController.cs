@@ -8,7 +8,7 @@ namespace SiraLocalizer.UI
 {
     internal class AutoCheckForUpdatesToggleController : MonoBehaviour
     {
-        private Config _config;
+        private Settings _config;
         private Toggle _toggle;
 
         public static AutoCheckForUpdatesToggleController Create(DiContainer container, Transform parent)
@@ -37,7 +37,7 @@ namespace SiraLocalizer.UI
 
         [Inject]
         [UsedImplicitly]
-        private void Construct(Config config)
+        private void Construct(Settings config)
         {
             _config = config;
         }

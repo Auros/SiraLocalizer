@@ -3,13 +3,13 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using IPA;
+using IPA.Config;
 using IPA.Config.Stores;
 using IPA.Logging;
 using Polyglot;
 using SiraLocalizer.Features;
 using SiraLocalizer.Installers;
 using SiraUtil.Zenject;
-using Conf = IPA.Config.Config;
 
 namespace SiraLocalizer
 {
@@ -21,7 +21,7 @@ namespace SiraLocalizer
         private readonly Harmony _harmony;
 
         [Init]
-        public Plugin(Conf conf, Logger logger, Zenjector zenjector)
+        public Plugin(Config conf, Logger logger, Zenjector zenjector)
         {
             if (Environment.GetCommandLineArgs().Contains("--dump-localization")) new LocalizationExporter(logger).DumpBaseGameLocalization();
 
@@ -32,7 +32,7 @@ namespace SiraLocalizer
             LocalizedPluginFeature.logger = logger;
 
             zenjector.UseLogger(logger);
-            zenjector.Install<SiraLocalizerCoreInstaller>(Location.App, conf.Generated<Config>());
+            zenjector.Install<SiraLocalizerCoreInstaller>(Location.App, conf.Generated<Settings>());
             zenjector.Install<SiraLocalizerUIInstaller>(Location.Menu);
         }
 

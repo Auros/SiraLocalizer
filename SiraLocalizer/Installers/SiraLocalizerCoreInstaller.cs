@@ -6,11 +6,11 @@ using Zenject;
 
 namespace SiraLocalizer.Installers
 {
-    internal class SiraLocalizerCoreInstaller : Installer<Config, SiraLocalizerCoreInstaller>
+    internal class SiraLocalizerCoreInstaller : Installer<Settings, SiraLocalizerCoreInstaller>
     {
-        private readonly Config _config;
+        private readonly Settings _config;
 
-        internal SiraLocalizerCoreInstaller(Config config)
+        internal SiraLocalizerCoreInstaller(Settings config)
         {
             _config = config;
         }

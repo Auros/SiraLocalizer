@@ -21,13 +21,13 @@ namespace SiraLocalizer
         private static readonly FieldInfo kLanguageStringsField = typeof(LocalizationImporter).GetField("languageStrings", BindingFlags.NonPublic | BindingFlags.Static);
 
         private readonly SiraLog _logger;
-        private readonly Config _config;
+        private readonly Settings _config;
         private readonly List<ILocalizationProvider> _localizationProviders;
         private readonly List<ILocalizationDownloader> _localizationDownloaders;
 
         private readonly List<LocalizationFile> _localizationFiles = new();
 
-        public LocalizationManager(SiraLog logger, Config config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders)
+        public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders)
         {
             _logger = logger;
             _config = config;

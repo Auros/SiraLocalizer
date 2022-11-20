@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
 namespace SiraLocalizer
 {
-    internal class Config
+    internal class Settings
     {
         public virtual bool automaticallyDownloadLocalizations { get; set; } = false;
 

@@ -10,12 +10,12 @@ namespace SiraLocalizer.UI
     internal class LanguageSettingCreator : IInitializable
     {
         private readonly DiContainer _container;
-        private readonly Config _config;
+        private readonly Settings _config;
         private readonly SiraLog _logger;
         private readonly SettingsNavigationController _settingsNavigationController;
         private readonly LocalizationManager _localizationManager;
 
-        internal LanguageSettingCreator(DiContainer container, Config config, SiraLog logger, SettingsNavigationController settingsNavigationController, LocalizationManager localizationManager)
+        internal LanguageSettingCreator(DiContainer container, Settings config, SiraLog logger, SettingsNavigationController settingsNavigationController, LocalizationManager localizationManager)
         {
             _container = container;
             _config = config;
