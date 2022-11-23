@@ -165,7 +165,6 @@ namespace SiraLocalizer
         [UsedImplicitly]
         private void LocalizationImporter_PreInitialize()
         {
-            _logger.Info("LocalizationImporter_PreInitialize");
             // make sure localizations are always loaded after whatever already existed in InputFiles
             RemoveLocalizationFilesFromPolyglot();
             AddLocalizationFilesToPolyglot();
@@ -176,7 +175,6 @@ namespace SiraLocalizer
         [UsedImplicitly]
         private void LocalizationImporter_PostInitialize()
         {
-            _logger.Info("LocalizationImporter_PostInitialize");
             UpdateSupportedLanguages();
         }
 
