@@ -39,12 +39,17 @@ namespace SiraLocalizer.Providers.Crowdin
 
         public async IAsyncEnumerable<LocalizationFile> GetLocalizationAssetsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            if (!Directory.Exists(kDownloadedFolder))
+            if (!File.Exists(kManifestFilePath) || !Directory.Exists(kDownloadedFolder))
             {
                 yield break;
             }
 
             CrowdinDistributionManifest manifest = await ReadLocalManifestAsync();
+
+            if (manifest == null)
+            {
+                yield break;
+            }
 
             foreach (string filePath in manifest.files)
             {
@@ -54,7 +59,7 @@ namespace SiraLocalizer.Providers.Crowdin
 
                 if (!LocalizationDefinition.IsDefinitionLoaded(parsed.id))
                 {
-                    _logger.Warn($"No localized plugin registered for '{parsed.id}'");
+                    _logger.Warn($"No localized plugin registered for '{parsed.id}'; ignored");
                     continue;
                 }
 
@@ -64,25 +69,45 @@ namespace SiraLocalizer.Providers.Crowdin
                     continue;
                 }
 
-                using FileStream fileStream = File.OpenRead(parsed.pathOnDisk);
-                using GZipStream gzipStream = new(fileStream, CompressionMode.Decompress);
-                using StreamReader reader = new(gzipStream);
+                string content = null;
 
-                string content = await reader.ReadToEndAsync();
-                yield return new LocalizationFile(content, 1000);
+                try
+                {
+                    using FileStream fileStream = File.OpenRead(parsed.pathOnDisk);
+                    using GZipStream gzipStream = new(fileStream, CompressionMode.Decompress);
+                    using StreamReader reader = new(gzipStream);
+
+                    content = await reader.ReadToEndAsync();
+                }
+                catch (IOException ex)
+                {
+                    _logger.Error($"Failed to read file '{parsed.pathOnDisk}'");
+                    _logger.Error(ex);
+                }
+
+                if (content != null)
+                {
+                    yield return new LocalizationFile(content, 1000);
+                }
             }
         }
 
         public async Task DownloadLocalizationsAsync(CancellationToken cancellationToken)
         {
-            string manifestContent = await GetManifestContentAsync();
+            string manifestContent = await GetRemoteManifestContentAsync();
 
             if (manifestContent == null)
             {
+                _logger.Error("Got empty manifest from Crowdin");
                 return;
             }
 
-            CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
+            CrowdinDistributionManifest manifest = DeserializeManifest(manifestContent);
+
+            if (manifest == null)
+            {
+                return;
+            }
 
             if (!await CheckIfUpdateAvailableAsync(manifest))
             {
@@ -108,7 +133,7 @@ namespace SiraLocalizer.Providers.Crowdin
                     continue;
                 }
 
-                await DownloadFileAsync($"{kCrowdinHost}/{kDistributionKey}/content/{parsed.relativePath}?timestamp={manifest.timestamp}", parsed.pathOnDisk);
+                await DownloadFileAsync(parsed.relativePath, manifest.timestamp, parsed.pathOnDisk);
             }
 
             using StreamWriter writer = new(kManifestFilePath);
@@ -117,45 +142,55 @@ namespace SiraLocalizer.Providers.Crowdin
 
         public async Task<bool> CheckForUpdatesAsync(CancellationToken cancellationToken)
         {
-            string manifestContent = await GetManifestContentAsync();
+            string manifestContent = await GetRemoteManifestContentAsync();
 
             if (manifestContent == null)
             {
                 return false;
             }
 
-            CrowdinDistributionManifest manifest = JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
+            CrowdinDistributionManifest manifest = DeserializeManifest(manifestContent);
 
-            return await CheckIfUpdateAvailableAsync(manifest);
+            return manifest != null && await CheckIfUpdateAvailableAsync(manifest);
         }
 
-        private async Task<string> GetManifestContentAsync()
+        private CrowdinDistributionManifest DeserializeManifest(string manifestContent)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<CrowdinDistributionManifest>(manifestContent);
+            }
+            catch (JsonException ex)
+            {
+                _logger.Error("Failed to deserialize manifest");
+                _logger.Error(ex);
+
+                return null;
+            }
+        }
+
+        private async Task<string> GetRemoteManifestContentAsync()
         {
             string url = $"{kCrowdinHost}/{kDistributionKey}/manifest.json";
-            string manifestContent;
 
             _logger.Info($"Fetching Crowdin manifest");
 
-            using (var request = UnityWebRequest.Get(url))
+            using var request = UnityWebRequest.Get(url);
+            UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
+
+            if (!asyncOperation.isDone)
             {
-                UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
-
-                if (!asyncOperation.isDone)
-                {
-                    _logger.Error($"UnityWebRequest for '{url}' failed");
-                    return null;
-                }
-
-                if (!request.IsSuccessResponseCode())
-                {
-                    _logger.Error($"'{url}' responded with {request.responseCode} ({request.error})");
-                    return null;
-                }
-
-                manifestContent = request.downloadHandler.text;
+                _logger.Error($"UnityWebRequest for '{url}' failed");
+                return null;
             }
 
-            return manifestContent;
+            if (!request.IsSuccessResponseCode())
+            {
+                _logger.Error($"'{url}' responded with {request.responseCode} ({request.error})");
+                return null;
+            }
+
+            return request.downloadHandler.text;
         }
 
         private async Task<bool> CheckIfUpdateAvailableAsync(CrowdinDistributionManifest remoteManifest)
@@ -174,7 +209,7 @@ namespace SiraLocalizer.Providers.Crowdin
 
             CrowdinDistributionManifest localManifest = await ReadLocalManifestAsync();
 
-            return localManifest.timestamp != remoteManifest.timestamp;
+            return localManifest?.timestamp != remoteManifest.timestamp;
         }
 
         private ParsedPathData ParsePath(string filePath)
@@ -207,16 +242,25 @@ namespace SiraLocalizer.Providers.Crowdin
 
         private async Task<CrowdinDistributionManifest> ReadLocalManifestAsync()
         {
-            using FileStream file = File.OpenRead(kManifestFilePath);
-            using StreamReader reader = new(file);
+            try
+            {
+                using StreamReader reader = new(kManifestFilePath);
+                return DeserializeManifest(await reader.ReadToEndAsync());
+            }
+            catch (IOException ex)
+            {
+                _logger.Error("Failed to read local manifest");
+                _logger.Error(ex);
 
-            return JsonConvert.DeserializeObject<CrowdinDistributionManifest>(await reader.ReadToEndAsync());
+                return null;
+            }
         }
 
-        private async Task DownloadFileAsync(string url, string filePath)
+        private async Task DownloadFileAsync(string relativePath, long timestamp, string filePath)
         {
-            _logger.Info($"Downloading '{url}'");
+            _logger.Info($"Downloading '{relativePath}'");
 
+            string url = $"{kCrowdinHost}/{kDistributionKey}/content/{relativePath}?timestamp={timestamp}";
             using var request = UnityWebRequest.Get(url);
 
             request.SetRequestHeader("Accept-Encoding", "gzip");
