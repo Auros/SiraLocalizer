@@ -5,6 +5,7 @@ using HMUI;
 using IPA.Utilities;
 using JetBrains.Annotations;
 using Polyglot;
+using SiraLocalizer.Providers;
 using SiraUtil.Logging;
 using TMPro;
 using UnityEngine;

@@ -3,8 +3,9 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using IPA.Utilities;
+using SiraLocalizer.Records;
 
-namespace SiraLocalizer
+namespace SiraLocalizer.Providers
 {
     internal class UserLocalizationFileProvider : ILocalizationProvider
     {
@@ -13,9 +14,7 @@ namespace SiraLocalizer
             string folder = Path.GetFullPath(Path.Combine(UnityGame.UserDataPath, "SiraLocalizer", "Localizations", "User"));
 
             if (!Directory.Exists(folder))
-            {
                 Directory.CreateDirectory(folder);
-            }
 
             foreach (string filePath in Directory.EnumerateFiles(folder, "*.csv"))
             {

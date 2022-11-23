@@ -1,4 +1,4 @@
-namespace SiraLocalizer.Crowdin
+namespace SiraLocalizer.Providers.Crowdin
 {
     internal record CrowdinDistributionManifest
     {

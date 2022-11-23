@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Polyglot;
+using SiraLocalizer.Utilities;
 
-namespace SiraLocalizer
+namespace SiraLocalizer.Records
 {
     internal record LocalizationDefinition(string id, string name, IEnumerable<string> keys)
     {

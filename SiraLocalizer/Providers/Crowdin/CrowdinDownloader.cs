@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using SiraLocalizer.Features;
+using SiraLocalizer.Records;
 using SiraLocalizer.Utilities;
 using SiraUtil.Logging;
 using UnityEngine.Networking;
 
-namespace SiraLocalizer.Crowdin
+namespace SiraLocalizer.Providers.Crowdin
 {
     internal class CrowdinDownloader : ILocalizationProvider, ILocalizationDownloader
     {

@@ -1,8 +1,8 @@
-﻿using Polyglot;
+using Polyglot;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SiraLocalizer
+namespace SiraLocalizer.Utilities
 {
     internal class PolyglotUtil
     {
@@ -16,9 +16,7 @@ namespace SiraLocalizer
             List<List<string>> rows;
 
             if (format == GoogleDriveDownloadFormat.TSV)
-            {
                 rows = TsvReader.Parse(content);
-            }
             else
             {
                 rows = CsvReader.Parse(content);

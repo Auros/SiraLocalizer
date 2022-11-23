@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading;
+using SiraLocalizer.Records;
 
-namespace SiraLocalizer
+namespace SiraLocalizer.Providers
 {
     internal interface ILocalizationProvider
     {

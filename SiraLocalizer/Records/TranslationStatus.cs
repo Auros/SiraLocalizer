@@ -1,4 +1,4 @@
-namespace SiraLocalizer
+namespace SiraLocalizer.Records
 {
     internal record TranslationStatus
     {
@@ -15,7 +15,7 @@ namespace SiraLocalizer
             this.name = name;
             this.totalStrings = totalStrings;
             this.translatedStrings = translatedStrings;
-            this.percentTranslated = totalStrings > 0 ? 100f * translatedStrings / totalStrings : 0;
+            percentTranslated = totalStrings > 0 ? 100f * translatedStrings / totalStrings : 0;
         }
     }
 }

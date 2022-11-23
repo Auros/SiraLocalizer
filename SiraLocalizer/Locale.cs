@@ -1,4 +1,4 @@
-﻿namespace SiraLocalizer
+namespace SiraLocalizer
 {
     public enum Locale
     {
@@ -31,6 +31,6 @@
         Arabic = 26,
         Bosnian = 27,
         Icelandic = 28,
-        Irish = 29
+        Irish = 29,
     }
 }

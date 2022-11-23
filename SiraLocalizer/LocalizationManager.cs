@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Polyglot;
+using SiraLocalizer.Providers;
+using SiraLocalizer.Records;
 using SiraUtil.Affinity;
 using SiraUtil.Logging;
 using Zenject;

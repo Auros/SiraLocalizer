@@ -4,6 +4,7 @@ using HMUI;
 using IPA.Utilities;
 using JetBrains.Annotations;
 using Polyglot;
+using SiraLocalizer.Records;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

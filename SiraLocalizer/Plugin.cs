@@ -9,6 +9,8 @@ using IPA.Logging;
 using Polyglot;
 using SiraLocalizer.Features;
 using SiraLocalizer.Installers;
+using SiraLocalizer.Records;
+using SiraLocalizer.Utilities;
 using SiraUtil.Zenject;
 
 namespace SiraLocalizer

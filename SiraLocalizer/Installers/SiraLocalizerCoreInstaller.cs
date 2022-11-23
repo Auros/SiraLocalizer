@@ -1,5 +1,6 @@
 using System;
-using SiraLocalizer.Crowdin;
+using SiraLocalizer.Providers;
+using SiraLocalizer.Providers.Crowdin;
 using SiraLocalizer.UI;
 using SiraUtil.Affinity;
 using Zenject;

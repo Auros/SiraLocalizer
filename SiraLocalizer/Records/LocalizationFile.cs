@@ -1,7 +1,7 @@
 using Polyglot;
 using UnityEngine;
 
-namespace SiraLocalizer
+namespace SiraLocalizer.Records
 {
     public record LocalizationFile
     {
@@ -11,7 +11,7 @@ namespace SiraLocalizer
 
         internal LocalizationFile(string content, int priority)
         {
-            this.localizationAsset = new LocalizationAsset { TextAsset = new TextAsset(content), Format = GoogleDriveDownloadFormat.CSV };
+            localizationAsset = new LocalizationAsset { TextAsset = new TextAsset(content), Format = GoogleDriveDownloadFormat.CSV };
             this.priority = priority;
         }
 

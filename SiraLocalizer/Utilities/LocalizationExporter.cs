@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace SiraLocalizer
+namespace SiraLocalizer.Utilities
 {
     internal class LocalizationExporter
     {
@@ -74,9 +74,7 @@ namespace SiraLocalizer
                             string result = rule.find.Replace(english, rule.replace);
 
                             if (result == english)
-                            {
                                 _logger.Warn($"Rule for '{key}' ('{rule.find}' -> '{rule.replace}') did nothing on '{english}'");
-                            }
                             else
                             {
                                 english = result;
