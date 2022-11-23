@@ -111,7 +111,7 @@ namespace SiraLocalizer.Providers.Crowdin
                 await DownloadFileAsync($"{kCrowdinHost}/{kDistributionKey}/content/{parsed.relativePath}?timestamp={manifest.timestamp}", parsed.pathOnDisk);
             }
 
-            StreamWriter writer = new(kManifestFilePath);
+            using StreamWriter writer = new(kManifestFilePath);
             await writer.WriteAsync(manifestContent);
         }
 
