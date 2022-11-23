@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using IPA.Utilities;
 using Newtonsoft.Json;
+using SiraLocalizer.Features;
 using SiraLocalizer.Utilities;
 using SiraUtil.Logging;
 using UnityEngine.Networking;
@@ -22,6 +25,8 @@ namespace SiraLocalizer.Crowdin
         private static readonly string kDownloadedFolder = Path.Combine(kLocalizationsFolder, "Content");
         private static readonly string kManifestFilePath = Path.Combine(kLocalizationsFolder, "manifest.json");
 
+        private static readonly Regex kValidPathRegex = new(@"^\/[A-Za-z\-_]+(?:\/[A-Za-z\-_]+)*\.csv$");
+
         private readonly SiraLog _logger;
 
         internal CrowdinDownloader(SiraLog logger)
@@ -30,6 +35,42 @@ namespace SiraLocalizer.Crowdin
         }
 
         public string name => "Crowdin";
+
+        public async IAsyncEnumerable<LocalizationFile> GetLocalizationAssetsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            if (!Directory.Exists(kDownloadedFolder))
+            {
+                yield break;
+            }
+
+            CrowdinDistributionManifest manifest = await ReadLocalManifestAsync();
+
+            foreach (string filePath in manifest.files)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                ParsedPathData parsed = ParsePath(filePath);
+
+                if (!LocalizationDefinition.IsDefinitionLoaded(parsed.id))
+                {
+                    _logger.Warn($"No localized plugin registered for '{parsed.id}'");
+                    continue;
+                }
+
+                if (!File.Exists(parsed.pathOnDisk))
+                {
+                    _logger.Error($"File '{parsed.pathOnDisk}' not found");
+                    continue;
+                }
+
+                using FileStream fileStream = File.OpenRead(parsed.pathOnDisk);
+                using GZipStream gzipStream = new(fileStream, CompressionMode.Decompress);
+                using StreamReader reader = new(gzipStream);
+
+                string content = await reader.ReadToEndAsync();
+                yield return new LocalizationFile(content, 1000);
+            }
+        }
 
         public async Task DownloadLocalizationsAsync(CancellationToken cancellationToken)
         {
@@ -56,26 +97,21 @@ namespace SiraLocalizer.Crowdin
 
             Directory.CreateDirectory(kDownloadedFolder);
 
-            foreach (string fileName in manifest.files)
+            foreach (string filePath in manifest.files)
             {
-                // file name has a leading slash so we have to remove that
-                string relativeFilePath = fileName.Substring(1);
-                string fullPath = Path.Combine(kDownloadedFolder, relativeFilePath);
-                string id = fileName.Substring(1, fileName.Length - 5);
+                ParsedPathData parsed = ParsePath(filePath);
 
-                if (!LocalizationDefinition.IsDefinitionLoaded(id))
+                if (!LocalizationDefinition.IsDefinitionLoaded(parsed.id))
                 {
-                    _logger.Trace($"'{id}' does not belong to a loaded LocalizedPlugin; ignored");
+                    _logger.Trace($"'{parsed.id}' does not belong to a loaded {nameof(LocalizedPlugin)}; ignored");
                     continue;
                 }
 
-                await DownloadFileAsync($"{kCrowdinHost}/{kDistributionKey}/content/{relativeFilePath}?timestamp={manifest.timestamp}", fullPath);
+                await DownloadFileAsync($"{kCrowdinHost}/{kDistributionKey}/content/{parsed.relativePath}?timestamp={manifest.timestamp}", parsed.pathOnDisk);
             }
 
-            using (var writer = new StreamWriter(kManifestFilePath))
-            {
-                await writer.WriteAsync(manifestContent);
-            }
+            StreamWriter writer = new(kManifestFilePath);
+            await writer.WriteAsync(manifestContent);
         }
 
         public async Task<bool> CheckForUpdatesAsync(CancellationToken cancellationToken)
@@ -125,12 +161,11 @@ namespace SiraLocalizer.Crowdin
         {
             if (!File.Exists(kManifestFilePath) || !Directory.Exists(kDownloadedFolder)) return true;
 
-            foreach (string fileName in remoteManifest.files)
+            foreach (string filePath in remoteManifest.files)
             {
-                string id = fileName.Substring(1, fileName.Length - 5);
-                string fullPath = Path.Combine(kDownloadedFolder, fileName.Substring(1));
+                ParsedPathData parsed = ParsePath(filePath);
 
-                if (LocalizationDefinition.IsDefinitionLoaded(id) && !File.Exists(fullPath))
+                if (LocalizationDefinition.IsDefinitionLoaded(parsed.id) && !File.Exists(parsed.pathOnDisk))
                 {
                     return true;
                 }
@@ -139,6 +174,34 @@ namespace SiraLocalizer.Crowdin
             CrowdinDistributionManifest localManifest = await ReadLocalManifestAsync();
 
             return localManifest.timestamp != remoteManifest.timestamp;
+        }
+
+        private ParsedPathData ParsePath(string filePath)
+        {
+            if (!kValidPathRegex.IsMatch(filePath))
+            {
+                throw new ArgumentException($"Path '{filePath}' is invalid", nameof(filePath));
+            }
+
+            string relativePath = filePath.Substring(1);
+            string pathOnDisk = Path.Combine(kDownloadedFolder, relativePath) + ".gz";
+            string id = Path.ChangeExtension(relativePath, null);
+
+            return new ParsedPathData
+            {
+                id = id,
+                pathOnDisk = pathOnDisk,
+                relativePath = relativePath,
+            };
+        }
+
+        private struct ParsedPathData
+        {
+            public string id { get; init; }
+
+            public string pathOnDisk { get; init; }
+
+            public string relativePath { get; init; }
         }
 
         private async Task<CrowdinDistributionManifest> ReadLocalManifestAsync()
@@ -153,78 +216,40 @@ namespace SiraLocalizer.Crowdin
         {
             _logger.Info($"Downloading '{url}'");
 
-            using (var request = UnityWebRequest.Get(url))
+            using var request = UnityWebRequest.Get(url);
+
+            request.SetRequestHeader("Accept-Encoding", "gzip");
+
+            UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
+
+            if (!asyncOperation.isDone)
             {
-                request.SetRequestHeader("Accept-Encoding", "gzip");
-
-                UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
-
-                if (!asyncOperation.isDone)
-                {
-                    _logger.Error($"UnityWebRequest for '{url}' failed");
-                    return;
-                }
-
-                if (!request.IsSuccessResponseCode())
-                {
-                    _logger.Error($"'{url}' responded with {request.responseCode} ({request.error})");
-                    return;
-                }
-
-                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-
-                using (var contentStream = new MemoryStream(request.downloadHandler.data))
-                using (var file = new FileStream(filePath, FileMode.Create))
-                {
-                    if (request.GetResponseHeader("Content-Encoding") == "gzip")
-                    {
-                        using (var gzipStream = new GZipStream(contentStream, CompressionMode.Decompress))
-                        {
-                            await gzipStream.CopyToAsync(file);
-                        }
-                    }
-                    else
-                    {
-                        await contentStream.CopyToAsync(file);
-                    }
-
-                    await file.FlushAsync();
-                }
-            }
-        }
-
-        public async IAsyncEnumerable<LocalizationFile> GetLocalizationAssetsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            if (!Directory.Exists(kDownloadedFolder))
-            {
-                yield break;
+                _logger.Error($"UnityWebRequest for '{url}' failed");
+                return;
             }
 
-            CrowdinDistributionManifest manifest = await ReadLocalManifestAsync();
-
-            foreach (string fileName in manifest.files)
+            if (!request.IsSuccessResponseCode())
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                string id = fileName.Substring(1, fileName.Length - 5);
-                string fullPath = Path.Combine(kDownloadedFolder, fileName.Substring(1));
-
-                if (!LocalizationDefinition.IsDefinitionLoaded(id))
-                {
-                    _logger.Warn($"No localized plugin registered for '{id}'");
-                    continue;
-                }
-
-                if (!File.Exists(fullPath))
-                {
-                    _logger.Error($"File '{fullPath}' not found");
-                    continue;
-                }
-
-                using StreamReader reader = new(fullPath);
-                string content = await reader.ReadToEndAsync();
-                yield return new LocalizationFile(content, 1000);
+                _logger.Error($"'{url}' responded with {request.responseCode} ({request.error})");
+                return;
             }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+            using var contentStream = new MemoryStream(request.downloadHandler.data);
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+
+            if (request.GetResponseHeader("Content-Encoding") == "gzip")
+            {
+                await contentStream.CopyToAsync(fileStream);
+            }
+            else
+            {
+                using var gzipStream = new GZipStream(fileStream, CompressionMode.Compress);
+                await contentStream.CopyToAsync(gzipStream);
+            }
+
+            await fileStream.FlushAsync();
         }
     }
 }

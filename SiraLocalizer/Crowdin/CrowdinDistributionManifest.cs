@@ -1,6 +1,6 @@
-﻿namespace SiraLocalizer.Crowdin
+namespace SiraLocalizer.Crowdin
 {
-    internal class CrowdinDistributionManifest
+    internal record CrowdinDistributionManifest
     {
         public string[] files { get; set; }
 
