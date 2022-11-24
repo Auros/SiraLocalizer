@@ -10,6 +10,7 @@ using SiraLocalizer.Providers;
 using SiraLocalizer.Records;
 using SiraUtil.Affinity;
 using SiraUtil.Logging;
+using UnityEngine;
 using Zenject;
 
 namespace SiraLocalizer
@@ -29,6 +30,8 @@ namespace SiraLocalizer
 
         private readonly List<LocalizationFile> _localizationFiles = new();
 
+        private MainSettingsModelSO _mainSettingsModel;
+
         public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders)
         {
             _logger = logger;
@@ -39,6 +42,8 @@ namespace SiraLocalizer
 
         public async void Initialize()
         {
+            _mainSettingsModel = Resources.FindObjectsOfTypeAll<MainSettingsModelSO>().First();
+
             try
             {
                 if (_config.automaticallyDownloadLocalizations)
@@ -150,7 +155,7 @@ namespace SiraLocalizer
                     int words = english.Split(kWhiteSpaceCharacters, StringSplitOptions.RemoveEmptyEntries).Length;
                     total += words;
 
-                    if (strings.Count >= (int)language - 1 && !string.IsNullOrWhiteSpace(strings[(int)language]))
+                    if (!string.IsNullOrWhiteSpace(strings.ElementAtOrDefault((int)language)))
                     {
                         translated += words;
                     }
@@ -196,6 +201,8 @@ namespace SiraLocalizer
 
             Localization.Instance.SupportedLanguages.Clear();
             Localization.Instance.SupportedLanguages.AddRange(languages.Select(lang => (Language)lang));
+
+            Localization.Instance.SelectLanguage(_mainSettingsModel.language.value);
         }
 
         private IEnumerable<Locale> GetSupportedLanguages()
