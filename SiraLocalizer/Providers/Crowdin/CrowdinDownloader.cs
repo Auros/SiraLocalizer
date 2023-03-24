@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -73,10 +72,7 @@ namespace SiraLocalizer.Providers.Crowdin
 
                 try
                 {
-                    using FileStream fileStream = File.OpenRead(parsed.pathOnDisk);
-                    using GZipStream gzipStream = new(fileStream, CompressionMode.Decompress);
-                    using StreamReader reader = new(gzipStream);
-
+                    using StreamReader reader = new(parsed.pathOnDisk);
                     content = await reader.ReadToEndAsync();
                 }
                 catch (IOException ex)
@@ -220,7 +216,7 @@ namespace SiraLocalizer.Providers.Crowdin
             }
 
             string relativePath = filePath.Substring(1);
-            string pathOnDisk = Path.Combine(kDownloadedFolder, relativePath) + ".gz";
+            string pathOnDisk = Path.Combine(kDownloadedFolder, relativePath);
             string id = Path.ChangeExtension(relativePath, null);
 
             return new ParsedPathData
@@ -263,8 +259,6 @@ namespace SiraLocalizer.Providers.Crowdin
             string url = $"{kCrowdinHost}/{kDistributionKey}/content/{relativePath}?timestamp={timestamp}";
             using var request = UnityWebRequest.Get(url);
 
-            request.SetRequestHeader("Accept-Encoding", "gzip");
-
             UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
 
             if (!asyncOperation.isDone)
@@ -281,20 +275,10 @@ namespace SiraLocalizer.Providers.Crowdin
 
             Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
-            using var contentStream = new MemoryStream(request.downloadHandler.data);
             using var fileStream = new FileStream(filePath, FileMode.Create);
 
-            if (request.GetResponseHeader("Content-Encoding") == "gzip")
-            {
-                await contentStream.CopyToAsync(fileStream);
-            }
-            else
-            {
-                using var gzipStream = new GZipStream(fileStream, CompressionMode.Compress);
-                await contentStream.CopyToAsync(gzipStream);
-            }
-
-            await fileStream.FlushAsync();
+            byte[] data = request.downloadHandler.data;
+            await fileStream.WriteAsync(data, 0, data.Length);
         }
     }
 }
