@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -275,10 +276,21 @@ namespace SiraLocalizer.Providers.Crowdin
 
             Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
-            using var fileStream = new FileStream(filePath, FileMode.Create);
-
             byte[] data = request.downloadHandler.data;
-            await fileStream.WriteAsync(data, 0, data.Length);
+
+            // depending on the Unity version UnityWebRequest might accept but not decompress gzipped data so check for magic bytes
+            if (data[0] == 0x1f && data[1] == 0x8b)
+            {
+                using var memoryStream = new MemoryStream(data);
+                using var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                await gzipStream.CopyToAsync(fileStream);
+            }
+            else
+            {
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                await fileStream.WriteAsync(data, 0, data.Length);
+            }
         }
     }
 }
