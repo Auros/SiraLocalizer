@@ -20,10 +20,10 @@ namespace SiraLocalizer.UI
         {
             new FontReplacementStrategy(
                 new[] { "Teko-Medium SDF" },
-                new[] { "Teko-Medium SDF Latin-1 Supplement", "Oswald-Medium SDF Cyrillic", "SourceHanSans-Medium SDF" }),
+                new[] { "Teko-Medium SDF Latin-1 Supplement", "Oswald-Medium SDF Cyrillic", "NotoSansHebrew-Medium SDF", "SourceHanSans-Medium SDF" }),
             new FontReplacementStrategy(
                 new[] { "Teko-Bold SDF" },
-                new[] { "Teko-Bold SDF Latin-1 Supplement", "Oswald-Bold SDF Cyrillic", "SourceHanSans-Medium SDF" }),
+                new[] { "Teko-Bold SDF Latin-1 Supplement", "Oswald-Bold SDF Cyrillic", "NotoSansHebrew-Bold SDF", "SourceHanSans-Medium SDF" }),
         };
 
         private readonly SiraLog _logger;
