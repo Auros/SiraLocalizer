@@ -213,6 +213,7 @@ namespace SiraLocalizer
             foreach (int lang in Enum.GetValues(typeof(Locale)))
             {
                 if (string.IsNullOrWhiteSpace(languageNames.ElementAtOrDefault(lang))) continue;
+                if ((Locale)lang is Locale.DebugKeys or Locale.DebugEnglishReverted or Locale.DebugEntryWithMaxLength) continue;
 
                 int count = 0;
 

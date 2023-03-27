@@ -74,12 +74,13 @@ namespace SiraLocalizer.Utilities
                             string result = rule.find.Replace(english, rule.replace);
 
                             if (result == english)
+                            {
                                 _logger.Warn($"Rule for '{key}' ('{rule.find}' -> '{rule.replace}') did nothing on '{english}'");
+                            }
                             else
                             {
                                 english = result;
                             }
-
                         }
 
                         writer.WriteLine($"{EscapeCsvValue(key)},{EscapeCsvValue(context)},{EscapeCsvValue(english)},{string.Join(",", languages)}");
