@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using HMUI;
-using IPA.Utilities;
 using JetBrains.Annotations;
 using Polyglot;
 using SiraLocalizer.Records;
@@ -109,7 +108,7 @@ namespace SiraLocalizer.UI
         {
             if (!_credits || !_translationStatus) return;
 
-            int idx = _languageSettingsController.GetField<int, DropdownSettingsController>("_idx");
+            int idx = _languageSettingsController._idx;
             Language language = Localization.Instance.SupportedLanguages[idx];
 
             if (language > Language.English)

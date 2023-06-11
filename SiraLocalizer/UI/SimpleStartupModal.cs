@@ -1,6 +1,5 @@
 using System;
 using HMUI;
-using IPA.Utilities;
 using Polyglot;
 using TMPro;
 using UnityEngine;
@@ -87,7 +86,7 @@ namespace SiraLocalizer.UI
             text.richText = false;
 
             LocalizedTextMeshProUGUI localizedText = textObject.AddComponent<LocalizedTextMeshProUGUI>();
-            localizedText.SetField<LocalizedTextComponent<TextMeshProUGUI>, TextMeshProUGUI>("localizedComponent", text);
+            localizedText.localizedComponent = text;
             localizedText.Key = localizationKey;
 
             ContentSizeFitter textSizeFitter = textObject.AddComponent<ContentSizeFitter>();

@@ -1,4 +1,3 @@
-using IPA.Utilities;
 using TMPro;
 using UnityEngine;
 
@@ -6,8 +5,6 @@ namespace SiraLocalizer.UI
 {
     internal class FontAssetHelper
     {
-        private static readonly FieldAccessor<TMP_FontAsset, Texture2D>.Accessor kAtlasTextureAccessor = FieldAccessor<TMP_FontAsset, Texture2D>.GetAccessor("m_AtlasTexture");
-
         public TMP_FontAsset CopyFontAsset(TMP_FontAsset original, Material referenceMaterial, string newName = null)
         {
             if (string.IsNullOrEmpty(newName))
@@ -29,9 +26,10 @@ namespace SiraLocalizer.UI
             {
                 name = $"{newName} Atlas Material",
             };
+
             material.SetTexture("_MainTex", newTexture);
 
-            kAtlasTextureAccessor(ref copy) = newTexture;
+            copy.m_AtlasTexture = newTexture;
             copy.name = newName;
             copy.atlasTextures = new[] { newTexture };
             copy.material = material;

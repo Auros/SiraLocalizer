@@ -1,4 +1,4 @@
-﻿using Polyglot;
+using Polyglot;
 using UnityEngine;
 
 namespace SiraLocalizer.UI
@@ -12,15 +12,19 @@ namespace SiraLocalizer.UI
             _flyingTextSpawner = GetComponent<ItalicizedFlyingTextSpawner>();
         }
 
-        public override void Start()
+        public new void Start()
         {
-            base.Start();
+            if (_initData.hide)
+            {
+                enabled = false;
+                return;
+            }
 
-            _beatmapObjectManager.noteWasMissedEvent -= base.HandleNoteWasMissed;
             _beatmapObjectManager.noteWasMissedEvent += HandleNoteWasMissed;
+            _spawnPosZ = transform.position.z;
         }
 
-        public override void HandleNoteWasMissed(NoteController noteController)
+        public new void HandleNoteWasMissed(NoteController noteController)
         {
             if (noteController.hidden) return;
             if (noteController.noteData.time + 0.5f < _audioTimeSyncController.songTime) return;
@@ -37,11 +41,12 @@ namespace SiraLocalizer.UI
             _flyingTextSpawner.SpawnText(position, noteController.worldRotation, noteController.inverseWorldRotation, Localization.Get("FLYING_TEXT_MISS"));
         }
 
-        public override void OnDestroy()
+        public new void OnDestroy()
         {
-            base.OnDestroy();
-
-            _beatmapObjectManager.noteWasMissedEvent -= HandleNoteWasMissed;
+            if (_beatmapObjectManager != null)
+            {
+                _beatmapObjectManager.noteWasMissedEvent -= HandleNoteWasMissed;
+            }
         }
     }
 }

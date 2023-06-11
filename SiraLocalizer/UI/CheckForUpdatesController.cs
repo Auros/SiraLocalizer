@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using HMUI;
-using IPA.Utilities;
 using JetBrains.Annotations;
 using Polyglot;
 using SiraLocalizer.Providers;
@@ -84,7 +83,7 @@ namespace SiraLocalizer.UI
             checkButtonText.alignment = TextAlignmentOptions.Midline;
 
             LocalizedTextMeshProUGUI localizedText = buttonTextObject.AddComponent<LocalizedTextMeshProUGUI>();
-            localizedText.SetField<LocalizedTextComponent<TextMeshProUGUI>, TextMeshProUGUI>("localizedComponent", checkButtonText);
+            localizedText.localizedComponent = checkButtonText;
             localizedText.Key = "CHECK_FOR_UPDATES_BUTTON";
 
             ContentSizeFitter textSizeFitter = buttonTextObject.AddComponent<ContentSizeFitter>();
