@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using TMPro;
 using UnityEngine;
 
@@ -6,15 +6,6 @@ namespace SiraLocalizer.HarmonyPatches
 {
     [HarmonyPatch(typeof(StandardLevelFailedController), "Start")]
     internal class StandardLevelFailedController_Start : LevelFailedController_Start
-    {
-        public static void Postfix(LevelFailedTextEffect ____levelFailedTextEffect)
-        {
-            FixLineSpacing(____levelFailedTextEffect);
-        }
-    }
-
-    [HarmonyPatch(typeof(MissionLevelFailedController), "Start")]
-    internal class MissionLevelFailedController_Start : LevelFailedController_Start
     {
         public static void Postfix(LevelFailedTextEffect ____levelFailedTextEffect)
         {
