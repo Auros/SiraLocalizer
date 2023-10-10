@@ -30,6 +30,7 @@ namespace SiraLocalizer.UI
         private readonly FontAssetHelper _fontAssetHelper;
 
         private readonly List<TMP_FontAsset> _fallbackFontAssets = new();
+        private readonly List<TMP_FontAsset> _createdFontAssets = new();
         private readonly List<TMP_FontAsset> _processedFontAssets = new();
 
         public FontLoader(SiraLog logger, FontAssetHelper fontAssetHelper)
@@ -55,6 +56,25 @@ namespace SiraLocalizer.UI
         public void Dispose()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
+
+            foreach (TMP_FontAsset fontAsset in _processedFontAssets)
+            {
+                fontAsset.fallbackFontAssetTable.RemoveAll(f => _createdFontAssets.Contains(f) || _fallbackFontAssets.Contains(f));
+            }
+
+            foreach (TMP_FontAsset fontAsset in _createdFontAssets)
+            {
+                Object.Destroy(fontAsset);
+            }
+
+            foreach (TMP_FontAsset fontAsset in _fallbackFontAssets)
+            {
+                Object.Destroy(fontAsset);
+            }
+
+            _processedFontAssets.Clear();
+            _createdFontAssets.Clear();
+            _fallbackFontAssets.Clear();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -113,7 +133,7 @@ namespace SiraLocalizer.UI
 
                 foreach (TMP_FontAsset fontAsset in originalFontAssets)
                 {
-                    AddFallbacksToFont(fontAsset, strategy.fontNamesToAdd.Select(n => _fallbackFontAssets.Find(f => f.name == n)).Where(f => f));
+                    AddFallbacksToFont(fontAsset, strategy.fontNamesToAdd.Select(n => _fallbackFontAssets.Find(f => f.name == n)).Where(f => f != null));
                 }
 
                 // force update any text that has already rendered
@@ -126,13 +146,15 @@ namespace SiraLocalizer.UI
 
         private void AddFallbacksToFont(TMP_FontAsset fontAsset, IEnumerable<TMP_FontAsset> fallbacks)
         {
-            _logger.Info($"Adding fallbacks to '{fontAsset.name}' ({(uint)fontAsset.GetHashCode()})");
+            _logger.Info($"Adding fallbacks to '{fontAsset.name}' ({fontAsset.GetInstanceID()})");
 
             fontAsset.fallbackFontAssetTable.RemoveAll(f => kFontNamesToRemove.Contains(f.name));
 
             foreach (TMP_FontAsset fallback in fallbacks.Reverse())
             {
+                // creating a copy is necessary to prevent fonts from overwriting each others' atlases
                 TMP_FontAsset fallbackCopy = _fontAssetHelper.CopyFontAsset(fallback, fontAsset.material);
+                _createdFontAssets.Add(fallbackCopy);
 
                 // insert as first possible fallback font
                 fontAsset.fallbackFontAssetTable.Insert(0, fallbackCopy);
