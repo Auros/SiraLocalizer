@@ -1,5 +1,10 @@
 ﻿<Project>
-  <Target Name="PackAssemblies" AfterTargets="Build">
+  <Target Name="ILRepacker" AfterTargets="Build">
+	<PropertyGroup>
+	  <!-- https://github.com/Alexx999/ILRepack.Lib.MSBuild.Task/pull/2 -->
+	  <DoILRepack>false</DoILRepack>
+	</PropertyGroup>
+
     <ItemGroup>
       <InputAssemblies Include="$(OutputPath)$(AssemblyName).dll" />
       <InputAssemblies Include="$(OutputPath)Microsoft.Bcl.AsyncInterfaces.dll" />

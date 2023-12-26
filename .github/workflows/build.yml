@@ -1,0 +1,56 @@
+name: Build
+
+on:
+  push:
+    paths:
+    - .github/workflows/build.yml
+    - SiraLocalizer/**
+    - SiraLocalizer.sln
+
+jobs:
+  build:
+    name: SiraLocalizer
+    runs-on: windows-latest
+    steps:
+    - name: Check out
+      uses: actions/checkout@v3
+
+    # using MSBuild since ILRepack.Lib.MSBuild (and equivalent packages) use an older version of ILRepack that doesn't work on .NET 8 and above
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v1.3
+
+    - name: Set up environment
+      run: ${{ github.workspace }}\.github\workflows\set_up_env.ps1 '${{ github.workspace }}\SiraLocalizer\manifest.json'
+
+    - name: Fetch Beat Saber Bindings
+      run: git clone https://${{ secrets.PRIVATE_GITHUB_TOKEN }}@github.com/nicoco007/BeatSaberBindings --branch v${{ env.GAME_VERSION }} --single-branch '${{ runner.temp }}\BeatSaberBindings\Beat Saber_Data\Managed'
+
+    - name: Download dependencies
+      uses: nicoco007/download-beatmods-deps@main
+      with:
+        manifest: ${{ github.workspace }}\SiraLocalizer\manifest.json
+        path: ${{ runner.temp }}\BeatSaberBindings
+
+    - id: build-debug
+      name: Build Debug
+      run: |
+        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Debug -t:restore
+        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Debug -p:BeatSaberDir=${{ runner.temp }}\BeatSaberBindings
+
+    - name: Upload Debug
+      uses: actions/upload-artifact@v3
+      with:
+        name: SiraLocalizer-bs${{ env.GAME_VERSION }}-${{ env.ZIP_VERSION }}-DEBUG
+        path: ${{ steps.build-debug.outputs.artifactpath }}
+
+    - id: build-release
+      name: Build Release
+      run: |
+        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Release -t:restore
+        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Release -p:BeatSaberDir=${{ runner.temp }}\BeatSaberBindings
+
+    - name: Upload Release
+      uses: actions/upload-artifact@v3
+      with:
+        name: SiraLocalizer-bs${{ env.GAME_VERSION }}-${{ env.ZIP_VERSION }}-RELEASE
+        path: ${{ steps.build-release.outputs.artifactpath }}
