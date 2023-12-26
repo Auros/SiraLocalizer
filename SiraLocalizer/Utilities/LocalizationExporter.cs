@@ -58,11 +58,19 @@ namespace SiraLocalizer.Utilities
                     {
                         string key = row.ElementAtOrDefault(0);
 
-                        if (kLocalizationKeyIgnoreList.Contains(key)) continue;
+                        if (kLocalizationKeyIgnoreList.Contains(key))
+                        {
+                            continue;
+                        }
 
                         string context = row.ElementAtOrDefault(1);
                         string english = row.ElementAtOrDefault(2);
                         string[] languages = new string[numberOfLanguages];
+
+                        if (key.Equals(english, StringComparison.Ordinal))
+                        {
+                            continue;
+                        }
 
                         foreach (int supportedLanguage in kSupportedLanguages)
                         {
