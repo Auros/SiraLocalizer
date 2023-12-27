@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using Polyglot;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SiraLocalizer.HarmonyPatches
 {
-    [HarmonyPatch(typeof(Localization), "SelectedLanguage", MethodType.Setter)]
+    [HarmonyPatch(typeof(Localization), nameof(Localization.SelectedLanguage), MethodType.Setter)]
     internal class Localization_SelectedLanguage
     {
         private static readonly MethodInfo kLogWarningMethod = typeof(Debug).GetMethod(nameof(Debug.LogWarning), BindingFlags.Public | BindingFlags.Static, null, CallingConventions.Standard, new[] { typeof(object) }, null);

@@ -167,7 +167,7 @@ namespace SiraLocalizer
             return statuses;
         }
 
-        [AffinityPatch(typeof(LocalizationImporter), "ImportFromFiles")]
+        [AffinityPatch(typeof(LocalizationImporter), nameof(LocalizationImporter.ImportFromFiles))]
         [AffinityPrefix]
         [UsedImplicitly]
         private void LocalizationImporter_PreInitialize()
@@ -177,7 +177,7 @@ namespace SiraLocalizer
             AddLocalizationFilesToPolyglot();
         }
 
-        [AffinityPatch(typeof(LocalizationImporter), "ImportFromFiles")]
+        [AffinityPatch(typeof(LocalizationImporter), nameof(LocalizationImporter.ImportFromFiles))]
         [AffinityPostfix]
         [UsedImplicitly]
         private void LocalizationImporter_PostInitialize()

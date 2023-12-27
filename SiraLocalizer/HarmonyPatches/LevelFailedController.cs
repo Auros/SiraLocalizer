@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SiraLocalizer.HarmonyPatches
 {
-    [HarmonyPatch(typeof(StandardLevelFailedController), "Start")]
+    [HarmonyPatch(typeof(StandardLevelFailedController), nameof(StandardLevelFailedController.Start))]
     internal class StandardLevelFailedController_Start : LevelFailedController_Start
     {
         public static void Postfix(LevelFailedTextEffect ____levelFailedTextEffect)
@@ -13,7 +13,7 @@ namespace SiraLocalizer.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(MultiplayerLocalActiveLevelFailController), "Start")]
+    [HarmonyPatch(typeof(MultiplayerLocalActiveLevelFailController), nameof(MultiplayerLocalActiveLevelFailController.Start))]
     internal class MultiplayerLocalActiveLevelFailController_Start : LevelFailedController_Start
     {
         public static void Postfix(LevelFailedTextEffect ____levelFailedTextEffect)
