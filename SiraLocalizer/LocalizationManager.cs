@@ -149,9 +149,18 @@ namespace SiraLocalizer
 
                     List<string> strings = languageStrings[key];
 
-                    if (strings.Count == 0) continue;
+                    if (strings.Count == 0)
+                    {
+                        continue;
+                    }
 
                     string english = strings[(int)Language.English];
+
+                    if (key.Equals(english, StringComparison.Ordinal))
+                    {
+                        continue;
+                    }
+
                     int words = english.Split(kWhiteSpaceCharacters, StringSplitOptions.RemoveEmptyEntries).Length;
                     total += words;
 
