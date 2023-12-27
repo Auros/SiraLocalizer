@@ -10,7 +10,6 @@ using SiraLocalizer.Providers;
 using SiraLocalizer.Records;
 using SiraUtil.Affinity;
 using SiraUtil.Logging;
-using UnityEngine;
 using Zenject;
 
 namespace SiraLocalizer
@@ -27,23 +26,21 @@ namespace SiraLocalizer
         private readonly Settings _config;
         private readonly List<ILocalizationProvider> _localizationProviders;
         private readonly List<ILocalizationDownloader> _localizationDownloaders;
+        private readonly MainSettingsModelSO _mainSettingsModel;
 
         private readonly List<LocalizationFile> _localizationFiles = new();
 
-        private MainSettingsModelSO _mainSettingsModel;
-
-        public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders)
+        public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders, MainSettingsModelSO mainSettingsModel)
         {
             _logger = logger;
             _config = config;
             _localizationProviders = localizationProviders;
             _localizationDownloaders = localizationDownloaders;
+            _mainSettingsModel = mainSettingsModel;
         }
 
         public async void Initialize()
         {
-            _mainSettingsModel = Resources.FindObjectsOfTypeAll<MainSettingsModelSO>().First();
-
             try
             {
                 if (_config.automaticallyDownloadLocalizations)
