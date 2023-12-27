@@ -198,7 +198,8 @@ namespace SiraLocalizer
 
         private void AddLocalizationFilesToPolyglot()
         {
-            Localization.Instance.InputFiles.AddRange(_localizationFiles.OrderBy(l => l.priority).Select(l => l.localizationAsset));
+            // we want our translations to override the base game's translations but not other mods' files
+            Localization.Instance.InputFiles.InsertRange(1, _localizationFiles.OrderBy(l => l.priority).Select(l => l.localizationAsset));
         }
 
         private void UpdateSupportedLanguages()
