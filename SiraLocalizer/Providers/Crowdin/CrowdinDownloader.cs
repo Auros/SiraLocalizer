@@ -229,7 +229,7 @@ namespace SiraLocalizer.Providers.Crowdin
             };
         }
 
-        private struct ParsedPathData
+        private readonly struct ParsedPathData
         {
             public string id { get; init; }
 

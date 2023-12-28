@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -88,7 +89,7 @@ namespace SiraLocalizer.Providers.CrowdinApi
             File.WriteAllText(kBuildIdPath, buildResponse.id.ToString());
         }
 
-        public async IAsyncEnumerable<LocalizationFile> GetLocalizationAssetsAsync(CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<LocalizationFile> GetLocalizationAssetsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (!Directory.Exists(kDownloadedFolder))
             {
