@@ -146,7 +146,7 @@ namespace SiraLocalizer.Providers.CrowdinApi
 
         private async Task<AbstractProjectBuildResponse> CreateOrGetLatestBuild()
         {
-            UnityWebRequest response = await _webRequestHelper.SendRequest(CreateApiRequest($"/projects/{kProjectId}/translations/builds", "POST"));
+            UnityWebRequest response = await _webRequestHelper.SendRequest(CreateApiRequest($"/projects/{kProjectId}/translations/builds", UnityWebRequest.kHttpVerbPOST));
 
             if (response.responseCode != 201)
             {
@@ -220,19 +220,20 @@ namespace SiraLocalizer.Providers.CrowdinApi
             archive.ExtractToDirectory(kDownloadedFolder);
         }
 
-        private UnityWebRequest CreateApiRequest(string path, string method = "GET", string body = null, Dictionary<string, string> queryParameters = null)
+        private UnityWebRequest CreateApiRequest(string path, string method = "GET", object body = null, Dictionary<string, string> queryParameters = null)
         {
             if (queryParameters?.Count > 0)
             {
                 path += "?" + string.Join("&", queryParameters.Select(kvp => $"{WebUtility.UrlEncode(kvp.Key)}={WebUtility.UrlEncode(kvp.Value)}"));
             }
 
-            var webRequest = new UnityWebRequest($"{kBaseApiUrl}{path}", method, new DownloadHandlerBuffer(), new UploadHandlerRaw(Encoding.UTF8.GetBytes(body ?? string.Empty)));
+            var webRequest = new UnityWebRequest($"{kBaseApiUrl}{path}", method, new DownloadHandlerBuffer(), null);
             webRequest.SetRequestHeader("Authorization", $"Bearer {_settings.crowdinAccessToken}");
+            webRequest.SetRequestHeader("Content-Type", "application/json");
 
-            if (webRequest.method is "POST" or "PUT" or "PATCH")
+            if (body != null)
             {
-                webRequest.SetRequestHeader("Content-Type", "application/json");
+                webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body)));
             }
 
             return webRequest;

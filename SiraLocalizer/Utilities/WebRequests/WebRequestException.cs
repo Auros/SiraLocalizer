@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using UnityEngine.Networking;
 
 #pragma warning disable IDE1006
 
@@ -7,8 +8,8 @@ namespace SiraLocalizer.Utilities.WebRequests
 {
     public class WebRequestException : Exception
     {
-        internal WebRequestException()
-            : base($"Failed to send web request")
+        internal WebRequestException(UnityWebRequest.Result result)
+            : base($"Failed to send web request: {result}")
         {
         }
 
@@ -27,7 +28,7 @@ namespace SiraLocalizer.Utilities.WebRequests
         public byte[] Body { get; }
 
 #if DEBUG
-        public override string Message => base.Message + "\n" + Encoding.UTF8.GetString(Body);
+        public override string Message => base.Message + "\n" + Encoding.UTF8.GetString(Body ?? Array.Empty<byte>());
 #endif
     }
 }

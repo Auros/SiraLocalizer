@@ -19,14 +19,13 @@ namespace SiraLocalizer.Utilities.WebRequests
 
             UnityWebRequestAsyncOperation result = await webRequest.SendWebRequest();
 
-            if (!result.isDone || webRequest.result != UnityWebRequest.Result.Success)
+            if (webRequest.result == UnityWebRequest.Result.ProtocolError)
             {
-                throw new WebRequestException();
+                throw new WebRequestException(webRequest.responseCode, webRequest.error, webRequest.downloadHandler?.data);
             }
-
-            if (!webRequest.IsSuccessResponseCode())
+            else if (webRequest.result != UnityWebRequest.Result.Success)
             {
-                throw new WebRequestException(webRequest.responseCode, webRequest.error, webRequest.downloadHandler.data);
+                throw new WebRequestException(webRequest.result);
             }
 
             return result.webRequest;
