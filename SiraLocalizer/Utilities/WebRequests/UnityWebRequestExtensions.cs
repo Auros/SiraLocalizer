@@ -1,6 +1,6 @@
 using UnityEngine.Networking;
 
-namespace SiraLocalizer.Utilities
+namespace SiraLocalizer.Utilities.WebRequests
 {
     internal static class UnityWebRequestExtensions
     {

@@ -9,5 +9,7 @@ namespace SiraLocalizer
         public virtual bool automaticallyDownloadLocalizations { get; set; } = false;
 
         public virtual bool startupModalDismissed { get; set; } = false;
+
+        public virtual string crowdinAccessToken { get; set; }
     }
 }

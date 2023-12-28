@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using SiraLocalizer.Features;
 using SiraLocalizer.Records;
 using SiraLocalizer.Utilities;
+using SiraLocalizer.Utilities.WebRequests;
 using SiraUtil.Logging;
 using UnityEngine.Networking;
 

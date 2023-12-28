@@ -1,7 +1,9 @@
 using System;
 using SiraLocalizer.Providers;
 using SiraLocalizer.Providers.Crowdin;
+using SiraLocalizer.Providers.CrowdinApi;
 using SiraLocalizer.UI;
+using SiraLocalizer.Utilities.WebRequests;
 using SiraUtil.Affinity;
 using Zenject;
 
@@ -22,10 +24,20 @@ namespace SiraLocalizer.Installers
 
             Container.Bind(typeof(LocalizationManager), typeof(IAffinity), typeof(IInitializable), typeof(IDisposable)).To<LocalizationManager>().AsSingle();
             Container.Bind(typeof(IInitializable), typeof(IDisposable)).To<FontLoader>().AsSingle();
-            Container.Bind(typeof(ILocalizationProvider), typeof(ILocalizationDownloader)).To<CrowdinDownloader>().AsSingle();
+
+            if (!string.IsNullOrWhiteSpace(_config.crowdinAccessToken))
+            {
+                Container.Bind(typeof(ILocalizationProvider), typeof(ILocalizationDownloader)).To<CrowdinApiDownloader>().AsSingle();
+            }
+            else
+            {
+                Container.Bind(typeof(ILocalizationProvider), typeof(ILocalizationDownloader)).To<CrowdinDownloader>().AsSingle();
+            }
+
             Container.Bind(typeof(ILocalizationProvider)).To<ResourceLocalizationProvider>().AsSingle();
             Container.Bind(typeof(ILocalizationProvider)).To<UserLocalizationFileProvider>().AsSingle();
             Container.Bind<FontAssetHelper>().AsTransient();
+            Container.Bind<UnityWebRequestHelper>().AsSingle();
         }
     }
 }
