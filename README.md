@@ -54,7 +54,7 @@ Polyglot,100,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 "KEY_NAME_2","Context for 2 if necessary","English String 2",,,,,,,,,,,,,,,,,,,,,,,,,,,
 ```
 
-The first line is required for Polyglot to properly identify the file. Also, note the trailing commas &ndash; these are important since Polyglot expects exactly 28 languages and tends to do strange things if there aren't enough columns. Therefore, there should be at least 27 commas after the English text.
+The first line is required for Polyglot to properly identify the file. Also, note the trailing commas &ndash; these are important since Polyglot expects exactly 28 languages and will not fall back to the English text if these commas are not present and translations are missing. Therefore, there should be at least 27 commas after the English text.
 
 ### Registering the mod with SiraLocalizer
 Registering your mod to be translated by the SiraLocalizer team is simple. First, fill out this request form (coming soon). If it the first time you request translations, you will be given an ID for your mod. Once you have this ID, simply add this JSON object to your manifest's `features` object:
@@ -80,5 +80,3 @@ using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifest
 ```
 
 You should call this method in your plugin's `[OnEnable]` or `[OnStart]` method. If everything works properly, translations keys should now show up as the English text you wrote in the CSV file.
-
-
