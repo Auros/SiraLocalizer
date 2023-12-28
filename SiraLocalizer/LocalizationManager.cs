@@ -82,11 +82,19 @@ namespace SiraLocalizer
 
             foreach (ILocalizationDownloader localizationDownloader in _localizationDownloaders)
             {
-                if (await localizationDownloader.CheckForUpdatesAsync(cancellationToken))
+                try
                 {
-                    _logger.Info($"Updates available from {localizationDownloader.name}");
 
-                    list.Add(localizationDownloader);
+                    if (await localizationDownloader.CheckForUpdatesAsync(cancellationToken))
+                    {
+                        _logger.Info($"Updates available from {localizationDownloader.name}");
+
+                        list.Add(localizationDownloader);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error($"Error occured while checking for updates for {localizationDownloader.name} ({localizationDownloader.GetType().FullName})\n{ex}");
                 }
             }
 
@@ -98,7 +106,15 @@ namespace SiraLocalizer
             foreach (ILocalizationDownloader localizationDownloader in localizationDownloaders)
             {
                 _logger.Info($"Downloading updates from {localizationDownloader.name}");
-                await localizationDownloader.DownloadLocalizationsAsync(cancellationToken);
+
+                try
+                {
+                    await localizationDownloader.DownloadLocalizationsAsync(cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error($"Error occured while downloading for updates for {localizationDownloader.name} ({localizationDownloader.GetType().FullName})\n{ex}");
+                }
             }
         }
 
@@ -108,9 +124,16 @@ namespace SiraLocalizer
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await foreach (LocalizationFile file in localizationProvider.GetLocalizationAssetsAsync(cancellationToken))
+                try
                 {
-                    _localizationFiles.Add(file);
+                    await foreach (LocalizationFile file in localizationProvider.GetLocalizationAssetsAsync(cancellationToken))
+                    {
+                        _localizationFiles.Add(file);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error($"Error occured while adding localizations from {localizationProvider.GetType().FullName}\n{ex}");
                 }
             }
 
@@ -175,8 +198,16 @@ namespace SiraLocalizer
         [UsedImplicitly]
         private void LocalizationImporter_PostImportFromFiles()
         {
-            AddLocalizationFilesToPolyglot();
-            UpdateSupportedLanguages();
+            // prevent exceptions on our end from breaking Polyglot's load process
+            try
+            {
+                AddLocalizationFilesToPolyglot();
+                UpdateSupportedLanguages();
+            }
+            catch (Exception ex)
+            {
+                _logger.Critical(ex);
+            }
         }
 
         private void AddLocalizationFilesToPolyglot()
