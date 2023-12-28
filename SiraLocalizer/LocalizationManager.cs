@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using HarmonyLib;
 using JetBrains.Annotations;
 using Polyglot;
 using SiraLocalizer.Providers;
@@ -20,7 +21,7 @@ namespace SiraLocalizer
 
         // Unicode white space characters + line breaks https://www.fileformat.info/info/unicode/category/Zs/list.htm
         private static readonly char[] kWhiteSpaceCharacters = new[] { ' ', '\n', '\r', '\t', '\x00A0', '\x1680', '\x2000', '\x2001', '\x2002', '\x2003', '\x2004', '\x2005', '\x2006', '\x2007', '\x2008', '\x2009', '\x200A', '\x202F', '\x205F', '\x3000' };
-        private static readonly FieldInfo kLanguageStringsField = typeof(LocalizationImporter).GetField("languageStrings", BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly FieldInfo kLanguageStringsField = AccessTools.DeclaredField(typeof(LocalizationImporter), nameof(LocalizationImporter.languageStrings));
 
         private readonly SiraLog _logger;
         private readonly Settings _config;
@@ -65,7 +66,7 @@ namespace SiraLocalizer
         {
             List<ILocalizationDownloader> list = await CheckForUpdatesAsync(cancellationToken);
 
-            if (list == null)
+            if (list.Count == 0)
             {
                 return;
             }
@@ -77,7 +78,7 @@ namespace SiraLocalizer
         {
             _logger.Info("Checking for updates");
 
-            List<ILocalizationDownloader> list = null;
+            List<ILocalizationDownloader> list = new();
 
             foreach (ILocalizationDownloader localizationDownloader in _localizationDownloaders)
             {
@@ -85,7 +86,6 @@ namespace SiraLocalizer
                 {
                     _logger.Info($"Updates available from {localizationDownloader.name}");
 
-                    list ??= new();
                     list.Add(localizationDownloader);
                 }
             }
@@ -119,10 +119,7 @@ namespace SiraLocalizer
 
         private void DeregisterLocalizations()
         {
-            RemoveLocalizationFilesFromPolyglot();
-
             _localizationFiles.Clear();
-
             LocalizationImporter.Refresh();
         }
 
@@ -174,32 +171,70 @@ namespace SiraLocalizer
         }
 
         [AffinityPatch(typeof(LocalizationImporter), nameof(LocalizationImporter.ImportFromFiles))]
-        [AffinityPrefix]
-        [UsedImplicitly]
-        private void LocalizationImporter_PreInitialize()
-        {
-            // make sure localizations are always loaded after whatever already existed in InputFiles
-            RemoveLocalizationFilesFromPolyglot();
-            AddLocalizationFilesToPolyglot();
-        }
-
-        [AffinityPatch(typeof(LocalizationImporter), nameof(LocalizationImporter.ImportFromFiles))]
         [AffinityPostfix]
         [UsedImplicitly]
-        private void LocalizationImporter_PostInitialize()
+        private void LocalizationImporter_PostImportFromFiles()
         {
+            AddLocalizationFilesToPolyglot();
             UpdateSupportedLanguages();
-        }
-
-        private void RemoveLocalizationFilesFromPolyglot()
-        {
-            Localization.Instance.InputFiles.RemoveAll(f => _localizationFiles.Any(l => l.localizationAsset == f));
         }
 
         private void AddLocalizationFilesToPolyglot()
         {
-            // we want our translations to override the base game's translations but not other mods' files
-            Localization.Instance.InputFiles.InsertRange(1, _localizationFiles.OrderBy(l => l.priority).Select(l => l.localizationAsset));
+            foreach (LocalizationFile localizationFile in _localizationFiles.OrderBy(l => l.priority))
+            {
+                ImportTextFile(localizationFile.content);
+            }
+        }
+
+        /// <summary>
+        /// Similar to <see cref="LocalizationImporter.ImportTextFile"/> but doesn't touch English strings if they already exist.
+        /// </summary>
+        /// <param name="text">The localization file in CSV format.</param>
+        private void ImportTextFile(string text)
+        {
+            text = text.Replace("\r\n", "\n");
+            List<List<string>> list = CsvReader.Parse(text);
+
+            foreach (List<string> row in list.SkipWhile(r => r[0] != "Polyglot").Skip(1))
+            {
+                string key = row[0];
+
+                if (string.IsNullOrEmpty(key) || LocalizationImporter.IsLineBreak(key) || row.Count <= 1)
+                {
+                    continue;
+                }
+
+                string longestString = string.Empty;
+
+                foreach (string str in row.Skip(2))
+                {
+                    if (longestString.Length < str.Length)
+                    {
+                        longestString = str;
+                    }
+                }
+
+                char[] chars = row[2].ToCharArray();
+                Array.Reverse(chars);
+                string reversed = new(chars);
+
+                row.Add(row[0]);
+                row.Add(reversed);
+                row.Add(longestString);
+
+                // remove key and context
+                row.RemoveAt(0);
+                row.RemoveAt(0);
+
+                if (LocalizationImporter.languageStrings.TryGetValue(key, out List<string> existingValues))
+                {
+                    // keep English, overwrite everything else
+                    row[0] = existingValues[0];
+                }
+
+                LocalizationImporter.languageStrings[key] = row;
+            }
         }
 
         private void UpdateSupportedLanguages()

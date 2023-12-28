@@ -63,11 +63,9 @@ namespace SiraLocalizer.Features
                 return;
             }
 
-            using (var reader = new StreamReader(resourceStream))
-            {
-                string extension = resourcePath.Substring(resourcePath.LastIndexOf('.'));
-                LocalizationDefinition.Add("plugins/" + _localizedPlugin.id, _localizedPlugin.name, PolyglotUtil.GetKeysFromLocalizationAsset(reader.ReadToEnd(), extension == ".tsv" ? GoogleDriveDownloadFormat.TSV : GoogleDriveDownloadFormat.CSV));
-            }
+            using var reader = new StreamReader(resourceStream);
+
+            LocalizationDefinition.Add("plugins/" + _localizedPlugin.id, _localizedPlugin.name, PolyglotUtil.GetKeysFromLocalizationAsset(reader.ReadToEnd(), GoogleDriveDownloadFormat.CSV));
         }
     }
 }

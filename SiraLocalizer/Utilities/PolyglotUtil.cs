@@ -13,15 +13,7 @@ namespace SiraLocalizer.Utilities
 
         public static IEnumerable<string> GetKeysFromLocalizationAsset(string content, GoogleDriveDownloadFormat format)
         {
-            List<List<string>> rows;
-
-            if (format == GoogleDriveDownloadFormat.TSV)
-                rows = TsvReader.Parse(content);
-            else
-            {
-                rows = CsvReader.Parse(content);
-            }
-
+            List<List<string>> rows = format == GoogleDriveDownloadFormat.TSV ? TsvReader.Parse(content) : CsvReader.Parse(content);
             return rows.SkipWhile(row => row[0] != "Polyglot").Skip(1).Select(row => row[0]);
         }
     }
