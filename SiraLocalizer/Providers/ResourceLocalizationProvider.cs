@@ -12,7 +12,6 @@ namespace SiraLocalizer.Providers
         private static readonly string[] kResourcesToLoad = new[]
         {
             "SiraLocalizer.Resources.sira-localizer.csv",
-            "SiraLocalizer.Resources.contributors.csv",
         };
 
         public async IAsyncEnumerable<LocalizationFile> GetLocalizationAssetsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
