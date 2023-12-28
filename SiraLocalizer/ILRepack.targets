@@ -19,6 +19,6 @@
       <LibraryPath Include="$(BeatSaberDir)\Plugins" />
     </ItemGroup>
 	  
-    <ILRepack Parallel="true" Internalize="true" InputAssemblies="@(InputAssemblies)" TargetKind="Dll" OutputFile="$(OutputPath)$(AssemblyName).dll" LibraryPath="@(LibraryPath)" />
+    <ILRepack Parallel="true" Internalize="true" InputAssemblies="@(InputAssemblies)" TargetKind="Dll" OutputFile="$(OutputPath)$(AssemblyName).dll" LibraryPath="@(LibraryPath)" DebugInfo="true" />
   </Target>
 </Project>
