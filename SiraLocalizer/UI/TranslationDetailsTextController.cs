@@ -113,7 +113,7 @@ namespace SiraLocalizer.UI
 
             if (language > Language.English)
             {
-                string contributors = Localization.Get("LANGUAGE_CONTRIBUTORS", language);
+                string contributors = LocalizationImporter.GetLanguages("LANGUAGE_CONTRIBUTORS").ElementAtOrDefault((int)language);
                 _credits.text = string.Format(Localization.Get("TRANSLATED_BY", language), !string.IsNullOrWhiteSpace(contributors) ? contributors : "—");
 
                 List<TranslationStatus> statuses = _localizationManager.GetTranslationStatuses((Locale)language);
