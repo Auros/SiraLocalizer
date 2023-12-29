@@ -1,19 +1,19 @@
-﻿using System;
-using Zenject;
-using HarmonyLib;
-using SiraLocalizer.UI;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Collections.Generic;
+using HarmonyLib;
+using SiraLocalizer.UI;
 using UnityEngine;
+using Zenject;
 
 namespace SiraLocalizer.HarmonyPatches
 {
     [HarmonyPatch(typeof(GameplayCoreInstaller), nameof(GameplayCoreInstaller.InstallBindings))]
     internal static class MissedEffectSpawnerSwapper
     {
-        private static readonly MethodInfo kBindMissedNoteEffectSpawnerMethod = typeof(DiContainer).GetMethod("Bind", Array.Empty<Type>()).MakeGenericMethod(new[] { typeof(MissedNoteEffectSpawner) });
-        private static readonly MethodInfo kBindToTextBasedEffectSpawnerMethod = typeof(ConcreteBinderGeneric<MissedNoteEffectSpawner>).GetMethod("To", Array.Empty<Type>()).MakeGenericMethod(new[] { typeof(TextBasedMissedNoteEffectSpawner) });
+        private static readonly MethodInfo kBindMissedNoteEffectSpawnerMethod = AccessTools.DeclaredMethod(typeof(DiContainer), nameof(DiContainer.Bind), Array.Empty<Type>(), new[] { typeof(MissedNoteEffectSpawner) });
+        private static readonly MethodInfo kBindToTextBasedEffectSpawnerMethod = AccessTools.DeclaredMethod(typeof(ConcreteBinderGeneric<MissedNoteEffectSpawner>), nameof(ConcreteBinderGeneric<MissedNoteEffectSpawner>.To), Array.Empty<Type>(), new[] { typeof(TextBasedMissedNoteEffectSpawner) });
 
         public static void Prefix(MissedNoteEffectSpawner ____missedNoteEffectSpawnerPrefab)
         {

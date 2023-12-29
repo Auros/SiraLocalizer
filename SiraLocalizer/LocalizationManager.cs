@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using HarmonyLib;
 using JetBrains.Annotations;
 using Polyglot;
 using SiraLocalizer.Providers;
@@ -21,7 +19,6 @@ namespace SiraLocalizer
 
         // Unicode white space characters + line breaks https://www.fileformat.info/info/unicode/category/Zs/list.htm
         private static readonly char[] kWhiteSpaceCharacters = new[] { ' ', '\n', '\r', '\t', '\x00A0', '\x1680', '\x2000', '\x2001', '\x2002', '\x2003', '\x2004', '\x2005', '\x2006', '\x2007', '\x2008', '\x2009', '\x200A', '\x202F', '\x205F', '\x3000' };
-        private static readonly FieldInfo kLanguageStringsField = AccessTools.DeclaredField(typeof(LocalizationImporter), nameof(LocalizationImporter.languageStrings));
 
         private readonly SiraLog _logger;
         private readonly Settings _config;
@@ -148,7 +145,7 @@ namespace SiraLocalizer
 
         internal List<TranslationStatus> GetTranslationStatuses(Locale language)
         {
-            var languageStrings = (Dictionary<string, List<string>>)kLanguageStringsField.GetValue(null);
+            var languageStrings = LocalizationImporter.languageStrings;
             var statuses = new List<TranslationStatus>();
 
             foreach (LocalizationDefinition def in LocalizationDefinition.loadedDefinitions)
@@ -280,7 +277,7 @@ namespace SiraLocalizer
 
         private IEnumerable<Locale> GetSupportedLanguages()
         {
-            var languageStrings = (Dictionary<string, List<string>>)kLanguageStringsField.GetValue(null);
+            var languageStrings = LocalizationImporter.languageStrings;
             List<string> languageNames = languageStrings["LANGUAGE_THIS"];
 
             foreach (int lang in Enum.GetValues(typeof(Locale)))
