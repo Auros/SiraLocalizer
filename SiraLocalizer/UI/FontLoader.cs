@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -86,11 +87,11 @@ namespace SiraLocalizer.UI
         {
             _logger.Info($"Loading fonts");
 
-            AssetBundleCreateRequest assetBundleCreateRequest = await AssetBundle.LoadFromStreamAsync(Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.fonts.assets"));
-
+            using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.fonts.assets");
+            AssetBundleCreateRequest assetBundleCreateRequest = await AssetBundle.LoadFromStreamAsync(stream);
             AssetBundle assetBundle = assetBundleCreateRequest.assetBundle;
 
-            if (!assetBundleCreateRequest.isDone || !assetBundle)
+            if (assetBundle == null)
             {
                 _logger.Error("Failed to load fonts asset bundle; some characters may not display as expected");
                 return;
@@ -101,7 +102,7 @@ namespace SiraLocalizer.UI
                 LoadFontAsset(assetBundle, fontName);
             }
 
-            assetBundle.Unload(false);
+            await assetBundle.UnloadAsync(false);
 
             ApplyFallbackFonts();
         }
