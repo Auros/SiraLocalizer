@@ -4,7 +4,7 @@
 "TRANSLATION_STATUS_FULL",,"<color=#cfc>Fully Translated</color> {0}",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 "TRANSLATION_STATUS_PARTIAL",,"<color=#ffc>Partially Translated</color> {0}",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 "TRANSLATION_STATUS_NONE",,"<color=#fcc>Not Supported</color> {0}",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-"DOWNLOAD_TRANSLATIONS_MODAL_TEXT",,"Allow SiraLocalizer to automatically download translation updates?",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"DOWNLOAD_TRANSLATIONS_MODAL_TEXT",,"Allow SiraLocalizer to automatically download translation updates on startup? You can manually check for updates at any time by going to <i>Settings</i> → <i>Settings</i> → <i>Others</i>.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 "LOCALIZATION_UPDATES",,"Localization Updates",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 "CHECK_FOR_UPDATES_BUTTON",,"Check for updates",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 "CHECKING_FOR_UPDATES",,"Checking for updates...",,,,,,,,,,,,,,,,,,,,,,,,,,,,,

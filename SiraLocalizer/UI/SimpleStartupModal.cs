@@ -46,10 +46,11 @@ namespace SiraLocalizer.UI
             rectTransform.anchorMin = Vector2.one * 0.5f;
             rectTransform.anchorMax = Vector2.one * 0.5f;
             rectTransform.anchoredPosition = Vector2.zero;
+            rectTransform.sizeDelta = new Vector2(100, 0);
 
             ContentSizeFitter modalSizeFitter = modalViewObject.AddComponent<ContentSizeFitter>();
-            modalSizeFitter.horizontalFit = ContentSizeFitter.FitMode.MinSize;
-            modalSizeFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
+            modalSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            modalSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             var stackLayout = modalViewObject.AddComponent<StackLayoutGroup>();
             stackLayout.childAlignment = TextAnchor.MiddleCenter;
@@ -62,13 +63,13 @@ namespace SiraLocalizer.UI
 
             VerticalLayoutGroup layoutGroup = content.AddComponent<VerticalLayoutGroup>();
             layoutGroup.childAlignment = TextAnchor.MiddleCenter;
-            layoutGroup.childControlHeight = false;
+            layoutGroup.childControlHeight = true;
             layoutGroup.childControlWidth = true;
             layoutGroup.padding = new RectOffset(3, 3, 3, 3);
 
             ContentSizeFitter contentSizeFitter = content.AddComponent<ContentSizeFitter>();
-            contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.MinSize;
-            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
+            contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             #endregion
 
             #region Text
@@ -81,17 +82,13 @@ namespace SiraLocalizer.UI
             text.font = template.font;
             text.fontMaterial = template.fontMaterial;
             text.fontSize = 5;
-            text.alignment = TextAlignmentOptions.Top;
+            text.alignment = TextAlignmentOptions.TopLeft;
             text.enableWordWrapping = true;
-            text.richText = false;
+            text.richText = true;
 
             LocalizedTextMeshProUGUI localizedText = textObject.AddComponent<LocalizedTextMeshProUGUI>();
             localizedText.localizedComponent = text;
             localizedText.Key = localizationKey;
-
-            ContentSizeFitter textSizeFitter = textObject.AddComponent<ContentSizeFitter>();
-            textSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-            textSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             #endregion
 
             #region Buttons
