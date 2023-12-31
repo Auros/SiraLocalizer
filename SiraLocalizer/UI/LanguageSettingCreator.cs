@@ -14,14 +14,18 @@ namespace SiraLocalizer.UI
         private readonly SiraLog _logger;
         private readonly SettingsNavigationController _settingsNavigationController;
         private readonly LocalizationManager _localizationManager;
+        private readonly MainMenuViewController _mainMenuViewController;
 
-        internal LanguageSettingCreator(DiContainer container, Settings config, SiraLog logger, SettingsNavigationController settingsNavigationController, LocalizationManager localizationManager)
+        private SimpleStartupModal _modal;
+
+        internal LanguageSettingCreator(DiContainer container, Settings config, SiraLog logger, SettingsNavigationController settingsNavigationController, LocalizationManager localizationManager, MainMenuViewController mainMenuViewController)
         {
             _container = container;
             _config = config;
             _logger = logger;
             _settingsNavigationController = settingsNavigationController;
             _localizationManager = localizationManager;
+            _mainMenuViewController = mainMenuViewController;
         }
 
         public void Initialize()
@@ -43,15 +47,22 @@ namespace SiraLocalizer.UI
 
             if (!_config.startupModalDismissed)
             {
-                ShowConfigStartupModal();
+                CreateStartupModal();
+                _mainMenuViewController.didActivateEvent += OnMainMenuViewControllerActivated;
             }
         }
 
-        private void ShowConfigStartupModal()
+        private void OnMainMenuViewControllerActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            var modal = SimpleStartupModal.Create(_container, "DOWNLOAD_TRANSLATIONS_MODAL_TEXT");
+            _modal.Show(false);
+            _mainMenuViewController.didActivateEvent -= OnMainMenuViewControllerActivated;
+        }
 
-            modal.closed += async (result) =>
+        private void CreateStartupModal()
+        {
+            _modal = SimpleStartupModal.Create(_container, "DOWNLOAD_TRANSLATIONS_MODAL_TEXT");
+
+            _modal.closed += async (result) =>
             {
                 _config.automaticallyDownloadLocalizations = result;
                 _config.startupModalDismissed = true;

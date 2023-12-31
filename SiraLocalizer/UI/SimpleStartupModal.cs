@@ -10,16 +10,15 @@ namespace SiraLocalizer.UI
 {
     internal class SimpleStartupModal : MonoBehaviour
     {
-        public event Action<bool> closed;
+        internal event Action<bool> closed;
 
         private ModalView _modalView;
-        private MainMenuViewController _mainMenuViewController;
-        private ScreenSystem _screenSystem;
 
-        public static SimpleStartupModal Create(DiContainer container, string localizationKey)
+        internal static SimpleStartupModal Create(DiContainer container, string localizationKey)
         {
             Transform gameplaySetupViewController = container.Resolve<GameplaySetupViewController>().transform;
             GameObject modalViewObject = container.InstantiatePrefab(gameplaySetupViewController.transform.Find("ColorsOverrideSettings/Settings/Detail/ColorSchemeDropDown/DropdownTableView").gameObject);
+            modalViewObject.SetActive(false);
             modalViewObject.name = "SiraLocalizerStartupModal";
 
             DestroyImmediate(modalViewObject.GetComponent<TableView>());
@@ -37,12 +36,14 @@ namespace SiraLocalizer.UI
                 Destroy(child.gameObject);
             }
 
-            MainMenuViewController mainMenuViewController = container.Resolve<MainMenuViewController>();
-            Transform mainMenuViewControllerTransform = mainMenuViewController.transform;
+            SimpleStartupModal modal = modalViewObject.AddComponent<SimpleStartupModal>();
+            modal._modalView = modalViewObject.GetComponent<ModalView>();
+
+            ScreenSystem screenSystem = container.Resolve<HierarchyManager>()._screenSystem;
 
             #region SiraLocalizerStartupModal
             var rectTransform = (RectTransform)modalViewObject.transform;
-            rectTransform.SetParent(mainMenuViewControllerTransform, false);
+            rectTransform.SetParent(screenSystem.mainScreen.transform, false);
             rectTransform.anchorMin = Vector2.one * 0.5f;
             rectTransform.anchorMax = Vector2.one * 0.5f;
             rectTransform.anchoredPosition = Vector2.zero;
@@ -52,7 +53,7 @@ namespace SiraLocalizer.UI
             modalSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
             modalSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            var stackLayout = modalViewObject.AddComponent<StackLayoutGroup>();
+            StackLayoutGroup stackLayout = modalViewObject.AddComponent<StackLayoutGroup>();
             stackLayout.childAlignment = TextAnchor.MiddleCenter;
             #endregion
 
@@ -107,23 +108,15 @@ namespace SiraLocalizer.UI
             buttonsFitter.verticalFit = ContentSizeFitter.FitMode.MinSize;
 
             Transform settingsNavigationControllerTransform = container.Resolve<SettingsNavigationController>().transform;
-            Button noButton = CreateButton(settingsNavigationControllerTransform.Find("BottomPanel/CancelButton"), "NoButton", "BUTTON_NO", buttonsObject.transform);
-            Button yesButton = CreateButton(settingsNavigationControllerTransform.Find("BottomPanel/OkButton"), "YesButton", "BUTTON_YES", buttonsObject.transform);
+
+            CreateButton(settingsNavigationControllerTransform.Find("BottomPanel/CancelButton"), "NoButton", "BUTTON_NO", buttonsObject.transform, modal, false);
+            CreateButton(settingsNavigationControllerTransform.Find("BottomPanel/OkButton"), "YesButton", "BUTTON_YES", buttonsObject.transform, modal, true);
             #endregion
-
-            SimpleStartupModal modal = modalViewObject.AddComponent<SimpleStartupModal>();
-            modal._modalView = modalViewObject.GetComponent<ModalView>();
-            modal._mainMenuViewController = mainMenuViewController;
-            modal._screenSystem = container.Resolve<HierarchyManager>().GetComponent<ScreenSystem>();
-
-            noButton.onClick.AddListener(modal.OnNoButtonClicked);
-            yesButton.onClick.AddListener(modal.OnYesButtonClicked);
-            mainMenuViewController.didActivateEvent += modal.OnMainMenuViewControllerActivated;
 
             return modal;
         }
 
-        private static Button CreateButton(Transform template, string name, string localizationKey, Transform parent)
+        private static void CreateButton(Transform template, string name, string localizationKey, Transform parent, SimpleStartupModal modal, bool result)
         {
             var transform = (RectTransform)Instantiate(template);
             transform.name = name;
@@ -133,29 +126,19 @@ namespace SiraLocalizer.UI
 
             Button button = transform.GetComponent<Button>();
             button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => modal.Close(result));
 
             transform.Find("Content/Text").GetComponent<LocalizedTextMeshProUGUI>().Key = localizationKey;
-
-            return button;
         }
 
-        private void OnMainMenuViewControllerActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+        internal void Show(bool animated)
         {
-            _modalView.SetupView(_screenSystem.mainScreen.transform);
-            _modalView.Show(false);
-            _mainMenuViewController.didActivateEvent -= OnMainMenuViewControllerActivated;
+            _modalView.Show(animated);
         }
 
-        private void OnYesButtonClicked()
+        private void Close(bool result)
         {
-            closed?.Invoke(true);
-            _modalView.Hide(true);
-        }
-
-        private void OnNoButtonClicked()
-        {
-            closed?.Invoke(false);
-            _modalView.Hide(true);
+            _modalView.Hide(true, () => closed?.Invoke(result));
         }
     }
 }
