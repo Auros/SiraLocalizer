@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 using SiraLocalizer.Features;
 using SiraLocalizer.Records;
 using SiraLocalizer.Utilities;
-using SiraLocalizer.Utilities.WebRequests;
 using SiraUtil.Logging;
 using UnityEngine.Networking;
 
@@ -174,17 +173,16 @@ namespace SiraLocalizer.Providers.Crowdin
             _logger.Info($"Fetching Crowdin manifest");
 
             using var request = UnityWebRequest.Get(url);
-            UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
+            await request.SendWebRequest();
 
-            if (!asyncOperation.isDone)
-            {
-                _logger.Error($"UnityWebRequest for '{url}' failed");
-                return null;
-            }
-
-            if (!request.IsSuccessResponseCode())
+            if (request.result == UnityWebRequest.Result.ProtocolError)
             {
                 _logger.Error($"'{url}' responded with {request.responseCode} ({request.error})");
+                return null;
+            }
+            else if (request.result != UnityWebRequest.Result.Success)
+            {
+                _logger.Error($"Request to '{url}' failed: {request.result}");
                 return null;
             }
 
@@ -260,18 +258,16 @@ namespace SiraLocalizer.Providers.Crowdin
 
             string url = $"{kCrowdinHost}/{kDistributionKey}/content/{relativePath}?timestamp={timestamp}";
             using var request = UnityWebRequest.Get(url);
+            await request.SendWebRequest();
 
-            UnityWebRequestAsyncOperation asyncOperation = await request.SendWebRequest();
-
-            if (!asyncOperation.isDone)
-            {
-                _logger.Error($"UnityWebRequest for '{url}' failed");
-                return;
-            }
-
-            if (!request.IsSuccessResponseCode())
+            if (request.result == UnityWebRequest.Result.ProtocolError)
             {
                 _logger.Error($"'{url}' responded with {request.responseCode} ({request.error})");
+                return;
+            }
+            else if (request.result != UnityWebRequest.Result.Success)
+            {
+                _logger.Error($"Request to '{url}' failed: {request.result}");
                 return;
             }
 

@@ -146,14 +146,15 @@ namespace SiraLocalizer.Providers.CrowdinApi
 
         private async Task<AbstractProjectBuildResponse> CreateOrGetLatestBuild()
         {
-            UnityWebRequest response = await _webRequestHelper.SendRequest(CreateApiRequest($"/projects/{kProjectId}/translations/builds", UnityWebRequest.kHttpVerbPOST));
+            using UnityWebRequest webRequest = CreateApiRequest($"/projects/{kProjectId}/translations/builds", UnityWebRequest.kHttpVerbPOST);
+            await _webRequestHelper.SendRequest(webRequest);
 
-            if (response.responseCode != 201)
+            if (webRequest.responseCode != 201)
             {
-                throw new CrowdinApiException($"Unexpected response code {response.responseCode}");
+                throw new CrowdinApiException($"Unexpected response code {webRequest.responseCode}");
             }
 
-            return DeserializeResponse<AbstractProjectBuildResponse>(response.downloadHandler.data);
+            return DeserializeResponse<AbstractProjectBuildResponse>(webRequest.downloadHandler.data);
         }
 
         private async Task<AbstractProjectBuildResponse> GetLatestBuild()
@@ -163,29 +164,31 @@ namespace SiraLocalizer.Providers.CrowdinApi
                 { "limit", "1" },
             };
 
-            UnityWebRequest response = await _webRequestHelper.SendRequest(CreateApiRequest($"/projects/{kProjectId}/translations/builds", queryParameters: queryParameters));
+            using UnityWebRequest webRequest = CreateApiRequest($"/projects/{kProjectId}/translations/builds", queryParameters: queryParameters);
+            await _webRequestHelper.SendRequest(webRequest);
 
-            if (response.responseCode != 200)
+            if (webRequest.responseCode != 200)
             {
-                throw new CrowdinApiException($"Unexpected response code {response.responseCode}");
+                throw new CrowdinApiException($"Unexpected response code {webRequest.responseCode}");
             }
 
-            return DeserializePaginatedResponse<AbstractProjectBuildResponse>(response.downloadHandler.data).FirstOrDefault();
+            return DeserializePaginatedResponse<AbstractProjectBuildResponse>(webRequest.downloadHandler.data).FirstOrDefault();
         }
 
         private async Task<DownloadLinkResponse> WaitForBuildToFinishAsync(long buildId)
         {
             while (true)
             {
-                UnityWebRequest request = await _webRequestHelper.SendRequest(CreateApiRequest($"/projects/{kProjectId}/translations/builds/{buildId}/download"));
+                using UnityWebRequest webRequest = CreateApiRequest($"/projects/{kProjectId}/translations/builds/{buildId}/download");
+                await _webRequestHelper.SendRequest(webRequest);
 
-                switch (request.responseCode)
+                switch (webRequest.responseCode)
                 {
                     case 200:
-                        return DeserializeResponse<DownloadLinkResponse>(request.downloadHandler.data);
+                        return DeserializeResponse<DownloadLinkResponse>(webRequest.downloadHandler.data);
 
                     case 202:
-                        AbstractProjectBuildResponse buildResponse = DeserializeResponse<AbstractProjectBuildResponse>(request.downloadHandler.data);
+                        AbstractProjectBuildResponse buildResponse = DeserializeResponse<AbstractProjectBuildResponse>(webRequest.downloadHandler.data);
 
                         if (buildResponse.status != ProjectBuildStatus.InProgress)
                         {
@@ -198,7 +201,7 @@ namespace SiraLocalizer.Providers.CrowdinApi
                         break;
 
                     default:
-                        throw new CrowdinApiException($"Unexpected response code {request.responseCode}");
+                        throw new CrowdinApiException($"Unexpected response code {webRequest.responseCode}");
                 }
             }
         }
@@ -212,9 +215,10 @@ namespace SiraLocalizer.Providers.CrowdinApi
 
             Directory.CreateDirectory(kDownloadedFolder);
 
-            UnityWebRequest fileDownloadRequest = await _webRequestHelper.SendRequest(UnityWebRequest.Get(url));
+            using var webRequest = UnityWebRequest.Get(url);
+            await _webRequestHelper.SendRequest(webRequest);
 
-            using var memoryStream = new MemoryStream(fileDownloadRequest.downloadHandler.data);
+            using var memoryStream = new MemoryStream(webRequest.downloadHandler.data);
             using var archive = new ZipArchive(memoryStream);
 
             archive.ExtractToDirectory(kDownloadedFolder);

@@ -13,11 +13,11 @@ namespace SiraLocalizer.Utilities.WebRequests
             _logger = logger;
         }
 
-        internal async Task<UnityWebRequest> SendRequest(UnityWebRequest webRequest)
+        internal async Task SendRequest(UnityWebRequest webRequest)
         {
             _logger.Debug($"{webRequest.method} {webRequest.url}");
 
-            UnityWebRequestAsyncOperation result = await webRequest.SendWebRequest();
+            await webRequest.SendWebRequest();
 
             if (webRequest.result == UnityWebRequest.Result.ProtocolError)
             {
@@ -27,8 +27,6 @@ namespace SiraLocalizer.Utilities.WebRequests
             {
                 throw new WebRequestException(webRequest.result);
             }
-
-            return result.webRequest;
         }
     }
 }
