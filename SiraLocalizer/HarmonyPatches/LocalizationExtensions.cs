@@ -1,5 +1,5 @@
+using BGLib.Polyglot;
 using HarmonyLib;
-using Polyglot;
 
 namespace SiraLocalizer.HarmonyPatches
 {

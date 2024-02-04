@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Polyglot;
 using SiraLocalizer.Utilities;
+using UnityEngine;
 
 namespace SiraLocalizer.Records
 {
@@ -10,14 +10,19 @@ namespace SiraLocalizer.Records
 
         private static readonly Dictionary<string, LocalizationDefinition> kLoadedDefinitions = new();
 
-        public static void Add(string id, string name, LocalizationAsset localizationAsset)
+        public static void Add(string id, string name, IEnumerable<TextAsset> textAssets)
         {
-            Add(id, name, PolyglotUtil.GetKeysFromLocalizationAsset(localizationAsset));
+            Add(id, name, PolyglotUtil.GetKeysFromLocalizationAsset(textAssets));
         }
 
         public static void Add(string id, string name, IEnumerable<string> keys)
         {
             kLoadedDefinitions.Add(id, new LocalizationDefinition(id, name, keys));
+        }
+
+        public static bool Remove(string id)
+        {
+            return kLoadedDefinitions.Remove(id);
         }
 
         public static bool IsDefinitionLoaded(string id)

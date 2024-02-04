@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using BGLib.Polyglot;
 using HMUI;
 using JetBrains.Annotations;
-using Polyglot;
 using SiraLocalizer.Records;
+using SiraLocalizer.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,21 +31,24 @@ namespace SiraLocalizer.UI
             ContentSizeFitter contentSizeFitter = translationDetails.AddComponent<ContentSizeFitter>();
             contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            Material fontMaterial = languageSettingsController.GetComponentInChildren<CurvedTextMeshPro>().fontMaterial;
+            CurvedTextMeshPro templateText = languageSettingsController.GetComponentInChildren<CurvedTextMeshPro>();
+            TMP_FontAsset font = templateText.font;
+            Material fontMaterial = templateText.fontMaterial;
 
             TranslationDetailsTextController controller = container.InstantiateComponent<TranslationDetailsTextController>(translationDetails);
 
             controller._languageSettingsController = languageSettingsController;
-            controller._credits = AddCreditsTextObject(translationDetailsTransform, fontMaterial);
-            controller._translationStatus = AddTranslationStatusTextObject(translationDetailsTransform, fontMaterial);
+            controller._credits = AddCreditsTextObject(translationDetailsTransform, font, fontMaterial);
+            controller._translationStatus = AddTranslationStatusTextObject(translationDetailsTransform, font, fontMaterial);
 
             return controller;
         }
 
-        private static CurvedTextMeshPro AddCreditsTextObject(Transform parent, Material fontMaterial)
+        private static CurvedTextMeshPro AddCreditsTextObject(Transform parent, TMP_FontAsset font, Material fontMaterial)
         {
             var textGameObject = new GameObject("CreditsText");
             CurvedTextMeshPro credits = textGameObject.AddComponent<CurvedTextMeshPro>();
+            credits.font = font;
             credits.fontMaterial = fontMaterial;
 
             var textRectTransform = (RectTransform)textGameObject.transform;
@@ -61,10 +65,11 @@ namespace SiraLocalizer.UI
             return credits;
         }
 
-        private static CurvedTextMeshPro AddTranslationStatusTextObject(Transform parent, Material fontMaterial)
+        private static CurvedTextMeshPro AddTranslationStatusTextObject(Transform parent, TMP_FontAsset font, Material fontMaterial)
         {
             var textGameObject = new GameObject("TranslationStatusText");
             CurvedTextMeshPro translationStatus = textGameObject.AddComponent<CurvedTextMeshPro>();
+            translationStatus.font = font;
             translationStatus.fontMaterial = fontMaterial;
 
             var textRectTransform = (RectTransform)textGameObject.transform;
@@ -114,7 +119,7 @@ namespace SiraLocalizer.UI
             if (language > Language.English)
             {
                 string contributors = LocalizationImporter.GetLanguages("LANGUAGE_CONTRIBUTORS").ElementAtOrDefault((int)language);
-                _credits.text = string.Format(Localization.Get("TRANSLATED_BY", language), !string.IsNullOrWhiteSpace(contributors) ? contributors : "—");
+                _credits.text = string.Format(Localization.Instance.Get("TRANSLATED_BY", language), !string.IsNullOrWhiteSpace(contributors) ? contributors : "—");
 
                 List<TranslationStatus> statuses = _localizationManager.GetTranslationStatuses((Locale)language);
                 var fullyTranslated = statuses.Where(s => s.percentTranslated == 100).Select(s => s.name).ToList();
@@ -125,17 +130,17 @@ namespace SiraLocalizer.UI
 
                 if (fullyTranslated.Count > 0)
                 {
-                    _translationStatus.text += string.Format(Localization.Get("TRANSLATION_STATUS_FULL", language), string.Join(", ", fullyTranslated)) + "\n";
+                    _translationStatus.text += string.Format(Localization.Instance.Get("TRANSLATION_STATUS_FULL", language), string.Join(", ", fullyTranslated)) + "\n";
                 }
 
                 if (partiallyTranslated.Count > 0)
                 {
-                    _translationStatus.text += string.Format(Localization.Get("TRANSLATION_STATUS_PARTIAL", language), string.Join(", ", partiallyTranslated)) + "\n";
+                    _translationStatus.text += string.Format(Localization.Instance.Get("TRANSLATION_STATUS_PARTIAL", language), string.Join(", ", partiallyTranslated)) + "\n";
                 }
 
                 if (notSupported.Count > 0)
                 {
-                    _translationStatus.text += string.Format(Localization.Get("TRANSLATION_STATUS_NONE", language), string.Join(", ", notSupported));
+                    _translationStatus.text += string.Format(Localization.Instance.Get("TRANSLATION_STATUS_NONE", language), string.Join(", ", notSupported));
                 }
 
                 _credits.gameObject.SetActive(true);

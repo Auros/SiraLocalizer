@@ -1,6 +1,6 @@
 using System;
+using BGLib.Polyglot;
 using HMUI;
-using Polyglot;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

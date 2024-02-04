@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using BGLib.Polyglot;
 using HarmonyLib;
 using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
 using IPA.Logging;
-using Polyglot;
 using SiraLocalizer.Features;
 using SiraLocalizer.Installers;
 using SiraLocalizer.Records;
@@ -28,8 +28,6 @@ namespace SiraLocalizer
             if (Environment.GetCommandLineArgs().Contains("--dump-localization")) new LocalizationExporter(logger).DumpBaseGameLocalization();
 
             _harmony = new Harmony(kHarmonyId);
-
-            LocalizationDefinition.Add("beat-saber", "Beat Saber", Localization.Instance.InputFiles[0]);
 
             LocalizedPluginFeature.logger = logger;
 

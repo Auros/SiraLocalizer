@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using BGLib.Polyglot;
 using HMUI;
 using JetBrains.Annotations;
-using Polyglot;
 using SiraLocalizer.Providers;
 using SiraUtil.Logging;
 using TMPro;

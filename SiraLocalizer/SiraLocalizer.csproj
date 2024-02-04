@@ -9,29 +9,33 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BeatmapCore">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatmapCore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="BGLib.Polyglot">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BGLib.Polyglot.dll</HintPath>
+      <Private>False</Private>
+      <Publicize>True</Publicize>
+    </Reference>
     <Reference Include="BGLib.UnityExtension">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BGLib.UnityExtension.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Polyglot">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Polyglot.dll</HintPath>
-      <Private>False</Private>
-      <Publicize>True</Publicize>
-    </Reference>
-    <Reference Include="SiraUtil">
-      <HintPath>$(BeatSaberDir)\Plugins\SiraUtil.dll</HintPath>
+    <Reference Include="DataModels">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\DataModels.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Harmony">
       <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>$(BeatSaberDir)\Libs\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="IPA.Loader">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="BeatmapCore">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatmapCore.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(BeatSaberDir)\Libs\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Main">
@@ -52,8 +56,8 @@
       <Private>False</Private>
       <Publicize>True</Publicize>
     </Reference>
-    <Reference Include="IPA.Loader">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
+    <Reference Include="SiraUtil">
+      <HintPath>$(BeatSaberDir)\Plugins\SiraUtil.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro">

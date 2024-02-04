@@ -1,8 +1,8 @@
+using BGLib.Polyglot;
 using IPA.Loader;
 using IPA.Loader.Features;
 using IPA.Logging;
 using Newtonsoft.Json.Linq;
-using Polyglot;
 using SiraLocalizer.Records;
 using SiraLocalizer.Utilities;
 using System.IO;

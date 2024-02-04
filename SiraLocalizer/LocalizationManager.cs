@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BGLib.Polyglot;
 using JetBrains.Annotations;
-using Polyglot;
 using SiraLocalizer.Providers;
 using SiraLocalizer.Records;
 using SiraUtil.Affinity;
@@ -18,7 +18,7 @@ namespace SiraLocalizer
         internal const float kMinimumTranslatedPercent = 0.50f;
 
         // Unicode white space characters + line breaks https://www.fileformat.info/info/unicode/category/Zs/list.htm
-        private static readonly char[] kWhiteSpaceCharacters = new[] { ' ', '\n', '\r', '\t', '\x00A0', '\x1680', '\x2000', '\x2001', '\x2002', '\x2003', '\x2004', '\x2005', '\x2006', '\x2007', '\x2008', '\x2009', '\x200A', '\x202F', '\x205F', '\x3000' };
+        private static readonly char[] kWhiteSpaceCharacters = [' ', '\n', '\r', '\t', '\x00A0', '\x1680', '\x2000', '\x2001', '\x2002', '\x2003', '\x2004', '\x2005', '\x2006', '\x2007', '\x2008', '\x2009', '\x200A', '\x202F', '\x205F', '\x3000'];
 
         private readonly SiraLog _logger;
         private readonly Settings _config;
@@ -134,13 +134,12 @@ namespace SiraLocalizer
                 }
             }
 
-            LocalizationImporter.Refresh();
+            LocalizationImporter.Initialize(Localization.Instance);
         }
 
         private void DeregisterLocalizations()
         {
             _localizationFiles.Clear();
-            LocalizationImporter.Refresh();
         }
 
         internal List<TranslationStatus> GetTranslationStatuses(Locale language)
@@ -267,18 +266,27 @@ namespace SiraLocalizer
 
         private void UpdateSupportedLanguages()
         {
+            if (Localization._instance == null)
+            {
+                return;
+            }
+
             IEnumerable<Locale> languages = GetSupportedLanguages();
 
-            Localization.Instance.SupportedLanguages.Clear();
-            Localization.Instance.SupportedLanguages.AddRange(languages.Select(lang => (Language)lang));
+            Localization.Instance.localization.supportedLanguages.Clear();
+            Localization.Instance.localization.supportedLanguages.AddRange(languages.Select(lang => (Language)lang));
 
-            Localization.Instance.SelectLanguage(_mainSettingsModel.language.value);
+            Localization.Instance.SelectLanguage((int)_mainSettingsModel.language.value);
         }
 
         private IEnumerable<Locale> GetSupportedLanguages()
         {
             var languageStrings = LocalizationImporter.languageStrings;
-            List<string> languageNames = languageStrings["LANGUAGE_THIS"];
+
+            if (!languageStrings.TryGetValue("LANGUAGE_THIS", out List<string> languageNames))
+            {
+                yield break;
+            }
 
             foreach (int lang in Enum.GetValues(typeof(Locale)))
             {

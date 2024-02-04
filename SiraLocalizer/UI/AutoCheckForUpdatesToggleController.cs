@@ -1,5 +1,5 @@
+using BGLib.Polyglot;
 using JetBrains.Annotations;
-using Polyglot;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;

@@ -1,4 +1,4 @@
-using Polyglot;
+using BGLib.Polyglot;
 using UnityEngine;
 
 namespace SiraLocalizer.UI

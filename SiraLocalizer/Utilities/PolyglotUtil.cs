@@ -1,14 +1,15 @@
-using Polyglot;
 using System.Collections.Generic;
 using System.Linq;
+using BGLib.Polyglot;
+using UnityEngine;
 
 namespace SiraLocalizer.Utilities
 {
     internal class PolyglotUtil
     {
-        public static IEnumerable<string> GetKeysFromLocalizationAsset(LocalizationAsset localizationAsset)
+        public static IEnumerable<string> GetKeysFromLocalizationAsset(IEnumerable<TextAsset> textAssets)
         {
-            return GetKeysFromLocalizationAsset(localizationAsset.TextAsset.text, localizationAsset.Format);
+            return textAssets.SelectMany(asset => GetKeysFromLocalizationAsset(asset.text, GoogleDriveDownloadFormat.CSV));
         }
 
         public static IEnumerable<string> GetKeysFromLocalizationAsset(string content, GoogleDriveDownloadFormat format)

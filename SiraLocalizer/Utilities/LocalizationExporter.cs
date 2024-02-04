@@ -1,18 +1,18 @@
-using IPA.Logging;
-using IPA.Utilities;
-using Polyglot;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BGLib.Polyglot;
+using IPA.Logging;
+using IPA.Utilities;
 
 namespace SiraLocalizer.Utilities
 {
     internal class LocalizationExporter
     {
         // languages supported by the base game
-        private static readonly Language[] kSupportedLanguages = new[] { Language.French, Language.Spanish, Language.German, Language.Japanese, Language.Korean };
+        private static readonly Language[] kSupportedLanguages = [Language.French, Language.Spanish, Language.German, Language.Japanese, Language.Korean];
 
         // keys that aren't actually used
         private static readonly string[] kLocalizationKeyIgnoreList =
