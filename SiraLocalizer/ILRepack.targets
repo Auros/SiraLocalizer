@@ -1,5 +1,5 @@
 ﻿<Project>
-  <Target Name="ILRepacker" AfterTargets="Build">
+  <Target Name="ILRepacker" AfterTargets="Build" BeforeTargets="CopyToArtifact">
 	<PropertyGroup>
 	  <!-- https://github.com/Alexx999/ILRepack.Lib.MSBuild.Task/pull/2 -->
 	  <DoILRepack>false</DoILRepack>

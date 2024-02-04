@@ -9,48 +9,42 @@ on:
 
 jobs:
   build:
-    name: SiraLocalizer
+    name: Build
     runs-on: windows-latest
     steps:
     - name: Check out
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # using MSBuild since ILRepack.Lib.MSBuild (and equivalent packages) use an older version of ILRepack that doesn't work on .NET 8 and above
     - name: Set up MSBuild
-      uses: microsoft/setup-msbuild@v1.3
+      uses: microsoft/setup-msbuild@v2
 
-    - name: Set up environment
-      run: ${{ github.workspace }}\.github\workflows\set_up_env.ps1 '${{ github.workspace }}\SiraLocalizer\manifest.json'
-
-    - name: Fetch Beat Saber Bindings
-      run: git clone https://${{ secrets.PRIVATE_GITHUB_TOKEN }}@github.com/nicoco007/BeatSaberBindings --branch v${{ env.GAME_VERSION }} --single-branch '${{ runner.temp }}\BeatSaberBindings\Beat Saber_Data\Managed'
-
-    - name: Download dependencies
-      uses: nicoco007/download-beatmods-deps@main
+    - name: Set up Beat Saber
+      uses: nicoco007/setup-beat-saber@main
       with:
+        access-token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
         manifest: ${{ github.workspace }}\SiraLocalizer\manifest.json
-        path: ${{ runner.temp }}\BeatSaberBindings
 
-    - id: build-debug
-      name: Build Debug
+    - name: Build Debug
+      id: build-debug
       run: |
         msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Debug -t:restore
-        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Debug -p:BeatSaberDir=${{ runner.temp }}\BeatSaberBindings
+        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Debug
 
     - name: Upload Debug
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: SiraLocalizer-bs${{ env.GAME_VERSION }}-${{ env.ZIP_VERSION }}-DEBUG
-        path: ${{ steps.build-debug.outputs.artifactpath }}
+        name: ${{ steps.build-debug.outputs.artifact-name }}
+        path: ${{ steps.build-debug.outputs.artifact-path }}
 
-    - id: build-release
-      name: Build Release
+    - name: Build Release
+      id: build-release
       run: |
         msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Release -t:restore
-        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Release -p:BeatSaberDir=${{ runner.temp }}\BeatSaberBindings
+        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Release
 
     - name: Upload Release
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: SiraLocalizer-bs${{ env.GAME_VERSION }}-${{ env.ZIP_VERSION }}-RELEASE
-        path: ${{ steps.build-release.outputs.artifactpath }}
+        name: ${{ steps.build-release.outputs.artifact-name }}
+        path: ${{ steps.build-release.outputs.artifact-path }}
