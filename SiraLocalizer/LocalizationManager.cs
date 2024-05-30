@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BeatSaber.GameSettings;
 using BGLib.Polyglot;
+using BGLib.SaveDataCore;
 using JetBrains.Annotations;
 using SiraLocalizer.Providers;
 using SiraLocalizer.Records;
@@ -24,17 +26,17 @@ namespace SiraLocalizer
         private readonly Settings _config;
         private readonly List<ILocalizationProvider> _localizationProviders;
         private readonly List<ILocalizationDownloader> _localizationDownloaders;
-        private readonly MainSettingsModelSO _mainSettingsModel;
+        private readonly MainSettingsHandler _mainSettingsHandler;
 
         private readonly List<LocalizationFile> _localizationFiles = new();
 
-        public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders, MainSettingsModelSO mainSettingsModel)
+        public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders, MainSettingsHandler mainSettingsHandler)
         {
             _logger = logger;
             _config = config;
             _localizationProviders = localizationProviders;
             _localizationDownloaders = localizationDownloaders;
-            _mainSettingsModel = mainSettingsModel;
+            _mainSettingsHandler = mainSettingsHandler;
         }
 
         public async void Initialize()
@@ -276,7 +278,7 @@ namespace SiraLocalizer
             Localization.Instance.localization.supportedLanguages.Clear();
             Localization.Instance.localization.supportedLanguages.AddRange(languages.Select(lang => (Language)lang));
 
-            Localization.Instance.SelectLanguage((int)_mainSettingsModel.language.value);
+            Localization.Instance.SelectLanguage((int)_mainSettingsHandler.instance.language);
         }
 
         private IEnumerable<Locale> GetSupportedLanguages()
