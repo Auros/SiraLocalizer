@@ -15,10 +15,6 @@ jobs:
     - name: Check out
       uses: actions/checkout@v4
 
-    # using MSBuild since ILRepack.Lib.MSBuild (and equivalent packages) use an older version of ILRepack that doesn't work on .NET 8 and above
-    - name: Set up MSBuild
-      uses: microsoft/setup-msbuild@v2
-
     - name: Set up Beat Saber
       uses: nicoco007/setup-beat-saber@main
       with:
@@ -28,8 +24,7 @@ jobs:
     - name: Build Release
       id: build-release
       run: |
-        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Release -t:restore
-        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Release
+        dotnet build ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -c Release
 
     - name: Upload Release
       uses: actions/upload-artifact@v4
