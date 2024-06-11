@@ -52,9 +52,14 @@
 
   <Target Name="SetGitHubActionsOutput" AfterTargets="CopyToArtifact" Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <Message Text="Writing to GitHub output" Importance="high" />
+
+    <PropertyGroup>
+      <ArtifactName>$(ProjectName)-v$(PluginVersion)</ArtifactName>
+      <ArtifactName Condition="'$(Configuration)' != 'Release'">$(ArtifactName)-$(Configuration)</ArtifactName>
+    </PropertyGroup>
     
     <ItemGroup>
-      <LinesToWrite Include="artifact-name=$(ProjectName)-v$(PluginVersion)-$(Configuration.ToUpper())" />
+      <LinesToWrite Include="artifact-name=$(ArtifactName)" />
       <LinesToWrite Include="artifact-path=$(ArtifactDir)" />
     </ItemGroup>
 

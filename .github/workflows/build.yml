@@ -25,18 +25,6 @@ jobs:
         access-token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
         manifest: ${{ github.workspace }}\SiraLocalizer\manifest.json
 
-    - name: Build Debug
-      id: build-debug
-      run: |
-        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Debug -t:restore
-        msbuild ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj -p:Configuration=Debug
-
-    - name: Upload Debug
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ steps.build-debug.outputs.artifact-name }}
-        path: ${{ steps.build-debug.outputs.artifact-path }}
-
     - name: Build Release
       id: build-release
       run: |
