@@ -275,10 +275,11 @@ namespace SiraLocalizer
 
             IEnumerable<Locale> languages = GetSupportedLanguages();
 
-            Localization.Instance.localization.supportedLanguages.Clear();
-            Localization.Instance.localization.supportedLanguages.AddRange(languages.Select(lang => (Language)lang));
+            List<Language> supportedLanguages = Localization.Instance.localization.supportedLanguages;
+            supportedLanguages.Clear();
+            supportedLanguages.AddRange(languages.Cast<Language>());
 
-            Localization.Instance.SelectLanguage((int)_mainSettingsHandler.instance.language);
+            Localization.Instance.SelectedLanguage = _mainSettingsHandler.instance.language;
         }
 
         private IEnumerable<Locale> GetSupportedLanguages()
