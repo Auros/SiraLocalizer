@@ -1,11 +1,19 @@
+using System.Collections.Generic;
+using System.Reflection;
 using BGLib.Polyglot;
 using HarmonyLib;
 
 namespace SiraLocalizer.HarmonyPatches
 {
-    [HarmonyPatch(typeof(LanguageExtensions), nameof(LanguageExtensions.ToSerializedName))]
+    [HarmonyPatch(typeof(LanguageExtensions))]
     internal static class LocalizationExtensions_ToSerializedName
     {
+        public static IEnumerable<MethodBase> TargetMethods()
+        {
+            yield return AccessTools.DeclaredMethod(typeof(LanguageExtensions), nameof(LanguageExtensions.ToSerializedName));
+            yield return AccessTools.DeclaredMethod(typeof(LanguageExtensions), nameof(LanguageExtensions.ToCultureInfoName));
+        }
+
         public static bool Prefix(Language lang, ref string __result)
         {
             __result = GetIetfLanguageCode((Locale)lang);
@@ -13,6 +21,7 @@ namespace SiraLocalizer.HarmonyPatches
         }
 
         // see https://en.wikipedia.org/wiki/IETF_language_tag
+        // and https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c
         private static string GetIetfLanguageCode(Locale locale)
         {
             return locale switch
