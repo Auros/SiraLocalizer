@@ -1,11 +1,19 @@
+using System.Collections.Generic;
+using System.Reflection;
 using BGLib.Polyglot;
 using HarmonyLib;
 
 namespace SiraLocalizer.HarmonyPatches
 {
-    [HarmonyPatch(typeof(LanguageExtensions), nameof(LanguageExtensions.ToSerializedName))]
+    [HarmonyPatch(typeof(LanguageExtensions))]
     internal static class LocalizationExtensions_ToSerializedName
     {
+        public static IEnumerable<MethodBase> TargetMethods()
+        {
+            yield return AccessTools.DeclaredMethod(typeof(LanguageExtensions), nameof(LanguageExtensions.ToSerializedName));
+            yield return AccessTools.DeclaredMethod(typeof(LanguageExtensions), nameof(LanguageExtensions.ToCultureInfoName));
+        }
+
         public static bool Prefix(Language lang, ref string __result)
         {
             __result = GetIetfLanguageCode((Locale)lang);
