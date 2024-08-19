@@ -10,6 +10,9 @@ using System.Text.RegularExpressions;
 
 namespace SiraLocalizer.Features
 {
+    /// <summary>
+    /// BSIPA feature used to register plugins that can be localized.
+    /// </summary>
     public class LocalizedPluginFeature : Feature
     {
         internal static Logger logger;
@@ -18,6 +21,7 @@ namespace SiraLocalizer.Features
 
         private LocalizedPlugin _localizedPlugin;
 
+        /// <inheritdoc />
         protected override bool Initialize(PluginMetadata pluginMetadata, JObject featureData)
         {
             _localizedPlugin = featureData.ToObject<LocalizedPlugin>();
@@ -52,6 +56,7 @@ namespace SiraLocalizer.Features
             return true;
         }
 
+        /// <inheritdoc />
         public override void AfterInit(PluginMetadata pluginMetadata)
         {
             string resourcePath = _localizedPlugin.resourcePath;

@@ -2,8 +2,12 @@ using BGLib.Polyglot;
 
 namespace SiraLocalizer
 {
+    /// <summary>
+    /// Extended version of the <see cref="Language"/> enum.
+    /// </summary>
     public enum Locale
     {
+#pragma warning disable CS1591 // enum entries are self-explanatory
         English = Language.English,
         French = Language.French,
         Spanish = Language.Spanish,
@@ -38,5 +42,6 @@ namespace SiraLocalizer
         DebugKeys,
         DebugEnglishReverted,
         DebugEntryWithMaxLength,
+#pragma warning restore CS1591
     }
 }

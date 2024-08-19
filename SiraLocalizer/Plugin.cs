@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using BGLib.Polyglot;
 using HarmonyLib;
 using IPA;
 using IPA.Config;
@@ -9,7 +8,6 @@ using IPA.Config.Stores;
 using IPA.Logging;
 using SiraLocalizer.Features;
 using SiraLocalizer.Installers;
-using SiraLocalizer.Records;
 using SiraLocalizer.Utilities;
 using SiraUtil.Zenject;
 

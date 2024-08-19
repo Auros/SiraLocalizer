@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BeatSaber.GameSettings;
 using BGLib.Polyglot;
-using BGLib.SaveDataCore;
 using JetBrains.Annotations;
 using SiraLocalizer.Providers;
 using SiraLocalizer.Records;
@@ -26,17 +24,17 @@ namespace SiraLocalizer
         private readonly Settings _config;
         private readonly List<ILocalizationProvider> _localizationProviders;
         private readonly List<ILocalizationDownloader> _localizationDownloaders;
-        private readonly MainSettingsHandler _mainSettingsHandler;
+        private readonly SettingsManager _settingsManager;
 
         private readonly List<LocalizationFile> _localizationFiles = new();
 
-        public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders, MainSettingsHandler mainSettingsHandler)
+        public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders, SettingsManager settingsManager)
         {
             _logger = logger;
             _config = config;
             _localizationProviders = localizationProviders;
             _localizationDownloaders = localizationDownloaders;
-            _mainSettingsHandler = mainSettingsHandler;
+            _settingsManager = settingsManager;
         }
 
         public async void Initialize()
@@ -279,7 +277,7 @@ namespace SiraLocalizer
             supportedLanguages.Clear();
             supportedLanguages.AddRange(languages.Cast<Language>());
 
-            Localization.Instance.SelectedLanguage = _mainSettingsHandler.instance.language;
+            Localization.Instance.SelectedLanguage = _settingsManager.settings.misc.language.ToLanguage();
         }
 
         private IEnumerable<Locale> GetSupportedLanguages()

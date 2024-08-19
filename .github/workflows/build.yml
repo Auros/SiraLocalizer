@@ -16,10 +16,10 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Beat Saber
-      uses: nicoco007/setup-beat-saber@main
+      uses: nicoco007/setup-beat-saber@v1
       with:
         access-token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
-        manifest: ${{ github.workspace }}\SiraLocalizer\manifest.json
+        project-path: ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj
 
     - name: Build Release
       id: build-release

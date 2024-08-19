@@ -1,24 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.Net.SDK">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <PackageId>SiraLocalizer</PackageId>
+    <Title>SiraLocalizer</Title>
+    <Authors>SIRA</Authors>
     <Copyright>Copyright © SIRA 2020-2024</Copyright>
+    <Description>Allows the use of custom player models for body presence.</Description>
+    <GameVersion>1.37.3</GameVersion>
+    <Version>2.0.0</Version>
+    <RepositoryUrl>https://github.com/nicoco007/BeatSaberCustomAvatars</RepositoryUrl>
+    <PluginFeatures>
+      {
+        "IPA.DefineFeature": {
+          "name": "SiraLocalizer.LocalizedPlugin",
+          "type": "SiraLocalizer.Features.LocalizedPluginFeature"
+        },
+        "SiraLocalizer.LocalizedPlugin": {
+          "id": "sira-localizer",
+          "resourcePath": "SiraLocalizer.Resources.sira-localizer.csv"
+        }
+      }
+    </PluginFeatures>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
+  <ItemGroup>
+    <DependsOn Include="BSIPA" Version="^4.3.0" />
+    <DependsOn Include="SiraUtil" Version="^3.1.3" />
+    <DependsOn Include="System.IO.Compression" Version="^4.6.57" />
+    <DependsOn Include="System.IO.Compression.FileSystem" Version="^4.7.3056" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="BeatmapCore">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatmapCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="BeatSaber.GameSettings">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatSaber.GameSettings.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="BGLib.SaveDataCore">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BGLib.SaveDataCore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="BeatSaber.Settings">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatSaber.Settings.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BGLib.Polyglot">
@@ -36,10 +56,6 @@
     </Reference>
     <Reference Include="Harmony">
       <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IPA.Loader">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -66,6 +82,14 @@
     </Reference>
     <Reference Include="SiraUtil">
       <HintPath>$(BeatSaberDir)\Plugins\SiraUtil.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\System.IO.Compression.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\System.IO.Compression.FileSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
@@ -118,20 +142,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.33">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>build</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="IsExternalInit" Version="1.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.8.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.18.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

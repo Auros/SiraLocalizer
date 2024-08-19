@@ -73,14 +73,15 @@ namespace SiraLocalizer.HarmonyPatches
         // see https://en.wikipedia.org/wiki/IETF_language_tag
         private static Locale FromIetfLanguageCode(string serializedName)
         {
-            return serializedName switch
+            // settings are stored lowercase for some godforsaken reason
+            return serializedName.ToLowerInvariant() switch
             {
                 "en" => Locale.English,
                 "fr" => Locale.French,
                 "es" => Locale.Spanish,
                 "de" => Locale.German,
                 "it" => Locale.Italian,
-                "pt-BR" => Locale.Portuguese_Brazil,
+                "pt-br" => Locale.Portuguese_Brazil,
                 "pt" => Locale.Portuguese,
                 "ru" => Locale.Russian,
                 "el" => Locale.Greek,
@@ -92,8 +93,8 @@ namespace SiraLocalizer.HarmonyPatches
                 "pl" => Locale.Polish,
                 "fi" => Locale.Finnish,
                 "ja" => Locale.Japanese,
-                "zh-Hans" => Locale.SimplifiedChinese,
-                "zh-Hant" => Locale.TraditionalChinese,
+                "zh-hans" => Locale.SimplifiedChinese,
+                "zh-hant" => Locale.TraditionalChinese,
                 "ko" => Locale.Korean,
                 "cs" => Locale.Czech,
                 "hu" => Locale.Hungarian,
