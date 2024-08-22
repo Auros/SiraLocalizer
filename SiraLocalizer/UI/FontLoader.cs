@@ -87,7 +87,7 @@ namespace SiraLocalizer.UI
         {
             _logger.Info($"Loading fonts");
 
-            using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.fonts.assets");
+            using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.Assets");
             AssetBundleCreateRequest assetBundleCreateRequest = await AssetBundle.LoadFromStreamAsync(stream);
             AssetBundle assetBundle = assetBundleCreateRequest.assetBundle;
 

@@ -1,43 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
-public class BuildFontsAssetBundle : MonoBehaviour
+public class BuildFontsAssetBundle
 {
-    [MenuItem("Assets/Export Font Asset Bundle...", false, 20)]
+    [MenuItem("Assets/Export Custom Avatars Asset Bundle", priority = 1100)]
     public static void BuildAssetBundle()
     {
-        string path = EditorUtility.SaveFilePanel("Export Font Asset Bundle", "", "fonts.assets", "assets");
+        string resourcesPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "..", "Source", "CustomAvatar", "Resources"));
+        string targetPath = EditorUtility.SaveFilePanel("Export Font Asset Bundle", resourcesPath, "Assets", string.Empty);
 
-        if (string.IsNullOrEmpty(path)) return;
-        
-        string fileName = Path.GetFileName(path);
-        string folderPath = Path.GetDirectoryName(path);
-
-        AssetBundleBuild assetBundleBuild = new AssetBundleBuild {
-            assetBundleName = fileName,
-            assetNames = Directory.GetFiles(Path.Combine("Assets", "Text Assets"), "*.asset", SearchOption.TopDirectoryOnly)
-        };
-
-        BuildTargetGroup selectedBuildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
-        BuildTarget activeBuildTarget = EditorUserBuildSettings.activeBuildTarget;
-
-        AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(Application.temporaryCachePath, new[] { assetBundleBuild }, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
-
-        if (manifest == null)
+        if (string.IsNullOrEmpty(targetPath))
         {
-            EditorUtility.DisplayDialog("Export Failed", "Failed to create asset bundle! Please check the Unity console for more information.", "OK");
             return;
         }
 
-        // switch back to what it was before creating the asset bundle
-        EditorUserBuildSettings.SwitchActiveBuildTarget(selectedBuildTargetGroup, activeBuildTarget);
+        AssetBundleBuild assetBundleBuild = new()
+        {
+            assetBundleName = "SiraLocalizerAssets",
+            assetNames = Directory.GetFiles(Path.Combine("Assets", "Text Assets"), "*.asset", SearchOption.TopDirectoryOnly),
+        };
 
-        File.Copy(Application.temporaryCachePath + "/" + fileName, path, true);
+        AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(Application.temporaryCachePath, new AssetBundleBuild[] { assetBundleBuild }, BuildAssetBundleOptions.ForceRebuildAssetBundle, BuildTarget.StandaloneWindows64);
 
-        AssetDatabase.Refresh();
-        EditorUtility.DisplayDialog("Export Successful!", "Export Successful!", "OK");
+        if (manifest == null)
+        {
+            EditorUtility.DisplayDialog("Failed to build asset bundle!", "Failed to build asset bundle! Check the console for details.", "OK");
+            return;
+        }
+
+        string fileName = manifest.GetAllAssetBundles()[0];
+        File.Copy(Path.Combine(Application.temporaryCachePath, fileName), targetPath, true);
+
+        EditorUtility.DisplayDialog("Export Successful!", "Asset bundle exported successfully!", "OK");
     }
 }
