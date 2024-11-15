@@ -6,7 +6,7 @@
     <Authors>SIRA</Authors>
     <Copyright>Copyright © SIRA 2020-2024</Copyright>
     <Description>Allows the use of custom player models for body presence.</Description>
-    <GameVersion>1.37.3</GameVersion>
+    <GameVersion>1.37.4</GameVersion>
     <Version>2.0.0</Version>
     <RepositoryUrl>https://github.com/nicoco007/BeatSaberCustomAvatars</RepositoryUrl>
     <PluginFeatures>
@@ -40,6 +40,11 @@
     <Reference Include="BeatSaber.Settings">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatSaber.Settings.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="BeatSaber.ViewSystem">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatSaber.ViewSystem.dll</HintPath>
+      <Private>False</Private>
+      <Publicize>True</Publicize>
     </Reference>
     <Reference Include="BGLib.Polyglot">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BGLib.Polyglot.dll</HintPath>
