@@ -18,7 +18,7 @@ jobs:
     - name: Set up Beat Saber
       uses: nicoco007/setup-beat-saber@v1
       with:
-        access-token: ${{ secrets.PRIVATE_GITHUB_TOKEN }}
+        access-token: ${{ secrets.BEAT_SABER_REFERENCE_ASSEMBLIES_TOKEN }}
         project-path: ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj
 
     - name: Build Release
