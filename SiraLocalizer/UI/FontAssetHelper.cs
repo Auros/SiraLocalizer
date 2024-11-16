@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace SiraLocalizer.UI
 {
-    internal class FontAssetHelper
+    internal static class FontAssetHelper
     {
-        public TMP_FontAsset CopyFontAsset(TMP_FontAsset original, Material referenceMaterial, string newName = null)
+        public static TMP_FontAsset CopyFontAsset(TMP_FontAsset original, Material referenceMaterial, string newName = null)
         {
             if (string.IsNullOrEmpty(newName))
             {
@@ -31,7 +31,7 @@ namespace SiraLocalizer.UI
 
             copy.m_AtlasTexture = newTexture;
             copy.name = newName;
-            copy.atlasTextures = new[] { newTexture };
+            copy.atlasTextures = [newTexture];
             copy.material = material;
 
             return copy;

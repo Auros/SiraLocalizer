@@ -1,7 +1,6 @@
 using HarmonyLib;
 using SiraLocalizer.UI;
 using TMPro;
-using UnityEngine;
 using Zenject;
 using Object = UnityEngine.Object;
 
@@ -10,6 +9,8 @@ namespace SiraLocalizer.HarmonyPatches
     [HarmonyPatch(typeof(EffectPoolsManualInstaller), nameof(EffectPoolsManualInstaller.ManualInstallBindings))]
     internal static class EffectPoolsManualInstaller_ManualInstallBindings
     {
+        private static TMP_FontAsset _fontAsset;
+
         public static void Postfix(DiContainer container, bool shortBeatEffect, FlyingTextEffect ____flyingTextEffectPrefab)
         {
             container.BindMemoryPool<FlyingTextEffect, FlyingTextEffect.Pool>().WithInitialSize(20).FromComponentInNewPrefab(CreateFlyingTextEffectPrefab(____flyingTextEffectPrefab)).WhenInjectedInto<ItalicizedFlyingTextSpawner>();
@@ -17,16 +18,28 @@ namespace SiraLocalizer.HarmonyPatches
 
         private static FlyingTextEffect CreateFlyingTextEffectPrefab(FlyingTextEffect original)
         {
-            GameObject gameObject = Object.Instantiate(original.gameObject);
-            gameObject.SetActive(false);
-            gameObject.name = "ItalicizedFlyingTextEffect";
+            FlyingTextEffect flyingTextEffect = Object.Instantiate(original);
+            flyingTextEffect.name = "ItalicizedFlyingTextEffect";
+            flyingTextEffect.gameObject.SetActive(false);
 
-            TextMeshPro text = gameObject.GetComponentInChildren<TextMeshPro>();
-            text.fontStyle = FontStyles.Bold | FontStyles.Italic | FontStyles.UpperCase;
+            TextMeshPro text = flyingTextEffect._text;
+            text.font = GetFontAsset(text);
+            text.fontStyle = FontStyles.Italic | FontStyles.UpperCase;
             text.alignment = TextAlignmentOptions.Center;
             text.fontSize = 3;
 
-            return gameObject.GetComponent<FlyingTextEffect>();
+            return flyingTextEffect;
+        }
+
+        private static TMP_FontAsset GetFontAsset(TextMeshPro text)
+        {
+            if (_fontAsset == null)
+            {
+                _fontAsset = FontAssetHelper.CopyFontAsset(FontLoader.tekoBoldFontAsset, text.fontMaterial);
+                _fontAsset.italicStyle = 18;
+            }
+
+            return _fontAsset;
         }
     }
 }

@@ -8,6 +8,7 @@ using SiraLocalizer.Utilities;
 using SiraUtil.Logging;
 using TMPro;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using Zenject;
 using Object = UnityEngine.Object;
@@ -16,28 +17,28 @@ namespace SiraLocalizer.UI
 {
     internal class FontLoader : IInitializable, IDisposable
     {
-        private static readonly string[] kFontNamesToRemove = { "NotoSansJP-Medium SDF", "NotoSansKR-Medium SDF", "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)" };
-        private static readonly FontReplacementStrategy[] kFontReplacementStrategies = new[]
-        {
+        private static readonly string[] kFontNamesToRemove = ["NotoSansJP-Medium SDF", "NotoSansKR-Medium SDF", "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)"];
+        private static readonly FontReplacementStrategy[] kFontReplacementStrategies =
+        [
             new FontReplacementStrategy(
-                new[] { "Teko-Medium SDF" },
-                new[] { "Teko-Medium SDF Latin-1 Supplement", "Oswald-Medium SDF Cyrillic", "NotoSansHebrew-Medium SDF", "SourceHanSans-Medium SDF" }),
+                ["Teko-Medium SDF"],
+                ["Teko-Medium SDF Latin-1 Supplement", "Oswald-Medium SDF Cyrillic", "NotoSansHebrew-Medium SDF", "SourceHanSans-Medium SDF"]),
             new FontReplacementStrategy(
-                new[] { "Teko-Bold SDF" },
-                new[] { "Teko-Bold SDF Latin-1 Supplement", "Oswald-Bold SDF Cyrillic", "NotoSansHebrew-Bold SDF", "SourceHanSans-Medium SDF" }),
-        };
+                ["Teko-Bold SDF"],
+                ["Teko-Bold SDF Latin-1 Supplement", "Oswald-Bold SDF Cyrillic", "NotoSansHebrew-Bold SDF", "SourceHanSans-Medium SDF"]),
+        ];
 
         private readonly SiraLog _logger;
-        private readonly FontAssetHelper _fontAssetHelper;
 
-        private readonly List<TMP_FontAsset> _fallbackFontAssets = new();
-        private readonly List<TMP_FontAsset> _createdFontAssets = new();
-        private readonly List<TMP_FontAsset> _processedFontAssets = new();
+        private readonly List<TMP_FontAsset> _fallbackFontAssets = [];
+        private readonly List<TMP_FontAsset> _createdFontAssets = [];
+        private readonly List<TMP_FontAsset> _processedFontAssets = [];
 
-        public FontLoader(SiraLog logger, FontAssetHelper fontAssetHelper)
+        internal static TMP_FontAsset tekoBoldFontAsset { get; private set; }
+
+        public FontLoader(SiraLog logger)
         {
             _logger = logger;
-            _fontAssetHelper = fontAssetHelper;
         }
 
         public async void Initialize()
@@ -104,7 +105,20 @@ namespace SiraLocalizer.UI
 
             await assetBundle.UnloadAsync(false);
 
+            tekoBoldFontAsset = await LoadTekoBoldAsync();
+
             ApplyFallbackFonts();
+        }
+
+        private Task<TMP_FontAsset> LoadTekoBoldAsync()
+        {
+            TaskCompletionSource<TMP_FontAsset> taskCompletionSource = new();
+            AsyncOperationHandle<TMP_FontAsset> asyncOperationHandle = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<TMP_FontAsset>("Assets/Visuals/Fonts/Teko-Bold/Teko-Bold SDF.asset");
+            asyncOperationHandle.Completed += (aoh) =>
+            {
+                taskCompletionSource.SetResult(aoh.Result);
+            };
+            return taskCompletionSource.Task;
         }
 
         private void LoadFontAsset(AssetBundle assetBundle, string name)
@@ -154,7 +168,7 @@ namespace SiraLocalizer.UI
             foreach (TMP_FontAsset fallback in fallbacks.Reverse())
             {
                 // creating a copy is necessary to prevent fonts from overwriting each others' atlases
-                TMP_FontAsset fallbackCopy = _fontAssetHelper.CopyFontAsset(fallback, fontAsset.material);
+                TMP_FontAsset fallbackCopy = FontAssetHelper.CopyFontAsset(fallback, fontAsset.material);
                 _createdFontAssets.Add(fallbackCopy);
 
                 // insert as first possible fallback font

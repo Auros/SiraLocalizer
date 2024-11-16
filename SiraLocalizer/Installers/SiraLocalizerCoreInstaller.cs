@@ -36,7 +36,6 @@ namespace SiraLocalizer.Installers
 
             Container.Bind(typeof(ILocalizationProvider)).To<ResourceLocalizationProvider>().AsSingle();
             Container.Bind(typeof(ILocalizationProvider)).To<UserLocalizationFileProvider>().AsSingle();
-            Container.Bind<FontAssetHelper>().AsTransient();
             Container.Bind<UnityWebRequestHelper>().AsSingle();
         }
     }
