@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using SiraLocalizer.Providers;
 using SiraLocalizer.Providers.Crowdin;
 using SiraLocalizer.Providers.CrowdinApi;
 using SiraLocalizer.UI;
+using SiraLocalizer.Utilities;
 using SiraLocalizer.Utilities.WebRequests;
 using SiraUtil.Affinity;
 using Zenject;
@@ -37,6 +39,11 @@ namespace SiraLocalizer.Installers
             Container.Bind(typeof(ILocalizationProvider)).To<ResourceLocalizationProvider>().AsSingle();
             Container.Bind(typeof(ILocalizationProvider)).To<UserLocalizationFileProvider>().AsSingle();
             Container.Bind<UnityWebRequestHelper>().AsSingle();
+
+            if (Environment.GetCommandLineArgs().Contains("--dump-localization"))
+            {
+                Container.Bind<IInitializable>().To<LocalizationExporter>().AsSingle();
+            }
         }
     }
 }

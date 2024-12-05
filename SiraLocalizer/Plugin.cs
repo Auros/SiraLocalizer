@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using IPA;
@@ -8,7 +6,6 @@ using IPA.Config.Stores;
 using IPA.Logging;
 using SiraLocalizer.Features;
 using SiraLocalizer.Installers;
-using SiraLocalizer.Utilities;
 using SiraUtil.Zenject;
 
 namespace SiraLocalizer
@@ -23,8 +20,6 @@ namespace SiraLocalizer
         [Init]
         public Plugin(Config conf, Logger logger, Zenjector zenjector)
         {
-            if (Environment.GetCommandLineArgs().Contains("--dump-localization")) new LocalizationExporter(logger).DumpBaseGameLocalization();
-
             _harmony = new Harmony(kHarmonyId);
 
             LocalizedPluginFeature.logger = logger;
