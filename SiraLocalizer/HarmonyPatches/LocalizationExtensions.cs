@@ -61,7 +61,7 @@ namespace SiraLocalizer.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(LanguageExtensions), nameof(LanguageExtensions.ToLanguage))]
+    [HarmonyPatch(typeof(LanguageExtensions), nameof(LanguageExtensions.ToLanguage), [typeof(string)])]
     internal static class LocalizationExtensions_ToLanguage
     {
         public static bool Prefix(string serializedName, ref Language __result)
