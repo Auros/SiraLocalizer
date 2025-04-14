@@ -8,7 +8,7 @@
     <Description>Community localization support in Beat Saber.</Description>
     <GameVersion>1.40.0</GameVersion>
     <Version>2.0.1</Version>
-    <RepositoryUrl>https://github.com/nicoco007/BeatSaberCustomAvatars</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Auros/SiraLocalizer</RepositoryUrl>
     <PluginFeatures>
       {
         "IPA.DefineFeature": {
