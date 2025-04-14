@@ -1,14 +1,15 @@
 using System.Collections.Generic;
+using System.Linq;
 using SiraLocalizer.Utilities;
 using UnityEngine;
 
 namespace SiraLocalizer.Records
 {
-    internal record LocalizationDefinition(string id, string name, IEnumerable<string> keys)
+    internal record LocalizationDefinition(string id, string name, IReadOnlyList<string> keys)
     {
         public static IReadOnlyCollection<LocalizationDefinition> loadedDefinitions => kLoadedDefinitions.Values;
 
-        private static readonly Dictionary<string, LocalizationDefinition> kLoadedDefinitions = new();
+        private static readonly Dictionary<string, LocalizationDefinition> kLoadedDefinitions = [];
 
         public static void Add(string id, string name, IEnumerable<TextAsset> textAssets)
         {
@@ -17,7 +18,7 @@ namespace SiraLocalizer.Records
 
         public static void Add(string id, string name, IEnumerable<string> keys)
         {
-            kLoadedDefinitions.Add(id, new LocalizationDefinition(id, name, keys));
+            kLoadedDefinitions.Add(id, new LocalizationDefinition(id, name, keys.ToArray()));
         }
 
         public static bool Remove(string id)

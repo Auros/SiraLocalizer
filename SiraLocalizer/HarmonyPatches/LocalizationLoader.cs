@@ -4,12 +4,12 @@ using HarmonyLib;
 using SiraLocalizer.Records;
 using UnityEngine;
 
-namespace BeatSaberMarkupLanguage.Harmony_Patches
+namespace SiraLocalizer.HarmonyPatches
 {
     [HarmonyPatch(typeof(LocalizationAsyncInstaller), "LoadResourcesBeforeInstall")]
-    [HarmonyPriority(Priority.First)]
     internal class LocalizationLoader
     {
+        [HarmonyPriority(Priority.First)]
         public static void Prefix(IList<TextAsset> assets)
         {
             LocalizationDefinition.Remove("beat-saber");
