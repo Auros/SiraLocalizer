@@ -142,6 +142,7 @@ namespace SiraLocalizer.UI
             try
             {
                 await _localizationManager.DownloadLocalizationsAsync(_localizationsToDownload, CancellationToken.None);
+                await _localizationManager.ReloadLocalizations(CancellationToken.None);
                 _text.Key = "UPDATED_SUCCESSFULLY";
             }
             catch (Exception ex)

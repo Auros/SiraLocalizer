@@ -12,7 +12,7 @@ using Zenject;
 
 namespace SiraLocalizer.UI
 {
-    internal class TranslationDetailsTextController : MonoBehaviour
+    internal class TranslationDetailsTextController : MonoBehaviour, ILocalize
     {
         private LanguageSettingsController _languageSettingsController;
         private TextMeshProUGUI _credits;
@@ -22,6 +22,8 @@ namespace SiraLocalizer.UI
         public static TranslationDetailsTextController Create(DiContainer container, Transform parent, LanguageSettingsController languageSettingsController)
         {
             var translationDetails = new GameObject("TranslationDetails", typeof(RectTransform));
+            translationDetails.SetActive(false);
+
             var translationDetailsTransform = (RectTransform)translationDetails.transform;
             translationDetailsTransform.SetParent(parent, false);
 
@@ -41,7 +43,14 @@ namespace SiraLocalizer.UI
             controller._credits = AddCreditsTextObject(translationDetailsTransform, font, fontMaterial);
             controller._translationStatus = AddTranslationStatusTextObject(translationDetailsTransform, font, fontMaterial);
 
+            translationDetails.SetActive(true);
+
             return controller;
+        }
+
+        public void OnLocalize(LocalizationModel model)
+        {
+            RefreshValues();
         }
 
         private static CurvedTextMeshPro AddCreditsTextObject(Transform parent, TMP_FontAsset font, Material fontMaterial)
@@ -96,20 +105,21 @@ namespace SiraLocalizer.UI
         private void OnEnable()
         {
             _languageSettingsController.dropDownValueDidChangeEvent += OnSelectedLanguageChanged;
-            OnSelectedLanguageChanged();
-        }
-
-        private void Start()
-        {
-            OnSelectedLanguageChanged();
+            Localization.Instance.AddOnLocalizeEvent(this);
         }
 
         private void OnDisable()
         {
             _languageSettingsController.dropDownValueDidChangeEvent -= OnSelectedLanguageChanged;
+            Localization.Instance.RemoveOnLocalizeEvent(this);
         }
 
         private void OnSelectedLanguageChanged()
+        {
+            RefreshValues();
+        }
+
+        private void RefreshValues()
         {
             if (!_credits || !_translationStatus) return;
 

@@ -115,6 +115,12 @@ namespace SiraLocalizer
             }
         }
 
+        internal async Task ReloadLocalizations(CancellationToken cancellationToken)
+        {
+            DeregisterLocalizations();
+            await RegisterLocalizationsAsync(cancellationToken);
+        }
+
         private async Task RegisterLocalizationsAsync(CancellationToken cancellationToken)
         {
             foreach (ILocalizationProvider localizationProvider in _localizationProviders)
