@@ -164,7 +164,7 @@ namespace SiraLocalizer.UI
             {
                 _localizationsToDownload = await _localizationManager.CheckForUpdatesAsync(CancellationToken.None);
 
-                if (_localizationsToDownload != null)
+                if (_localizationsToDownload.Count > 0)
                 {
                     _button.interactable = true;
                     _text.Key = "DOWNLOAD_UPDATES";
