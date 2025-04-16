@@ -28,6 +28,7 @@ namespace SiraLocalizer.UI
 
             GameObject root = container.InstantiatePrefab(template, parent);
             root.name = "CheckForUpdates";
+            root.AddComponent<LayoutElement>().preferredHeight = 7;
 
             var rootTransform = (RectTransform)root.transform;
 

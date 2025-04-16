@@ -30,20 +30,21 @@ namespace SiraLocalizer.UI
 
         public void Initialize()
         {
-            var otherSettings = (RectTransform)_settingsNavigationController.transform.Find("OtherSettings/Content");
+            var otherSettings = (RectTransform)_settingsNavigationController.transform.Find("OtherSettings");
+            otherSettings.offsetMin = new Vector2(otherSettings.offsetMin.x, -70);
 
-            VerticalLayoutGroup layoutGroup = otherSettings.GetComponent<VerticalLayoutGroup>();
-            layoutGroup.childControlHeight = false;
-            layoutGroup.enabled = true;
+            var content = (RectTransform)otherSettings.Find("Content");
+            content.GetComponent<VerticalLayoutGroup>().enabled = true;
+            content.GetComponent<ContentSizeFitter>().enabled = true;
 
-            ContentSizeFitter contentSizeFitter = otherSettings.GetComponent<ContentSizeFitter>();
-            contentSizeFitter.enabled = true;
+            Transform languageDropdownTransform = content.Find("LanguageDropdown");
+            languageDropdownTransform.SetSiblingIndex(content.childCount - 1);
 
-            LanguageSettingsController languageSettingController = _settingsNavigationController.transform.Find("OtherSettings/Content/LanguageDropdown").GetComponent<LanguageSettingsController>();
+            LanguageSettingsController languageSettingsController = languageDropdownTransform.GetComponent<LanguageSettingsController>();
 
-            TranslationDetailsTextController.Create(_container, otherSettings, languageSettingController);
-            CheckForUpdatesController.Create(_container, otherSettings);
-            AutoCheckForUpdatesToggleController.Create(_container, otherSettings);
+            TranslationDetailsTextController.Create(_container, content, languageSettingsController);
+            CheckForUpdatesController.Create(_container, content);
+            AutoCheckForUpdatesToggleController.Create(_container, content);
 
             if (!_config.startupModalDismissed)
             {

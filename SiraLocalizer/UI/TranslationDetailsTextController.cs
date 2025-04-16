@@ -30,9 +30,6 @@ namespace SiraLocalizer.UI
             VerticalLayoutGroup layoutGroup = translationDetails.AddComponent<VerticalLayoutGroup>();
             layoutGroup.childForceExpandHeight = false;
 
-            ContentSizeFitter contentSizeFitter = translationDetails.AddComponent<ContentSizeFitter>();
-            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
             CurvedTextMeshPro templateText = languageSettingsController.GetComponentInChildren<CurvedTextMeshPro>();
             TMP_FontAsset font = templateText.font;
             Material fontMaterial = templateText.fontMaterial;
