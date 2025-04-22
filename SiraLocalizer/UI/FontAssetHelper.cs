@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 namespace SiraLocalizer.UI
 {
@@ -16,15 +17,13 @@ namespace SiraLocalizer.UI
 
             // Unity doesn't copy textures when using Object.Instantiate so we have to do it manually
             Texture2D texture = original.atlasTexture;
-            Texture2D newTexture = null;
-
-            if (texture != null && texture.width > 0 && texture.height > 0)
+            Texture2D newTexture = new(texture.width, texture.height, texture.graphicsFormat, texture.mipmapCount, TextureCreationFlags.DontInitializePixels | TextureCreationFlags.DontUploadUponCreate)
             {
-                newTexture = new Texture2D(texture.width, texture.height, texture.format, texture.mipmapCount, true)
-                {
-                    name = $"{newName} Atlas",
-                };
+                name = $"{newName} Atlas",
+            };
 
+            if (texture.width > 0 && texture.height > 0)
+            {
                 Graphics.CopyTexture(texture, newTexture);
             }
 
