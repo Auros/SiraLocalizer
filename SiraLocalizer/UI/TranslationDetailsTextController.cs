@@ -123,44 +123,40 @@ namespace SiraLocalizer.UI
             int idx = _languageSettingsController._idx;
             Language language = Localization.Instance.SupportedLanguages[idx];
 
-            if (language > Language.English)
-            {
-                string contributors = LocalizationImporter.GetLanguages("LANGUAGE_CONTRIBUTORS").ElementAtOrDefault((int)language);
-                _credits.text = string.Format(Localization.Instance.Get("TRANSLATED_BY", language), !string.IsNullOrWhiteSpace(contributors) ? contributors : "—");
-
-                List<TranslationStatus> statuses = _localizationManager.GetTranslationStatuses((Locale)language);
-                var fullyTranslated = statuses.Where(s => s.percentTranslated == 100).Select(s => s.name).ToList();
-                var partiallyTranslated = statuses.Where(s => s.percentTranslated is < 100 and > 0).Select(s => $"{s.name} ({Mathf.Clamp(s.percentTranslated, 1, 99):0}%)").ToList();
-                var notSupported = statuses.Where(s => s.percentTranslated == 0).Select(s => s.name).ToList();
-
-                _translationStatus.text = string.Empty;
-
-                if (fullyTranslated.Count > 0)
-                {
-                    _translationStatus.text += string.Format(Localization.Instance.Get("TRANSLATION_STATUS_FULL", language), string.Join(", ", fullyTranslated)) + "\n";
-                }
-
-                if (partiallyTranslated.Count > 0)
-                {
-                    _translationStatus.text += string.Format(Localization.Instance.Get("TRANSLATION_STATUS_PARTIAL", language), string.Join(", ", partiallyTranslated)) + "\n";
-                }
-
-                if (notSupported.Count > 0)
-                {
-                    _translationStatus.text += string.Format(Localization.Instance.Get("TRANSLATION_STATUS_NONE", language), string.Join(", ", notSupported));
-                }
-
-                _credits.gameObject.SetActive(true);
-                _translationStatus.gameObject.SetActive(true);
-            }
-            else
+            if (language <= Language.English)
             {
                 _credits.gameObject.SetActive(false);
                 _translationStatus.gameObject.SetActive(false);
+                return;
             }
 
-            // I don't know why this is necessary but without it the text objects don't resize properly
-            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
+            string contributors = LocalizationImporter.GetLanguages("LANGUAGE_CONTRIBUTORS").ElementAtOrDefault((int)language);
+            _credits.text = string.Format(Localization.Instance.Get("TRANSLATED_BY", language), !string.IsNullOrWhiteSpace(contributors) ? contributors : "—");
+
+            List<TranslationStatus> statuses = _localizationManager.GetTranslationStatuses((Locale)language);
+            var fullyTranslated = statuses.Where(s => s.percentTranslated == 100).Select(s => s.name).ToList();
+            var partiallyTranslated = statuses.Where(s => s.percentTranslated is < 100 and > 0).Select(s => $"{s.name} ({Mathf.Clamp(s.percentTranslated, 1, 99):0}%)").ToList();
+            var notSupported = statuses.Where(s => s.percentTranslated == 0).Select(s => s.name).ToList();
+
+            _translationStatus.text = string.Empty;
+
+            if (fullyTranslated.Count > 0)
+            {
+                _translationStatus.text += string.Format(Localization.Instance.Get("TRANSLATION_STATUS_FULL", language), string.Join(", ", fullyTranslated)) + "\n";
+            }
+
+            if (partiallyTranslated.Count > 0)
+            {
+                _translationStatus.text += string.Format(Localization.Instance.Get("TRANSLATION_STATUS_PARTIAL", language), string.Join(", ", partiallyTranslated)) + "\n";
+            }
+
+            if (notSupported.Count > 0)
+            {
+                _translationStatus.text += string.Format(Localization.Instance.Get("TRANSLATION_STATUS_NONE", language), string.Join(", ", notSupported)) + "\n";
+            }
+
+            _credits.gameObject.SetActive(true);
+            _translationStatus.gameObject.SetActive(true);
         }
     }
 }
