@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.Net.SDK">
   <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>12</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <PackageId>SiraLocalizer</PackageId>
     <Title>SiraLocalizer</Title>
     <Authors>SIRA</Authors>
@@ -29,111 +33,58 @@
     <DependsOn Include="System.IO.Compression.FileSystem" Version="^4.7.3056" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="BeatmapCore">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="BeatSaber.GameSettings">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="BGLib.SaveDataCore">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="BeatSaber.Settings">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="BeatSaber.ViewSystem">
-      <Private>False</Private>
-      <Publicize>True</Publicize>
-    </Reference>
-    <Reference Include="BGLib.Polyglot">
-      <Private>False</Private>
-      <Publicize>True</Publicize>
-    </Reference>
-    <Reference Include="BGLib.UnityExtension">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DataModels">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Harmony">
-      <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>$(BeatSaberDir)\Libs\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Main">
-      <Private>False</Private>
-      <Publicize>True</Publicize>
-    </Reference>
-    <Reference Include="Menu.CommonLib">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="HMLib">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="HMUI">
-      <Private>False</Private>
-      <Publicize>True</Publicize>
-    </Reference>
-    <Reference Include="SiraUtil">
-      <HintPath>$(BeatSaberDir)\Plugins\SiraUtil.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.IO.Compression">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.IO.Compression.FileSystem">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Addressables">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.ResourceManager">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <Private>False</Private>
-      <Publicize>True</Publicize>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-	  <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Zenject">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Zenject-usage">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="0Harmony" />
+    <Reference Include="BeatmapCore" />
+    <Reference Include="BeatSaber.GameSettings" />
+    <Reference Include="BGLib.SaveDataCore" />
+    <Reference Include="BeatSaber.Settings" />
+    <Reference Include="BeatSaber.ViewSystem" Publicize="True" />
+    <Reference Include="BGLib.Polyglot" Publicize="True" />
+    <Reference Include="BGLib.UnityExtension" />
+    <Reference Include="DataModels" />
+    <Reference Include="IPA.Loader" />
+    <Reference Include="Newtonsoft.Json" />
+    <Reference Include="Main" Publicize="True" />
+    <Reference Include="Menu.CommonLib" />
+    <Reference Include="HMLib" />
+    <Reference Include="HMUI" Publicize="True" />
+    <Reference Include="SiraUtil" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="Unity.Addressables" />
+    <Reference Include="Unity.ResourceManager" />
+    <Reference Include="Unity.TextMeshPro" Publicize="True" />
+    <Reference Include="UnityEngine" />
+    <Reference Include="UnityEngine.AssetBundleModule" />
+    <Reference Include="UnityEngine.CoreModule" />
+    <Reference Include="UnityEngine.TextRenderingModule" />
+    <Reference Include="UnityEngine.UI" />
+    <Reference Include="UnityEngine.UIModule" />
+    <Reference Include="UnityEngine.UnityWebRequestModule" />
+    <Reference Include="Zenject" />
+    <Reference Include="Zenject-usage" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\**\*.*" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1">
+    <PackageReference Include="BSIPA.AssemblyPublicizer.MSBuild" Version="0.5.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="IsExternalInit" Version="1.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="nicoco007.BeatSaberModdingTools.Tasks" Version="0.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.11.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.22.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

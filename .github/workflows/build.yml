@@ -21,6 +21,9 @@ jobs:
         access-token: ${{ secrets.BEAT_SABER_REFERENCE_ASSEMBLIES_TOKEN }}
         project-path: ${{ github.workspace }}\SiraLocalizer\SiraLocalizer.csproj
 
+    - name: Add NuGet source
+      run: dotnet nuget update source "nicoco007 GitHub Packages" --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
+
     - name: Build Release
       id: build-release
       run: |
