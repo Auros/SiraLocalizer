@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using IPA.Loader;
 using SiraLocalizer.UI;
 using UnityEngine;
 using Zenject;
@@ -14,6 +15,11 @@ namespace SiraLocalizer.HarmonyPatches
     {
         private static readonly MethodInfo kBindMissedNoteEffectSpawnerMethod = AccessTools.DeclaredMethod(typeof(DiContainer), nameof(DiContainer.Bind), Array.Empty<Type>(), new[] { typeof(MissedNoteEffectSpawner) });
         private static readonly MethodInfo kBindToTextBasedEffectSpawnerMethod = AccessTools.DeclaredMethod(typeof(ConcreteBinderGeneric<MissedNoteEffectSpawner>), nameof(ConcreteBinderGeneric<MissedNoteEffectSpawner>.To), Array.Empty<Type>(), new[] { typeof(TextBasedMissedNoteEffectSpawner) });
+
+        private const string kCustomMissTextId = "CustomMissText";
+
+        // Don't overwrite the miss effect when CustomMissText is installed.
+        public static bool Prepare() => PluginManager.GetPluginFromId(kCustomMissTextId) == null;
 
         public static void Prefix(MissedNoteEffectSpawner ____missedNoteEffectSpawnerPrefab)
         {
