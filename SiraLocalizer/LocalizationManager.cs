@@ -140,7 +140,7 @@ namespace SiraLocalizer
                 }
             }
 
-            LocalizationImporter.Initialize(Localization.Instance);
+            LocalizationImporter.ImportFromFiles(Localization.Instance.inputFiles);
         }
 
         private void DeregisterLocalizations()
@@ -150,7 +150,7 @@ namespace SiraLocalizer
 
         internal List<TranslationStatus> GetTranslationStatuses(Locale language)
         {
-            var languageStrings = LocalizationImporter.languageStrings;
+            var languageStrings = Localization.Instance._languageStrings;
             var statuses = new List<TranslationStatus>();
 
             foreach (LocalizationDefinition def in LocalizationDefinition.loadedDefinitions)
@@ -173,7 +173,7 @@ namespace SiraLocalizer
                         continue;
                     }
 
-                    string english = strings[(int)Language.English];
+                    string english = strings[(int)LocalizationLanguage.English];
 
                     if (key.Equals(english, StringComparison.Ordinal))
                     {
@@ -228,6 +228,7 @@ namespace SiraLocalizer
         {
             text = text.Replace("\r\n", "\n");
             List<List<string>> list = CsvReader.Parse(text);
+            var languageStrings = Localization.Instance._languageStrings;
 
             foreach (List<string> row in list.SkipWhile(r => r[0] != "Polyglot").Skip(1))
             {
@@ -260,13 +261,13 @@ namespace SiraLocalizer
                 row.RemoveAt(0);
                 row.RemoveAt(0);
 
-                if (LocalizationImporter.languageStrings.TryGetValue(key, out List<string> existingValues))
+                if (languageStrings.TryGetValue(key, out List<string> existingValues))
                 {
                     // keep English, overwrite everything else
                     row[0] = existingValues[0];
                 }
 
-                LocalizationImporter.languageStrings[key] = row;
+                languageStrings[key] = row;
             }
         }
 
@@ -279,16 +280,16 @@ namespace SiraLocalizer
 
             IEnumerable<Locale> languages = GetSupportedLanguages();
 
-            List<Language> supportedLanguages = Localization.Instance.localization.supportedLanguages;
+            List<LocalizationLanguage> supportedLanguages = Localization.Instance._localization.supportedLanguages;
             supportedLanguages.Clear();
-            supportedLanguages.AddRange(languages.Cast<Language>());
+            supportedLanguages.AddRange(languages.Cast<LocalizationLanguage>());
 
-            Localization.Instance.SelectedLanguage = _settingsManager.settings.misc.language.ToLanguage();
+            Localization.Instance.SelectedLanguage = _settingsManager.settings.misc.language.ToLocalizationLanguage();
         }
 
         private IEnumerable<Locale> GetSupportedLanguages()
         {
-            var languageStrings = LocalizationImporter.languageStrings;
+            var languageStrings = Localization.Instance._languageStrings;
 
             if (!languageStrings.TryGetValue("LANGUAGE_THIS", out List<string> languageNames))
             {

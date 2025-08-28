@@ -84,7 +84,7 @@ namespace SiraLocalizer.UI
             text.fontMaterial = template.fontMaterial;
             text.fontSize = 5;
             text.alignment = TextAlignmentOptions.TopLeft;
-            text.enableWordWrapping = true;
+            text.textWrappingMode = TextWrappingModes.Normal;
             text.richText = true;
 
             LocalizedTextMeshProUGUI localizedText = textObject.AddComponent<LocalizedTextMeshProUGUI>();

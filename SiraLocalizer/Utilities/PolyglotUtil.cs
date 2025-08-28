@@ -9,12 +9,12 @@ namespace SiraLocalizer.Utilities
     {
         public static IEnumerable<string> GetKeysFromLocalizationAsset(IEnumerable<TextAsset> textAssets)
         {
-            return textAssets.SelectMany(asset => GetKeysFromLocalizationAsset(asset.text, GoogleDriveDownloadFormat.CSV));
+            return textAssets.SelectMany(asset => GetKeysFromLocalizationAsset(asset.text));
         }
 
-        public static IEnumerable<string> GetKeysFromLocalizationAsset(string content, GoogleDriveDownloadFormat format)
+        public static IEnumerable<string> GetKeysFromLocalizationAsset(string content)
         {
-            List<List<string>> rows = format == GoogleDriveDownloadFormat.TSV ? TsvReader.Parse(content) : CsvReader.Parse(content);
+            List<List<string>> rows = CsvReader.Parse(content);
             return rows.SkipWhile(row => row[0] != "Polyglot").Skip(1).Select(row => row[0]);
         }
     }

@@ -13,7 +13,7 @@ namespace SiraLocalizer.Utilities
     internal class LocalizationExporter : IInitializable
     {
         // languages supported by the base game
-        private static readonly Language[] kSupportedLanguages = [Language.French, Language.Spanish, Language.German, Language.Japanese, Language.Korean];
+        private static readonly LocalizationLanguage[] kSupportedLanguages = [LocalizationLanguage.French, LocalizationLanguage.Spanish, LocalizationLanguage.German, LocalizationLanguage.Japanese, LocalizationLanguage.Korean];
 
         // keys that aren't actually used
         private static readonly string[] kLocalizationKeyIgnoreList =
@@ -58,7 +58,7 @@ namespace SiraLocalizer.Utilities
                 {
                     writer.WriteLine("Polyglot,100," + new string(',', numberOfLanguages));
 
-                    foreach (LocalizationAsset baseGameAsset in _localizationModel.InputFiles.Take(2))
+                    foreach (LocalizationAsset baseGameAsset in _localizationModel.inputFiles.Take(2))
                     {
                         _logger.Info($"Processing '{baseGameAsset.TextAsset.name}'");
 

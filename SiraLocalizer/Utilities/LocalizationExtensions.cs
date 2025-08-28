@@ -10,7 +10,7 @@ namespace SiraLocalizer.Utilities
 
         private static readonly OnLocalizeDelegate kRemoveOnChangeLanguage = (OnLocalizeDelegate)typeof(LocalizationModel).GetEvent("_onChangeLanguage", BindingFlags.Instance | BindingFlags.NonPublic).GetRemoveMethod(true).CreateDelegate(typeof(OnLocalizeDelegate));
 
-        public static string Get(this LocalizationModel model, string key, Language language)
+        public static string Get(this LocalizationModel model, string key, LocalizationLanguage language)
         {
             model.TryGet(key, language, out string value);
             return value;

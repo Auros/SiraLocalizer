@@ -5,12 +5,26 @@ using IPA.Utilities;
 
 namespace SiraLocalizer.HarmonyPatches
 {
-    [HarmonyPatch(typeof(LocalizationImporter), nameof(LocalizationImporter.Initialize))]
+    [HarmonyPatch(typeof(LocalizationImporter), nameof(LocalizationImporter.ImportFromFiles))]
     internal static class LocalizationImporter_Initialize
     {
-        public static void Postfix(LocalizationModel settings)
+        public static void Postfix()
         {
-            settings.GetField<Action<LocalizationModel>, LocalizationModel>("_onChangeLanguage")?.Invoke(settings);
+            if (Localization._instance == null)
+            {
+                return;
+            }
+
+            Localization.Instance.GetField<Action<LocalizationModel>, LocalizationModel>("_onChangeLanguage")?.Invoke(Localization.Instance);
+        }
+    }
+
+    [HarmonyPatch(typeof(Localization), nameof(Localization.SetSingletonInstance))]
+    internal static class Localization_SetSingletonInstance
+    {
+        public static void Postfix()
+        {
+            Localization.Instance.GetField<Action<LocalizationModel>, LocalizationModel>("_onChangeLanguage")?.Invoke(Localization.Instance);
         }
     }
 }

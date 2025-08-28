@@ -121,16 +121,16 @@ namespace SiraLocalizer.UI
             if (!_credits || !_translationStatus) return;
 
             int idx = _languageSettingsController._idx;
-            Language language = Localization.Instance.SupportedLanguages[idx];
+            LocalizationLanguage language = Localization.Instance._localization.SupportedLanguages[idx];
 
-            if (language <= Language.English)
+            if (language <= LocalizationLanguage.English)
             {
                 _credits.gameObject.SetActive(false);
                 _translationStatus.gameObject.SetActive(false);
                 return;
             }
 
-            string contributors = LocalizationImporter.GetLanguages("LANGUAGE_CONTRIBUTORS").ElementAtOrDefault((int)language);
+            string contributors = Localization.Instance.GetLanguages("LANGUAGE_CONTRIBUTORS").ElementAtOrDefault((int)language);
             _credits.text = string.Format(Localization.Instance.Get("TRANSLATED_BY", language), !string.IsNullOrWhiteSpace(contributors) ? contributors : "—");
 
             List<TranslationStatus> statuses = _localizationManager.GetTranslationStatuses((Locale)language);

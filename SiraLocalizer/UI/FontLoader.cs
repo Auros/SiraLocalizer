@@ -152,7 +152,7 @@ namespace SiraLocalizer.UI
                 }
 
                 // force update any text that has already rendered
-                foreach (TMP_Text text in Object.FindObjectsOfType<TMP_Text>())
+                foreach (TMP_Text text in Object.FindObjectsByType<TMP_Text>(FindObjectsSortMode.None))
                 {
                     text.SetAllDirty();
                 }

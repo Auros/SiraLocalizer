@@ -5,18 +5,18 @@ using HarmonyLib;
 
 namespace SiraLocalizer.HarmonyPatches
 {
-    [HarmonyPatch(typeof(LanguageExtensions))]
+    [HarmonyPatch(typeof(LocalizationLanguageExtensions))]
     internal static class LocalizationExtensions_ToSerializedName
     {
         public static IEnumerable<MethodBase> TargetMethods()
         {
-            yield return AccessTools.DeclaredMethod(typeof(LanguageExtensions), nameof(LanguageExtensions.ToSerializedName));
-            yield return AccessTools.DeclaredMethod(typeof(LanguageExtensions), nameof(LanguageExtensions.ToCultureInfoName));
+            yield return AccessTools.DeclaredMethod(typeof(LocalizationLanguageExtensions), nameof(LocalizationLanguageExtensions.ToSerializedName));
+            yield return AccessTools.DeclaredMethod(typeof(LocalizationLanguageExtensions), nameof(LocalizationLanguageExtensions.ToCultureInfoName));
         }
 
-        public static bool Prefix(Language lang, ref string __result)
+        public static bool Prefix(LocalizationLanguage language, ref string __result)
         {
-            __result = GetIetfLanguageCode((Locale)lang);
+            __result = GetIetfLanguageCode((Locale)language);
             return false;
         }
 
@@ -61,12 +61,12 @@ namespace SiraLocalizer.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(LanguageExtensions), nameof(LanguageExtensions.ToLanguage), [typeof(string)])]
+    [HarmonyPatch(typeof(LocalizationLanguageExtensions), nameof(LocalizationLanguageExtensions.ToLocalizationLanguage), [typeof(string)])]
     internal static class LocalizationExtensions_ToLanguage
     {
-        public static bool Prefix(string serializedName, ref Language __result)
+        public static bool Prefix(string serializedName, ref LocalizationLanguage __result)
         {
-            __result = (Language)FromIetfLanguageCode(serializedName);
+            __result = (LocalizationLanguage)FromIetfLanguageCode(serializedName);
             return false;
         }
 

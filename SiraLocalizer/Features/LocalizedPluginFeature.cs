@@ -1,12 +1,11 @@
-using BGLib.Polyglot;
+using System.IO;
+using System.Text.RegularExpressions;
 using IPA.Loader;
 using IPA.Loader.Features;
 using IPA.Logging;
 using Newtonsoft.Json.Linq;
 using SiraLocalizer.Records;
 using SiraLocalizer.Utilities;
-using System.IO;
-using System.Text.RegularExpressions;
 
 namespace SiraLocalizer.Features
 {
@@ -70,7 +69,7 @@ namespace SiraLocalizer.Features
 
             using var reader = new StreamReader(resourceStream);
 
-            LocalizationDefinition.Add("plugins/" + _localizedPlugin.id, _localizedPlugin.name, PolyglotUtil.GetKeysFromLocalizationAsset(reader.ReadToEnd(), GoogleDriveDownloadFormat.CSV));
+            LocalizationDefinition.Add("plugins/" + _localizedPlugin.id, _localizedPlugin.name, PolyglotUtil.GetKeysFromLocalizationAsset(reader.ReadToEnd()));
         }
     }
 }

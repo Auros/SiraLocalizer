@@ -10,7 +10,7 @@
     <Authors>SIRA</Authors>
     <Copyright>Copyright © SIRA 2020-2025</Copyright>
     <Description>Community localization support in Beat Saber.</Description>
-    <GameVersion>1.40.0</GameVersion>
+    <GameVersion>1.40.9</GameVersion>
     <Version>2.0.3</Version>
     <RepositoryUrl>https://github.com/Auros/SiraLocalizer</RepositoryUrl>
     <PluginFeatures>
@@ -89,5 +89,4 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  <ProjectExtensions><VisualStudio><UserProperties manifest_1json__JsonSchema="https://json-schema.org/draft-04/schema" /></VisualStudio></ProjectExtensions>
 </Project>

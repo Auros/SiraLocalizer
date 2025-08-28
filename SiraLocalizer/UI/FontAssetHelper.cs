@@ -17,12 +17,16 @@ namespace SiraLocalizer.UI
 
             // Unity doesn't copy textures when using Object.Instantiate so we have to do it manually
             Texture2D texture = original.atlasTexture;
-            Texture2D newTexture = new(texture.width, texture.height, texture.graphicsFormat, texture.mipmapCount, TextureCreationFlags.DontInitializePixels | TextureCreationFlags.DontUploadUponCreate)
+
+            bool shouldCopy = texture != null && texture.width > 0 && texture.height > 0;
+
+            // 1 × 1 texture causes TMP to reinitialize the texture
+            Texture2D newTexture = new(shouldCopy ? texture.width : 1, shouldCopy ? texture.height : 1, texture.graphicsFormat, texture.mipmapCount, TextureCreationFlags.DontInitializePixels | TextureCreationFlags.DontUploadUponCreate)
             {
                 name = $"{newName} Atlas",
             };
 
-            if (texture.width > 0 && texture.height > 0)
+            if (shouldCopy)
             {
                 Graphics.CopyTexture(texture, newTexture);
             }
