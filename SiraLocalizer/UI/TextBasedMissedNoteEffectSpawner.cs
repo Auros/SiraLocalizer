@@ -12,18 +12,6 @@ namespace SiraLocalizer.UI
             _flyingTextSpawner = GetComponent<ItalicizedFlyingTextSpawner>();
         }
 
-        public new void Start()
-        {
-            if (_initData.hide)
-            {
-                enabled = false;
-                return;
-            }
-
-            _beatmapObjectManager.noteWasMissedEvent += HandleNoteWasMissed;
-            _spawnPosZ = transform.position.z;
-        }
-
         public new void HandleNoteWasMissed(NoteController noteController)
         {
             if (noteController.hidden) return;
@@ -39,14 +27,6 @@ namespace SiraLocalizer.UI
             position = worldRotation * position;
 
             _flyingTextSpawner.SpawnText(position, noteController.worldRotation, noteController.inverseWorldRotation, Localization.Get("FLYING_TEXT_MISS"));
-        }
-
-        public new void OnDestroy()
-        {
-            if (_beatmapObjectManager != null)
-            {
-                _beatmapObjectManager.noteWasMissedEvent -= HandleNoteWasMissed;
-            }
         }
     }
 }
