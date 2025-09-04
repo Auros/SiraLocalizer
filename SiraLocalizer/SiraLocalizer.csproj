@@ -11,7 +11,7 @@
     <Copyright>Copyright © SIRA 2020-2025</Copyright>
     <Description>Community localization support in Beat Saber.</Description>
     <GameVersion>1.40.9</GameVersion>
-    <Version>2.0.3</Version>
+    <Version>2.0.4</Version>
     <RepositoryUrl>https://github.com/Auros/SiraLocalizer</RepositoryUrl>
     <PluginFeatures>
       {
