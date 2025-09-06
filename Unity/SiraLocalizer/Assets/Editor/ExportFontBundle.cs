@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class BuildFontsAssetBundle
 {
-    [MenuItem("Assets/Export Custom Avatars Asset Bundle", priority = 1100)]
+    [MenuItem("Assets/Export Asset Bundle", priority = 1100)]
     public static void BuildAssetBundle()
     {
-        string resourcesPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "..", "Source", "CustomAvatar", "Resources"));
+        string resourcesPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "..", "SiraLocalizer", "Resources"));
         string targetPath = EditorUtility.SaveFilePanel("Export Font Asset Bundle", resourcesPath, "Assets", string.Empty);
 
         if (string.IsNullOrEmpty(targetPath))
