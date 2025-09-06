@@ -164,16 +164,7 @@ namespace SiraLocalizer.UI
             _logger.Info($"Adding fallbacks to '{fontAsset.name}' ({fontAsset.GetInstanceID()})");
 
             fontAsset.fallbackFontAssetTable.RemoveAll(f => kFontNamesToRemove.Contains(f.name));
-
-            foreach (TMP_FontAsset fallback in fallbacks.Reverse())
-            {
-                // creating a copy is necessary to prevent fonts from overwriting each others' atlases
-                TMP_FontAsset fallbackCopy = FontAssetHelper.CopyFontAsset(fallback, fontAsset.material);
-                _createdFontAssets.Add(fallbackCopy);
-
-                // insert as first possible fallback font
-                fontAsset.fallbackFontAssetTable.Insert(0, fallbackCopy);
-            }
+            fontAsset.fallbackFontAssetTable.InsertRange(0, fallbacks);
 
             // reset the lookup tables so TMP tries to find previously cached characters in the new fallback fonts
             fontAsset.InitializeDictionaryLookupTables();
