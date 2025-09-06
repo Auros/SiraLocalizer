@@ -57,6 +57,7 @@
     <Reference Include="UnityEngine" />
     <Reference Include="UnityEngine.AssetBundleModule" />
     <Reference Include="UnityEngine.CoreModule" />
+    <Reference Include="UnityEngine.TextCoreFontEngineModule" />
     <Reference Include="UnityEngine.TextRenderingModule" />
     <Reference Include="UnityEngine.UI" />
     <Reference Include="UnityEngine.UIModule" />

@@ -8,6 +8,7 @@ using SiraLocalizer.Utilities;
 using SiraUtil.Logging;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -88,6 +89,19 @@ namespace SiraLocalizer.UI
         {
             _logger.Info($"Loading fonts");
 
+            await Task.WhenAll(LoadFallbackFontsAsync(), LoadTekoBoldAsync());
+
+            ApplyFallbackFonts();
+        }
+
+        private async Task LoadTekoBoldAsync()
+        {
+            AsyncOperationHandle<TMP_FontAsset> asyncOperationHandle = await Addressables.LoadAssetAsync<TMP_FontAsset>("Assets/Visuals/Fonts/Teko-Bold/Teko-Bold SDF.asset");
+            tekoBoldFontAsset = asyncOperationHandle.Result;
+        }
+
+        private async Task LoadFallbackFontsAsync()
+        {
             using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SiraLocalizer.Resources.Assets");
             AssetBundleCreateRequest assetBundleCreateRequest = await AssetBundle.LoadFromStreamAsync(stream);
             AssetBundle assetBundle = assetBundleCreateRequest.assetBundle;
@@ -98,31 +112,19 @@ namespace SiraLocalizer.UI
                 return;
             }
 
+            await assetBundle.LoadAllAssetsAsync();
+
             foreach (string fontName in kFontReplacementStrategies.SelectMany(s => s.fontNamesToAdd).Distinct())
             {
                 LoadFontAsset(assetBundle, fontName);
             }
 
             await assetBundle.UnloadAsync(false);
-
-            tekoBoldFontAsset = await LoadTekoBoldAsync();
-
-            ApplyFallbackFonts();
-        }
-
-        private Task<TMP_FontAsset> LoadTekoBoldAsync()
-        {
-            TaskCompletionSource<TMP_FontAsset> taskCompletionSource = new();
-            AsyncOperationHandle<TMP_FontAsset> asyncOperationHandle = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<TMP_FontAsset>("Assets/Visuals/Fonts/Teko-Bold/Teko-Bold SDF.asset");
-            asyncOperationHandle.Completed += (aoh) =>
-            {
-                taskCompletionSource.SetResult(aoh.Result);
-            };
-            return taskCompletionSource.Task;
         }
 
         private void LoadFontAsset(AssetBundle assetBundle, string name)
         {
+            // this is basically instant since we've called LoadAllAssetsAsync previously
             TMP_FontAsset fontAsset = assetBundle.LoadAsset<TMP_FontAsset>(name);
 
             if (fontAsset == null)
