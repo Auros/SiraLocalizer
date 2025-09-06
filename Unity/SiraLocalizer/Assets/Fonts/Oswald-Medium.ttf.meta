@@ -8,10 +8,10 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Oswald
   fontNames:
   - Oswald
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: fc4edf97afc97aa44af3d35f0cb1e814, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

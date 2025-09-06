@@ -8,10 +8,10 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Noto Sans Hebrew
   fontNames:
   - Noto Sans Hebrew
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 5fa9131ae1b4c804fb4e0677abd0714f, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

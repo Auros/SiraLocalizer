@@ -8,10 +8,10 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Source Han Sans
   fontNames:
   - Source Han Sans
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 1f1324d5b998b9b4e9e5c421d5c88a03, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
