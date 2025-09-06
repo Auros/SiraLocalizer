@@ -150,12 +150,12 @@ namespace SiraLocalizer.UI
                 {
                     AddFallbacksToFont(fontAsset, strategy.fontNamesToAdd.Select(n => _fallbackFontAssets.Find(f => f.name == n)).Where(f => f != null));
                 }
+            }
 
-                // force update any text that has already rendered
-                foreach (TMP_Text text in Object.FindObjectsByType<TMP_Text>(FindObjectsSortMode.None))
-                {
-                    text.SetAllDirty();
-                }
+            // force update any text that has already rendered
+            foreach (TMP_Text text in Object.FindObjectsByType<TMP_Text>(FindObjectsSortMode.None))
+            {
+                text.SetAllDirty();
             }
         }
 
