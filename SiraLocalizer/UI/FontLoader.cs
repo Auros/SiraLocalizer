@@ -168,8 +168,10 @@ namespace SiraLocalizer.UI
             fontAsset.fallbackFontAssetTable.RemoveAll(f => kFontNamesToRemove.Contains(f.name));
             fontAsset.fallbackFontAssetTable.InsertRange(0, fallbacks);
 
-            // reset the lookup tables so TMP tries to find previously cached characters in the new fallback fonts
-            fontAsset.InitializeDictionaryLookupTables();
+            if (fontAsset.m_CharacterLookupDictionary != null)
+            {
+                fontAsset.ClearFallbackCharacterTable();
+            }
 
             _processedFontAssets.Add(fontAsset);
         }
