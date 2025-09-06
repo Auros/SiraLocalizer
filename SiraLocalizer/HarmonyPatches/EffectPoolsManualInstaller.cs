@@ -13,30 +13,33 @@ namespace SiraLocalizer.HarmonyPatches
 
         public static void Postfix(DiContainer container, bool shortBeatEffect, FlyingTextEffect ____flyingTextEffectPrefab)
         {
-            container.BindMemoryPool<FlyingTextEffect, FlyingTextEffect.Pool>().WithInitialSize(20).FromComponentInNewPrefab(CreateFlyingTextEffectPrefab(____flyingTextEffectPrefab)).WhenInjectedInto<ItalicizedFlyingTextSpawner>();
+            FlyingTextEffect flyingTextEffect = CreateFlyingTextEffectPrefab(container, ____flyingTextEffectPrefab);
+            container.BindMemoryPool<FlyingTextEffect, FlyingTextEffect.Pool>().WithInitialSize(20).FromComponentInNewPrefab(flyingTextEffect).WhenInjectedInto<ItalicizedFlyingTextSpawner>();
         }
 
-        private static FlyingTextEffect CreateFlyingTextEffectPrefab(FlyingTextEffect original)
+        private static FlyingTextEffect CreateFlyingTextEffectPrefab(DiContainer container, FlyingTextEffect original)
         {
             FlyingTextEffect flyingTextEffect = Object.Instantiate(original);
             flyingTextEffect.name = "ItalicizedFlyingTextEffect";
             flyingTextEffect.gameObject.SetActive(false);
 
             TextMeshPro text = flyingTextEffect._text;
-            text.font = GetFontAsset(text);
-            text.fontStyle = FontStyles.Italic | FontStyles.UpperCase;
+            text.font = GetFontAsset(container, text);
+            text.fontStyle = FontStyles.Bold | FontStyles.Italic | FontStyles.UpperCase;
             text.alignment = TextAlignmentOptions.Center;
             text.fontSize = 3;
 
             return flyingTextEffect;
         }
 
-        private static TMP_FontAsset GetFontAsset(TextMeshPro text)
+        private static TMP_FontAsset GetFontAsset(DiContainer container, TextMeshPro text)
         {
             if (_fontAsset == null)
             {
-                _fontAsset = FontAssetHelper.CopyFontAsset(FontLoader.tekoBoldFontAsset, text.fontMaterial);
+                TMP_FontAsset original = container.Resolve<FontLoader>().tekoBoldFontAsset;
+                _fontAsset = FontAssetHelper.CopyFontAsset(original, text.fontMaterial, $"{original.name} - ItalicizedFlyingTextEffect");
                 _fontAsset.italicStyle = 18;
+                _fontAsset.boldSpacing = 2f;
             }
 
             return _fontAsset;

@@ -35,7 +35,7 @@ namespace SiraLocalizer.UI
         private readonly List<TMP_FontAsset> _createdFontAssets = [];
         private readonly List<TMP_FontAsset> _processedFontAssets = [];
 
-        internal static TMP_FontAsset tekoBoldFontAsset { get; private set; }
+        internal TMP_FontAsset tekoBoldFontAsset { get; private set; }
 
         public FontLoader(SiraLog logger)
         {
