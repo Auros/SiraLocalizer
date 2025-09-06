@@ -175,6 +175,9 @@ namespace SiraLocalizer.UI
                 fontAsset.fallbackFontAssetTable.Insert(0, fallbackCopy);
             }
 
+            // reset the lookup tables so TMP tries to find previously cached characters in the new fallback fonts
+            fontAsset.InitializeDictionaryLookupTables();
+
             _processedFontAssets.Add(fontAsset);
         }
 
