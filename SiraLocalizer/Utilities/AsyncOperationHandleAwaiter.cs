@@ -5,7 +5,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 namespace SiraLocalizer.Utilities
 {
 #pragma warning disable IDE1006
-    internal class AsyncOperationHandleAwaiter<T> : ICriticalNotifyCompletion
+    internal struct AsyncOperationHandleAwaiter<T> : ICriticalNotifyCompletion
     {
         private AsyncOperationHandle<T> asyncOperation;
         private Action continuationAction;
