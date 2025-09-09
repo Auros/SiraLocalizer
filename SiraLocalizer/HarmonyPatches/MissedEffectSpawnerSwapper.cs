@@ -26,12 +26,21 @@ namespace SiraLocalizer.HarmonyPatches
             var textSpawner = gameObject.GetComponent<ItalicizedFlyingTextSpawner>();
             var effectSpawner = gameObject.GetComponent<TextBasedMissedNoteEffectSpawner>();
 
-            if (!textSpawner)
+            if (textSpawner == null)
             {
-                gameObject.AddComponent<ItalicizedFlyingTextSpawner>();
+                FlyingSpriteSpawner missedNoteEffectSpawner = gameObject.transform.GetComponentInChildren<FlyingSpriteSpawner>(true);
+
+                textSpawner = gameObject.AddComponent<ItalicizedFlyingTextSpawner>();
+                textSpawner._color = missedNoteEffectSpawner._color;
+                textSpawner._duration = missedNoteEffectSpawner._duration;
+                textSpawner._targetYPos = missedNoteEffectSpawner._targetYPos;
+                textSpawner._targetZPos = missedNoteEffectSpawner._targetZPos;
+                textSpawner._xSpread = missedNoteEffectSpawner._xSpread;
+                textSpawner._shake = missedNoteEffectSpawner._shake;
+                textSpawner._fontSize = 4.5f;
             }
 
-            if (!effectSpawner)
+            if (effectSpawner == null)
             {
                 gameObject.AddComponent<TextBasedMissedNoteEffectSpawner>();
             }

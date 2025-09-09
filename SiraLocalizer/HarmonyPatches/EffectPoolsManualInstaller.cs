@@ -27,7 +27,6 @@ namespace SiraLocalizer.HarmonyPatches
             text.font = GetFontAsset(container, text);
             text.fontStyle = FontStyles.Italic | FontStyles.UpperCase;
             text.alignment = TextAlignmentOptions.Center;
-            text.fontSize = 3;
 
             return flyingTextEffect;
         }
