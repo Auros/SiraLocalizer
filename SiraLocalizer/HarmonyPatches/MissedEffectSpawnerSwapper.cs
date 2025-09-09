@@ -42,7 +42,7 @@ namespace SiraLocalizer.HarmonyPatches
 
             if (effectSpawner == null)
             {
-                gameObject.AddComponent<TextBasedMissedNoteEffectSpawner>();
+                gameObject.AddComponent<TextBasedMissedNoteEffectSpawner>().Init(textSpawner);
             }
         }
 

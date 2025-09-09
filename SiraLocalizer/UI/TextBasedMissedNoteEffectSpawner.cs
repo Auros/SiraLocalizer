@@ -5,11 +5,12 @@ namespace SiraLocalizer.UI
 {
     internal class TextBasedMissedNoteEffectSpawner : MissedNoteEffectSpawner
     {
+        [SerializeField]
         private FlyingTextSpawner _flyingTextSpawner;
 
-        private void Awake()
+        internal void Init(FlyingTextSpawner flyingTextSpawner)
         {
-            _flyingTextSpawner = GetComponent<ItalicizedFlyingTextSpawner>();
+            _flyingTextSpawner = flyingTextSpawner;
         }
 
         public new void HandleNoteWasMissed(NoteController noteController)
