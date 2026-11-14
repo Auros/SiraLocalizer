@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using BGLib.Polyglot;
 using SiraLocalizer.Utilities;
 using SiraUtil.Logging;
 using TMPro;
@@ -18,27 +19,39 @@ namespace SiraLocalizer.UI
 {
     internal class FontLoader : IInitializable, IDisposable
     {
+        // The faces of SourceHanSans-Medium.ttc cover the same characters, but each draws the Han characters shared between
+        // languages (e.g. 关) the way its region does. This one is the Japanese face; the others replace it for their language.
+        private const string kDefaultCjkFontName = "SourceHanSans-Medium SDF";
+        private static readonly Dictionary<LocalizationLanguage, string> kRegionalCjkFontNames = new()
+        {
+            { LocalizationLanguage.Simplified_Chinese, "SourceHanSansSC-Medium SDF" },
+            { LocalizationLanguage.Traditional_Chinese, "SourceHanSansTC-Medium SDF" },
+            { LocalizationLanguage.Korean, "SourceHanSansK-Medium SDF" },
+        };
+
         private static readonly string[] kFontNamesToRemove = ["NotoSansJP-Medium SDF", "NotoSansKR-Medium SDF", "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)"];
         private static readonly FontReplacementStrategy[] kFontReplacementStrategies =
         [
             new FontReplacementStrategy(
                 ["Teko-Medium SDF"],
-                ["Teko-Medium SDF Latin-1 Supplement", "Oswald-Medium SDF Cyrillic", "NotoSansHebrew-Medium SDF", "SourceHanSans-Medium SDF"]),
+                ["Teko-Medium SDF Latin-1 Supplement", "Oswald-Medium SDF Cyrillic", "NotoSansHebrew-Medium SDF", kDefaultCjkFontName]),
             new FontReplacementStrategy(
                 ["Teko-Bold SDF"],
-                ["Teko-Bold SDF Latin-1 Supplement", "Oswald-Bold SDF Cyrillic", "NotoSansHebrew-Bold SDF", "SourceHanSans-Medium SDF"]),
+                ["Teko-Bold SDF Latin-1 Supplement", "Oswald-Bold SDF Cyrillic", "NotoSansHebrew-Bold SDF", kDefaultCjkFontName]),
         ];
 
         private readonly SiraLog _logger;
+        private readonly LocalizationModel _localizationModel;
 
         private readonly List<TMP_FontAsset> _fallbackFontAssets = [];
         private readonly List<TMP_FontAsset> _processedFontAssets = [];
 
         internal TMP_FontAsset tekoBoldFontAsset { get; private set; }
 
-        public FontLoader(SiraLog logger)
+        public FontLoader(SiraLog logger, LocalizationModel localizationModel)
         {
             _logger = logger;
+            _localizationModel = localizationModel;
         }
 
         public async void Initialize()
@@ -107,7 +120,7 @@ namespace SiraLocalizer.UI
 
             await assetBundle.LoadAllAssetsAsync();
 
-            foreach (string fontName in kFontReplacementStrategies.SelectMany(s => s.fontNamesToAdd).Distinct())
+            foreach (string fontName in kFontReplacementStrategies.SelectMany(s => s.fontNamesToAdd).Concat(kRegionalCjkFontNames.Values).Distinct())
             {
                 LoadFontAsset(assetBundle, fontName);
             }
@@ -136,14 +149,15 @@ namespace SiraLocalizer.UI
             if (!_fallbackFontAssets.Any()) return;
 
             TMP_FontAsset[] fontAssets = Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
+            TMP_FontAsset cjkFontAsset = GetCjkFontAsset();
 
             foreach (FontReplacementStrategy strategy in kFontReplacementStrategies)
             {
-                IEnumerable<TMP_FontAsset> originalFontAssets = fontAssets.Where(f => !_processedFontAssets.Contains(f) && strategy.targetFontNames.Contains(f.name));
+                var fallbacks = strategy.fontNamesToAdd.Select(n => n == kDefaultCjkFontName ? cjkFontAsset : FindFallbackFontAsset(n)).Where(f => f != null).ToList();
 
-                foreach (TMP_FontAsset fontAsset in originalFontAssets)
+                foreach (TMP_FontAsset fontAsset in fontAssets.Where(f => !_processedFontAssets.Contains(f) && strategy.targetFontNames.Contains(f.name)))
                 {
-                    AddFallbacksToFont(fontAsset, strategy.fontNamesToAdd.Select(n => _fallbackFontAssets.Find(f => f.name == n)).Where(f => f != null));
+                    AddFallbacksToFont(fontAsset, fallbacks);
                 }
             }
 
@@ -154,9 +168,26 @@ namespace SiraLocalizer.UI
             }
         }
 
-        private void AddFallbacksToFont(TMP_FontAsset fontAsset, IEnumerable<TMP_FontAsset> fallbacks)
+        private TMP_FontAsset FindFallbackFontAsset(string name)
         {
-            _logger.Info($"Adding fallbacks to '{fontAsset.name}' ({fontAsset.GetInstanceID()})");
+            return _fallbackFontAssets.Find(f => f.name == name);
+        }
+
+        private TMP_FontAsset GetCjkFontAsset()
+        {
+            LocalizationLanguage language = _localizationModel.SelectedLanguage;
+
+            if (kRegionalCjkFontNames.TryGetValue(language, out string name) && FindFallbackFontAsset(name) is TMP_FontAsset fontAsset)
+            {
+                return fontAsset;
+            }
+
+            return FindFallbackFontAsset(kDefaultCjkFontName);
+        }
+
+        private void AddFallbacksToFont(TMP_FontAsset fontAsset, List<TMP_FontAsset> fallbacks)
+        {
+            _logger.Info($"Adding fallbacks to '{fontAsset.name}' ({fontAsset.GetInstanceID()}): {string.Join(", ", fallbacks.Select(f => f.name))}");
 
             fontAsset.fallbackFontAssetTable.RemoveAll(f => kFontNamesToRemove.Contains(f.name));
             fontAsset.fallbackFontAssetTable.InsertRange(0, fallbacks);
