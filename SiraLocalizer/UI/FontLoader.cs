@@ -41,17 +41,17 @@ namespace SiraLocalizer.UI
         ];
 
         private readonly SiraLog _logger;
-        private readonly LocalizationModel _localizationModel;
+        private readonly SettingsManager _settingsManager;
 
         private readonly List<TMP_FontAsset> _fallbackFontAssets = [];
         private readonly List<TMP_FontAsset> _processedFontAssets = [];
 
         internal TMP_FontAsset tekoBoldFontAsset { get; private set; }
 
-        public FontLoader(SiraLog logger, LocalizationModel localizationModel)
+        public FontLoader(SiraLog logger, SettingsManager settingsManager)
         {
             _logger = logger;
-            _localizationModel = localizationModel;
+            _settingsManager = settingsManager;
         }
 
         public async void Initialize()
@@ -175,7 +175,8 @@ namespace SiraLocalizer.UI
 
         private TMP_FontAsset GetCjkFontAsset()
         {
-            LocalizationLanguage language = _localizationModel.SelectedLanguage;
+            // Read from the settings directly instead of LocalizationModel.SelectedLanguage to avoid a race with updating SupportedLanguages
+            var language = _settingsManager.settings.misc.language.ToLocalizationLanguage();
 
             if (kRegionalCjkFontNames.TryGetValue(language, out string name) && FindFallbackFontAsset(name) is TMP_FontAsset fontAsset)
             {
