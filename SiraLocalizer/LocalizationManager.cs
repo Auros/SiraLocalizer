@@ -41,6 +41,8 @@ namespace SiraLocalizer
             _playerDataModel = playerDataModel;
         }
 
+        internal event Action localizationsChanged;
+
         public async void Initialize()
         {
             try
@@ -216,6 +218,8 @@ namespace SiraLocalizer
             {
                 AddLocalizationFilesToPolyglot();
                 UpdateSupportedLanguages();
+
+                localizationsChanged?.Invoke();
             }
             catch (Exception ex)
             {
@@ -302,7 +306,16 @@ namespace SiraLocalizer
 
             if (_playerDataModel.playerData.didSelectLanguage)
             {
-                localizationModel.SelectedLanguage = _settingsManager.settings.misc.language.ToLocalizationLanguage();
+                var language = _settingsManager.settings.misc.language.ToLocalizationLanguage();
+
+                if (localization.IsLanguageSupported(language))
+                {
+                    localizationModel.SelectedLanguage = language;
+                }
+                else
+                {
+                    localizationModel.SelectedLanguage = LocalizationLanguage.English;
+                }
             }
         }
 

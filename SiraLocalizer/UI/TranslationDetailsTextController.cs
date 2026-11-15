@@ -94,25 +94,33 @@ namespace SiraLocalizer.UI
 
         [Inject]
         [UsedImplicitly]
-        private void Construct(LocalizationManager localizer)
+        private void Construct(LocalizationManager localizationManager)
         {
-            _localizationManager = localizer;
+            _localizationManager = localizationManager;
         }
 
         private void OnEnable()
         {
             _languageSettingsController.dropDownValueDidChangeEvent += OnSelectedLanguageChanged;
             Localization.Instance.AddOnLocalizeEvent(this);
+            _localizationManager.localizationsChanged += OnLocalizationChanged;
         }
 
         private void OnDisable()
         {
             _languageSettingsController.dropDownValueDidChangeEvent -= OnSelectedLanguageChanged;
             Localization.Instance.RemoveOnLocalizeEvent(this);
+            _localizationManager.localizationsChanged -= OnLocalizationChanged;
         }
 
         private void OnSelectedLanguageChanged()
         {
+            RefreshValues();
+        }
+
+        private void OnLocalizationChanged()
+        {
+            _languageSettingsController.Refresh(true);
             RefreshValues();
         }
 
