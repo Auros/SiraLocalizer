@@ -29,6 +29,8 @@ namespace SiraLocalizer
 
         private readonly List<LocalizationFile> _localizationFiles = new();
 
+        private LocalizationLanguage[] _gameSupportedLanguages;
+
         public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders, SettingsManager settingsManager, PlayerDataModel playerDataModel)
         {
             _logger = logger;
@@ -59,6 +61,13 @@ namespace SiraLocalizer
         public void Dispose()
         {
             DeregisterLocalizations();
+
+            if (_gameSupportedLanguages != null)
+            {
+                List<LocalizationLanguage> supportedLanguages = Localization.Instance._localization.supportedLanguages;
+                supportedLanguages.Clear();
+                supportedLanguages.AddRange(_gameSupportedLanguages);
+            }
         }
 
         internal async Task CheckForUpdatesAndDownloadIfAvailable(CancellationToken cancellationToken)
@@ -280,15 +289,20 @@ namespace SiraLocalizer
                 return;
             }
 
+            LocalizationModel localizationModel = Localization.Instance;
+            Localization localization = localizationModel._localization;
+
+            _gameSupportedLanguages ??= [.. localization.SupportedLanguages];
+
             IEnumerable<Locale> languages = GetSupportedLanguages();
 
-            List<LocalizationLanguage> supportedLanguages = Localization.Instance._localization.supportedLanguages;
+            List<LocalizationLanguage> supportedLanguages = localization.supportedLanguages;
             supportedLanguages.Clear();
             supportedLanguages.AddRange(languages.Cast<LocalizationLanguage>());
 
             if (_playerDataModel.playerData.didSelectLanguage)
             {
-                Localization.Instance.SelectedLanguage = _settingsManager.settings.misc.language.ToLocalizationLanguage();
+                localizationModel.SelectedLanguage = _settingsManager.settings.misc.language.ToLocalizationLanguage();
             }
         }
 
@@ -303,6 +317,12 @@ namespace SiraLocalizer
 
             foreach (int lang in Enum.GetValues(typeof(Locale)))
             {
+                if (_gameSupportedLanguages.Contains((LocalizationLanguage)lang))
+                {
+                    yield return (Locale)lang;
+                    continue;
+                }
+
                 if (string.IsNullOrWhiteSpace(languageNames.ElementAtOrDefault(lang))) continue;
                 if ((Locale)lang is Locale.DebugKeys or Locale.DebugEnglishReverted or Locale.DebugEntryWithMaxLength) continue;
 
