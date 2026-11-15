@@ -17,7 +17,7 @@ using Object = UnityEngine.Object;
 
 namespace SiraLocalizer.UI
 {
-    internal class FontLoader : IInitializable, IDisposable
+    internal class FontLoader : IInitializable, IDisposable, ILocalize
     {
         private static readonly string[] kFontNamesToRemove = ["NotoSansJP-Medium SDF", "NotoSansKR-Medium SDF", "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)"];
 
@@ -41,22 +41,21 @@ namespace SiraLocalizer.UI
         ];
 
         private readonly SiraLog _logger;
-        private readonly SettingsManager _settingsManager;
 
         private readonly List<TMP_FontAsset> _fallbackFontAssets = [];
         private readonly List<TMP_FontAsset> _processedFontAssets = [];
 
         internal TMP_FontAsset tekoBoldFontAsset { get; private set; }
 
-        public FontLoader(SiraLog logger, SettingsManager settingsManager)
+        public FontLoader(SiraLog logger)
         {
             _logger = logger;
-            _settingsManager = settingsManager;
         }
 
         public async void Initialize()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
+            Localization.Instance.AddOnLocalizeEvent(this);
 
             try
             {
@@ -68,9 +67,15 @@ namespace SiraLocalizer.UI
             }
         }
 
+        public void OnLocalize(LocalizationModel localization)
+        {
+            ApplyFallbackFonts(true);
+        }
+
         public void Dispose()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            Localization.Instance.RemoveOnLocalizeEvent(this);
 
             foreach (TMP_FontAsset fontAsset in _processedFontAssets)
             {
@@ -144,14 +149,23 @@ namespace SiraLocalizer.UI
             _fallbackFontAssets.Add(fontAsset);
         }
 
-        private void ApplyFallbackFonts()
+        private void ApplyFallbackFonts(bool reapply = false)
         {
             if (!_fallbackFontAssets.Any()) return;
 
-            TMP_FontAsset[] fontAssets = Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
+            var locale = (Locale)Localization.Instance.SelectedLanguage;
 
-            // Read from the settings directly instead of LocalizationModel.SelectedLanguage to avoid a race with updating SupportedLanguages
-            var locale = (Locale)_settingsManager.settings.misc.language.ToLocalizationLanguage();
+            if (reapply)
+            {
+                foreach (TMP_FontAsset fontAsset in _processedFontAssets)
+                {
+                    fontAsset.fallbackFontAssetTable.RemoveAll(_fallbackFontAssets.Contains);
+                }
+
+                _processedFontAssets.Clear();
+            }
+
+            TMP_FontAsset[] fontAssets = Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
 
             foreach (FontReplacementStrategy strategy in kFontReplacementStrategies)
             {
