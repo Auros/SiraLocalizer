@@ -25,16 +25,18 @@ namespace SiraLocalizer
         private readonly List<ILocalizationProvider> _localizationProviders;
         private readonly List<ILocalizationDownloader> _localizationDownloaders;
         private readonly SettingsManager _settingsManager;
+        private readonly PlayerDataModel _playerDataModel;
 
         private readonly List<LocalizationFile> _localizationFiles = new();
 
-        public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders, SettingsManager settingsManager)
+        public LocalizationManager(SiraLog logger, Settings config, List<ILocalizationProvider> localizationProviders, List<ILocalizationDownloader> localizationDownloaders, SettingsManager settingsManager, PlayerDataModel playerDataModel)
         {
             _logger = logger;
             _config = config;
             _localizationProviders = localizationProviders;
             _localizationDownloaders = localizationDownloaders;
             _settingsManager = settingsManager;
+            _playerDataModel = playerDataModel;
         }
 
         public async void Initialize()
@@ -284,7 +286,10 @@ namespace SiraLocalizer
             supportedLanguages.Clear();
             supportedLanguages.AddRange(languages.Cast<LocalizationLanguage>());
 
-            Localization.Instance.SelectedLanguage = _settingsManager.settings.misc.language.ToLocalizationLanguage();
+            if (_playerDataModel.playerData.didSelectLanguage)
+            {
+                Localization.Instance.SelectedLanguage = _settingsManager.settings.misc.language.ToLocalizationLanguage();
+            }
         }
 
         private IEnumerable<Locale> GetSupportedLanguages()
