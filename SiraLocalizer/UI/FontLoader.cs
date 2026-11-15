@@ -19,25 +19,25 @@ namespace SiraLocalizer.UI
 {
     internal class FontLoader : IInitializable, IDisposable
     {
-        // The faces of SourceHanSans-Medium.ttc cover the same characters, but each draws the Han characters shared between
-        // languages (e.g. 关) the way its region does. This one is the Japanese face; the others replace it for their language.
-        private const string kDefaultCjkFontName = "SourceHanSans-Medium SDF";
-        private static readonly Dictionary<LocalizationLanguage, string> kRegionalCjkFontNames = new()
-        {
-            { LocalizationLanguage.Simplified_Chinese, "SourceHanSansSC-Medium SDF" },
-            { LocalizationLanguage.Traditional_Chinese, "SourceHanSansTC-Medium SDF" },
-            { LocalizationLanguage.Korean, "SourceHanSansK-Medium SDF" },
-        };
-
         private static readonly string[] kFontNamesToRemove = ["NotoSansJP-Medium SDF", "NotoSansKR-Medium SDF", "SourceHanSansCN-Bold-SDF-Common-1(2k)", "SourceHanSansCN-Bold-SDF-Common-2(2k)", "SourceHanSansCN-Bold-SDF-Uncommon(2k)"];
+
+        // The multiple faces of SourceHanSans cover the same characters, but each draws the Han characters
+        // shared between languages (e.g. 关) the way its region does. The base one is the Japanese face.
+        private static readonly ReplacementFont kCjkReplacementFont = new("SourceHanSans-Medium SDF", new Dictionary<Locale, string>()
+        {
+            { Locale.SimplifiedChinese, "SourceHanSansSC-Medium SDF" },
+            { Locale.TraditionalChinese, "SourceHanSansTC-Medium SDF" },
+            { Locale.Korean, "SourceHanSansK-Medium SDF" },
+        });
+
         private static readonly FontReplacementStrategy[] kFontReplacementStrategies =
         [
             new FontReplacementStrategy(
-                ["Teko-Medium SDF"],
-                ["Teko-Medium SDF Latin-1 Supplement", "Oswald-Medium SDF Cyrillic", "NotoSansHebrew-Medium SDF", kDefaultCjkFontName]),
+                "Teko-Medium SDF",
+                [new ReplacementFont("Teko-Medium SDF Latin-1 Supplement"), new ReplacementFont("Oswald-Medium SDF Cyrillic"), new ReplacementFont("NotoSansHebrew-Medium SDF"), kCjkReplacementFont]),
             new FontReplacementStrategy(
-                ["Teko-Bold SDF"],
-                ["Teko-Bold SDF Latin-1 Supplement", "Oswald-Bold SDF Cyrillic", "NotoSansHebrew-Bold SDF", kDefaultCjkFontName]),
+                "Teko-Bold SDF",
+                [new ReplacementFont("Teko-Bold SDF Latin-1 Supplement"), new ReplacementFont("Oswald-Bold SDF Cyrillic"), new ReplacementFont("NotoSansHebrew-Bold SDF"), kCjkReplacementFont]),
         ];
 
         private readonly SiraLog _logger;
@@ -120,7 +120,7 @@ namespace SiraLocalizer.UI
 
             await assetBundle.LoadAllAssetsAsync();
 
-            foreach (string fontName in kFontReplacementStrategies.SelectMany(s => s.fontNamesToAdd).Concat(kRegionalCjkFontNames.Values).Distinct())
+            foreach (string fontName in kFontReplacementStrategies.SelectMany(s => s.fontsToAdd.SelectMany(f => f.allFontNames)).Distinct())
             {
                 LoadFontAsset(assetBundle, fontName);
             }
@@ -149,13 +149,16 @@ namespace SiraLocalizer.UI
             if (!_fallbackFontAssets.Any()) return;
 
             TMP_FontAsset[] fontAssets = Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
-            TMP_FontAsset cjkFontAsset = GetCjkFontAsset();
+
+            // Read from the settings directly instead of LocalizationModel.SelectedLanguage to avoid a race with updating SupportedLanguages
+            var locale = (Locale)_settingsManager.settings.misc.language.ToLocalizationLanguage();
 
             foreach (FontReplacementStrategy strategy in kFontReplacementStrategies)
             {
-                var fallbacks = strategy.fontNamesToAdd.Select(n => n == kDefaultCjkFontName ? cjkFontAsset : FindFallbackFontAsset(n)).Where(f => f != null).ToList();
+                IEnumerable<TMP_FontAsset> originalFontAssets = fontAssets.Where(f => !_processedFontAssets.Contains(f) && strategy.targetFontName == f.name);
+                List<TMP_FontAsset> fallbacks = [.. strategy.fontsToAdd.Select(r => _fallbackFontAssets.Find(f => f.name == r.GetLocalizedFontName(locale))).Where(f => f != null)];
 
-                foreach (TMP_FontAsset fontAsset in fontAssets.Where(f => !_processedFontAssets.Contains(f) && strategy.targetFontNames.Contains(f.name)))
+                foreach (TMP_FontAsset fontAsset in originalFontAssets)
                 {
                     AddFallbacksToFont(fontAsset, fallbacks);
                 }
@@ -166,24 +169,6 @@ namespace SiraLocalizer.UI
             {
                 text.SetAllDirty();
             }
-        }
-
-        private TMP_FontAsset FindFallbackFontAsset(string name)
-        {
-            return _fallbackFontAssets.Find(f => f.name == name);
-        }
-
-        private TMP_FontAsset GetCjkFontAsset()
-        {
-            // Read from the settings directly instead of LocalizationModel.SelectedLanguage to avoid a race with updating SupportedLanguages
-            var language = _settingsManager.settings.misc.language.ToLocalizationLanguage();
-
-            if (kRegionalCjkFontNames.TryGetValue(language, out string name) && FindFallbackFontAsset(name) is TMP_FontAsset fontAsset)
-            {
-                return fontAsset;
-            }
-
-            return FindFallbackFontAsset(kDefaultCjkFontName);
         }
 
         private void AddFallbacksToFont(TMP_FontAsset fontAsset, List<TMP_FontAsset> fallbacks)
@@ -201,6 +186,34 @@ namespace SiraLocalizer.UI
             _processedFontAssets.Add(fontAsset);
         }
 
-        private record FontReplacementStrategy(string[] targetFontNames, string[] fontNamesToAdd);
+        private record FontReplacementStrategy(string targetFontName, ReplacementFont[] fontsToAdd);
+
+        private record ReplacementFont
+        {
+            private readonly Dictionary<Locale, string> _variants = [];
+            private readonly string _defaultName;
+
+            public ReplacementFont(string name)
+            {
+                _defaultName = name;
+
+                allFontNames = [name];
+            }
+
+            public ReplacementFont(string defaultName, Dictionary<Locale, string> variants)
+            {
+                _defaultName = defaultName;
+                _variants = variants;
+
+                allFontNames = [.. variants.Values, defaultName];
+            }
+
+            public string[] allFontNames { get; }
+
+            public string GetLocalizedFontName(Locale locale)
+            {
+                return _variants.TryGetValue(locale, out string name) ? name : _defaultName;
+            }
+        }
     }
 }
