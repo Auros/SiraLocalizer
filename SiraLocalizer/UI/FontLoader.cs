@@ -32,7 +32,6 @@ namespace SiraLocalizer.UI
         private readonly SiraLog _logger;
 
         private readonly List<TMP_FontAsset> _fallbackFontAssets = [];
-        private readonly List<TMP_FontAsset> _createdFontAssets = [];
         private readonly List<TMP_FontAsset> _processedFontAssets = [];
 
         internal TMP_FontAsset tekoBoldFontAsset { get; private set; }
@@ -62,12 +61,7 @@ namespace SiraLocalizer.UI
 
             foreach (TMP_FontAsset fontAsset in _processedFontAssets)
             {
-                fontAsset.fallbackFontAssetTable.RemoveAll(f => _createdFontAssets.Contains(f) || _fallbackFontAssets.Contains(f));
-            }
-
-            foreach (TMP_FontAsset fontAsset in _createdFontAssets)
-            {
-                Object.Destroy(fontAsset);
+                fontAsset.fallbackFontAssetTable.RemoveAll(_fallbackFontAssets.Contains);
             }
 
             foreach (TMP_FontAsset fontAsset in _fallbackFontAssets)
@@ -76,7 +70,6 @@ namespace SiraLocalizer.UI
             }
 
             _processedFontAssets.Clear();
-            _createdFontAssets.Clear();
             _fallbackFontAssets.Clear();
         }
 
