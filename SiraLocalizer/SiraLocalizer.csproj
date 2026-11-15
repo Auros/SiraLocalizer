@@ -28,6 +28,7 @@
   </PropertyGroup>
   <ItemGroup>
     <DependsOn Include="BSIPA" Version="^4.3.0" />
+    <DependsOn Include="RTLTMPro" Version="^3.4.5" />
     <DependsOn Include="SiraUtil" Version="^3.1.3" />
     <DependsOn Include="System.IO.Compression" Version="^4.6.57" />
     <DependsOn Include="System.IO.Compression.FileSystem" Version="^4.7.3056" />
@@ -48,6 +49,7 @@
     <Reference Include="Menu.CommonLib" />
     <Reference Include="HMLib" />
     <Reference Include="HMUI" Publicize="True" />
+    <Reference Include="RTLTMPro" />
     <Reference Include="SiraUtil" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
