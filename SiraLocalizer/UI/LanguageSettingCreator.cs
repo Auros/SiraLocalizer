@@ -133,6 +133,7 @@ namespace SiraLocalizer.UI
                 try
                 {
                     await _localizationManager.CheckForUpdatesAndDownloadIfAvailable(CancellationToken.None);
+                    await _localizationManager.ReloadLocalizations(CancellationToken.None);
                 }
                 catch (Exception ex)
                 {
