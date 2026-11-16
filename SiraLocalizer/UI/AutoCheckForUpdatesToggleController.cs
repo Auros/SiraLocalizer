@@ -18,7 +18,7 @@ namespace SiraLocalizer.UI
             GameObject root = container.InstantiatePrefab(template, parent);
             root.name = "AutoCheckForUpdatesToggle";
 
-            Destroy(root.GetComponent<SwitchSettingsController>());
+            Destroy(root.GetComponent("SwitchSettingsController")); // SwitchSettingsController moved assemblies in 1.44.2
 
             var rootTransform = (RectTransform)root.transform;
             rootTransform.SetParent(parent, false);
